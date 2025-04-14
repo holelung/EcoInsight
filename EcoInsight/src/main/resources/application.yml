@@ -1,3 +1,10 @@
 spring:
   application:
     name: EcoInsight
+  profiles:
+    include: secret
+  mvc:
+    static-path-pattern: /uploads/**
+  web:
+    resources:
+      static-locations: file:uploads/
