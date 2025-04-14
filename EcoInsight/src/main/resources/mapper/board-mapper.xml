@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.throwjava.web.board.model.dao.BoardMapper">
+<!-- 이거 쓰는사람 namespace 꼭 수정하세요 -->
 
 
 </mapper>
