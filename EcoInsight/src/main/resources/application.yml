@@ -8,3 +8,26 @@ spring:
   web:
     resources:
       static-locations: file:uploads/
+
+server:
+  port: 80
+  
+servlet:
+  multipart:
+    max-file-size: 100MB
+    max-request-size: 100MB
+
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    jdbc-type-for-null: VARCHAR
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.kh.start.board.model.vo, com.kh.start.member.model.vo
+
+logging:
+  level:
+    org.apache.ibatis: DEBUG
+    java.sql: DEBUG
+    jdbc.sqlonly: DEBUG
+    jdbc.resultset: DEBUG
+    jdbc.audit: DEBUG
