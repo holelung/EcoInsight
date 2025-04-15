@@ -13,6 +13,7 @@ import EditProfile from './components/MyPage/EditProfile';
 function App() {
   
   return (
+
     <AuthProvider>
       <Header />
       <Routes>
@@ -25,6 +26,7 @@ function App() {
         <Route path='/editprofile' element={<EditProfile />} />
       </Routes>
     </AuthProvider>
+
   )
 }
 
