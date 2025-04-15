@@ -8,9 +8,10 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.semi.ecoinsight.auth.util.JwtUtil;
+import com.semi.ecoinsight.configuration.util.JwtUtil;
 import com.semi.ecoinsight.token.model.dao.TokenMapper;
 import com.semi.ecoinsight.token.model.vo.RefreshToken;
+import com.semi.ecoinsight.token.model.vo.Tokens;
 
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
@@ -28,13 +29,13 @@ public class TokenServiceImpl implements TokenService {
      * 토큰 생성 메서드 호출 후 토큰 값을 Map으로 받아서 전달
      */
     @Override
-    public Map<String, String> generateToken(String memberId, Long memberNo) {
+    public Tokens generateToken(String memberId, Long memberNo) {
         
         Map<String, String> tokens = createToken(memberId);
 
         saveToken(tokens.get("refreshToken"), memberNo);
         
-        return tokens;
+        return Tokens.builder().refreshToken(tokens.get("refreshToken")).accessToken(tokens.get("accessToken")).build();
     }
 
     /**
@@ -68,7 +69,7 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public Map<String, String> refreshToken(String refreshToken) {
+    public Tokens refreshToken(String refreshToken) {
         RefreshToken token = RefreshToken.builder().refreshToken(refreshToken).build();
         RefreshToken responseToken = tokenMapper.findByToken(token);
         

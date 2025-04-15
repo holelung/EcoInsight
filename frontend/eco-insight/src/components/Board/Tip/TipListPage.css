@@ -1,0 +1,91 @@
+/* TipListPage.css */
+
+.tip-list-page {
+  max-width: 1024px; /* max-w-4xl*/
+  margin: 0 auto; /* mx-auto */
+  padding: 1rem; /* p-4 */
+}
+
+.header {
+  font-size: 1.5rem; /* text-2xl */
+  font-weight: 700; /* font-bold */
+  text-align: center; /* text-center */
+  margin-bottom: 1.5rem; /* mb-6 */
+}
+
+.filter-search {
+  display: flex; /* flex */
+  justify-content: space-between; /* justify-between */
+  align-items: center; /* items-center */
+  margin-bottom: 1rem; /* mb-4 */
+}
+
+.button-group {
+  display: flex; /* flex */
+  gap: 0.5rem; /* space-x-2 */
+}
+
+.search-input-group {
+  display: flex; /* flex */
+  gap: 0.5rem; /* space-x-2 */
+}
+
+.button {
+  padding: 0.5rem 1rem; /* px-4 py-2 */
+  border-radius: 0.375rem; /* rounded */
+  border: 1px solid black; /* border border-gray-300 */
+  background-color: white; /* bg-blue-600 */
+  color: black; /* text-white */
+}
+
+.button.outline {
+  background-color: transparent; /* bg-transparent */
+  border: 1px solid #d1d5db; /* border border-gray-300 */
+  color: black; /* text-blue-600 */
+}
+
+.table-header {
+  display: grid; /* grid */
+  grid-template-columns: repeat(6, 1fr); /* grid-cols-6 */
+  border-top: 1px solid #e5e7eb; /* border-y */
+  border-bottom: 1px solid #e5e7eb; /* border-y */
+  font-weight: 600; /* font-semibold */
+  text-align: center; /* text-center */
+  font-size: 0.875rem; /* text-sm */
+  padding: 0.5rem 0; /* py-2 */
+}
+
+.row {
+  display: grid; /* grid */
+  grid-template-columns: repeat(6, 1fr); /* grid-cols-6 */
+  border-bottom: 1px solid #e5e7eb; /* border-b */
+  text-align: center; /* text-center */
+  padding: 0.5rem 0; /* py-2 */
+  font-size: 0.875rem; /* text-sm */
+}
+
+.notice {
+  color: #4ade80; /* text-green-600 */
+  font-weight: 600; /* font-semibold */
+}
+
+.notice-title {
+  color: #4ade80; /* text-green-600 */
+  font-weight: 600; /* font-semibold */
+}
+
+.notice-content {
+  text-align: left; /* text-left */
+  font-weight: bold; /* font-bold */
+}
+
+.post-content {
+  text-align: left; /* text-left */
+}
+
+.report-link {
+  font-size: 0.75rem; /* text-xs */
+  color: #3b82f6; /* text-blue-600 */
+  text-decoration: underline; /* underline */
+  margin-top: 0.25rem; /* mt-1 */
+}
