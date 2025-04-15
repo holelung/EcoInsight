@@ -1,9 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import logo from '../../../assets/EcoInsigthLogo2.png'
 import ListItem from '../../Button/ListItem';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { AuthContext } from '../../Context/AuthContext';
 
 const Header = () => {
+  const { auth, logout } = useContext(AuthContext);
   const navi = useNavigate();
   const [subNav, setSubNav] = useState(false);
 
@@ -30,13 +32,36 @@ const Header = () => {
             </ul>
           </div>
           <div className="button-area flex items-center space-x-4">
-            <button className="px-4 py-2 rounded-lg bg-main">로그인</button>
-            <button className="px-4 py-2 rounded-lg bg-sub text-white">
-              회원가입
-            </button>
+            {!auth.isAuthenticated ? (
+              <>
+                <button
+                  className="px-4 py-2 rounded-lg bg-main"
+                  onClick={() => navi('/login')}>로그인</button>
+                <button
+                  className="px-4 py-2 rounded-lg bg-sub text-white"
+                  onClick={() => navi('/signup')}>
+                  회원가입
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                    className="px-4 py-2 rounded-lg bg-main"
+                    onClick={()=> navi('/mypage')}
+                  >
+                  마이페이지
+                </button>
+                <button 
+                    className="px-4 py-2 rounded-lg bg-sub text-white"
+                    onClick={logout}>
+                  로그아웃
+                </button>
+              </>
+            )}
           </div>
         </div>
 
+        {/* 하단 Nav */}
         {subNav && (
           <div className="w-full border-b-1 pb-2 mb-2 border-gray-200">
             <nav className="flex items-center justify-around px-6 py-2 bg-white">
