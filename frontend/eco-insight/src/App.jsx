@@ -4,20 +4,38 @@ import { AuthProvider } from './components/Context/AuthContext'
 import HomePage from './pages/HomePage/HomePage';
 import Header from './components/Common/Header/Header';
 import AuthListPage from './components/Board/Auth/AuthListPage';
+import MyPage from './components/MyPage/MyPage';
+import Myposts from './components/MyPage/MyPosts';
+import WithdrawalForm from './components/MyPage/Withdrawal/WithdrawalForm';
+import OkWithdrawal from './components/MyPage/Withdrawal/OkWithdrawal';
+import CheckWithdrawal from './components/MyPage/Withdrawal/CheckWithdrawal';
+import EditProfile from './components/MyPage/EditProfile';
+import Footer from './components/Common/Footer/Footer';
 
 function App() {
   
-
   return (
-    <>
-      <AuthProvider>
+
+    <AuthProvider>
+      <div className='min-h-screen flex flex-col'>
         <Header />
-        <Routes>
-          <Route path='/' element={<HomePage />} />
-          <Route path='/board/cert' element={<AuthListPage />} />
-        </Routes>
-      </AuthProvider>
-    </>
+
+        <div className='flex-grow'>
+          <Routes>
+            <Route path='/' element={<HomePage />} />
+            <Route path='/mypage' element={<MyPage />} />
+            <Route path='/myposts' element={<Myposts />} />
+            <Route path='/withdrawal/form' element={<WithdrawalForm />} />
+            <Route path='/withdrawal/ok' element={<OkWithdrawal />} />
+            <Route path='/withdrawal/check' element={<CheckWithdrawal />} />
+            <Route path='/editprofile' element={<EditProfile />} />
+            <Route path='/board/cert' element={<AuthListPage />} />
+          </Routes>
+        </div>
+        <Footer />
+      </div>
+    </AuthProvider>
+
   )
 }
 
