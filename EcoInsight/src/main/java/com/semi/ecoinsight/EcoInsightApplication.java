@@ -1,4 +1,4 @@
-package com.ecoinsight;
+package com.semi.ecoinsight;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
