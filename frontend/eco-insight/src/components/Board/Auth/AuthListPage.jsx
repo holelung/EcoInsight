@@ -28,15 +28,35 @@ const AuthListPage = () => {
 
     <div className="overflow-y-auto mt-8 max-h-[600px] border rounded-xl p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        <div className="border rounded-xl overflow-hidden shadow hover:shadow-lg transition">
-        
-        <div className="bg-blue-100 flex items-center justify-center h-40">
-            이미지
-        </div>
-            <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold">
-                글 제목
+
+            <div className="border rounded-xl overflow-hidden shadow hover:shadow-lg transition">
+            <div className="bg-blue-100 flex items-center justify-center h-40">
+                이미지
             </div>
 
+            <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold">
+                글 제목1
+            </div>
+
+            <div className="px-4 py-3 text-sm">
+                <div className="text-gray-500 flex justify-between mt-1">
+                    <span>작성자: </span>
+                    <span>작성일: </span>
+                </div>
+
+                <div className="text-black-500 font-bold mt-1">☆</div>
+            </div>
+            </div>
+
+            <div className="border rounded-xl overflow-hidden shadow hover:shadow-lg transition">
+            <div className="bg-blue-100 flex items-center justify-center h-40">
+                이미지
+            </div>
+                
+            <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold">
+                글 제목2
+            </div>
+        
             <div className="px-4 py-3 text-sm">
                 <div className="text-gray-500 flex justify-between mt-1">
                     <span>작성자: </span>
@@ -45,8 +65,84 @@ const AuthListPage = () => {
                 
                 <div className="text-black-500 font-bold mt-1">☆</div>
             </div>
-            
-        </div>
+            </div>
+
+            <div className="border rounded-xl overflow-hidden shadow hover:shadow-lg transition">
+            <div className="bg-blue-100 flex items-center justify-center h-40">
+                이미지
+            </div>
+                
+            <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold">
+                글 제목3
+            </div>
+        
+            <div className="px-4 py-3 text-sm">
+                <div className="text-gray-500 flex justify-between mt-1">
+                    <span>작성자: </span>
+                    <span>작성일: </span>
+                </div>
+                
+                <div className="text-black-500 font-bold mt-1">☆</div>
+            </div>
+            </div>
+
+            <div className="border rounded-xl overflow-hidden shadow hover:shadow-lg transition">
+            <div className="bg-blue-100 flex items-center justify-center h-40">
+                이미지
+            </div>
+                
+            <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold">
+                글 제목4
+            </div>
+        
+            <div className="px-4 py-3 text-sm">
+                <div className="text-gray-500 flex justify-between mt-1">
+                    <span>작성자: </span>
+                    <span>작성일: </span>
+                </div>
+                
+                <div className="text-black-500 font-bold mt-1">☆</div>
+            </div>
+            </div>
+
+            <div className="border rounded-xl overflow-hidden shadow hover:shadow-lg transition">
+            <div className="bg-blue-100 flex items-center justify-center h-40">
+                이미지
+            </div>
+                
+            <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold">
+                글 제목5
+            </div>
+        
+            <div className="px-4 py-3 text-sm">
+                <div className="text-gray-500 flex justify-between mt-1">
+                    <span>작성자: </span>
+                    <span>작성일: </span>
+                </div>
+                
+                <div className="text-black-500 font-bold mt-1">☆</div>
+            </div>
+            </div>
+
+            <div className="border rounded-xl overflow-hidden shadow hover:shadow-lg transition">
+            <div className="bg-blue-100 flex items-center justify-center h-40">
+                이미지
+            </div>
+                
+            <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold">
+                글 제목6
+            </div>
+        
+            <div className="px-4 py-3 text-sm">
+                <div className="text-gray-500 flex justify-between mt-1">
+                    <span>작성자: </span>
+                    <span>작성일: </span>
+                </div>
+                
+                <div className="text-black-500 font-bold mt-1">☆</div>
+            </div>
+            </div>
+
         </div>
     </div>
 
