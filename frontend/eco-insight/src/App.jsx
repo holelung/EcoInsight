@@ -1,5 +1,7 @@
+
 import './App.css'
 import { AuthProvider } from './components/Context/AuthContext'
+import { useState } from "react";
 
 function App() {
   
@@ -11,7 +13,7 @@ function App() {
 
       </AuthProvider>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
