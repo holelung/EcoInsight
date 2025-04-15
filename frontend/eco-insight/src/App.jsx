@@ -1,9 +1,11 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 
+
 import { AuthProvider } from "./components/Context/AuthContext";
 import HomePage from "./pages/HomePage/HomePage";
 import Header from "./components/Common/Header/Header";
+import AuthListPage from './components/Board/Auth/AuthListPage';
 import MyPage from "./components/MyPage/MyPage";
 import Myposts from "./components/MyPage/MyPosts";
 import WithdrawalForm from "./components/MyPage/Withdrawal/WithdrawalForm";
@@ -14,12 +16,12 @@ import Footer from "./components/Common/Footer/Footer";
 import TipListPage from "./components/Board/Tip/TipListPage";
 import WritePostPage from "./components/Board/WritePostPage";
 
+
 function App() {
   return (
     <AuthProvider>
       <div className="min-h-screen flex flex-col">
         <Header />
-
         <div className="flex-grow">
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -31,6 +33,7 @@ function App() {
             <Route path="/editprofile" element={<EditProfile />} />
             <Route path="/board/:type" element={<TipListPage />} />
             <Route path="/write/:type" element={<WritePostPage />} />
+            <Route path='/board/cert' element={<AuthListPage />} />
           </Routes>
         </div>
         <Footer />
