@@ -1,68 +1,48 @@
 import { useState, useEffect, createContext, Children } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  // session.setAttribute("키", 밸류)
+  const navi = useNavigate();
   const [auth, setAuth] = useState({
-    memberNo: null,
-    memberId: null,
-    memberName: null,
-    accessToken: null,
-    refreshToken: null,
+    memberInfo: {},
+    authTokens: {},
     isAuthenticated: false,
   });
 
   useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-    const refreshToken = localStorage.getItem("refreshToken");
-    const memberName = localStorage.getItem("memberName");
-    const memberId = localStorage.getItem("memberId");
-    const memberNo = localStorage.getItem("memberNo");
+    const memberInfo = JSON.parse(localStorage.getItem("memberInfo"));
+    const authTokens = JSON.parse(localStorage.getItem("authTokens"));
 
-    if (accessToken && refreshToken && memberName && memberId && memberNo) {
+    if (memberInfo && authTokens) {
       setAuth({
-        memberNo,
-        memberId,
-        memberName,
-        accessToken,
-        refreshToken,
+        memberInfo,
+        authTokens,
         isAuthenticated: true,
       });
     }
   }, []);
 
-  const login = (memberNo, memberId, memberName, accessToken, refreshToken) => {
+  const login = (memberInfo, authTokens) => {
     setAuth({
-      memberNo,
-      memberId,
-      memberName,
-      accessToken,
-      refreshToken,
+      memberInfo,
+      authTokens,
       isAuthenticated: true,
     });
-    localStorage.setItem("memberId", memberId);
-    localStorage.setItem("memberName", memberName);
-    localStorage.setItem("memberNo", memberNo);
-    localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
+    localStorage.setItem("memberInfo", JSON.stringify(memberInfo));
+    localStorage.setItem("authTokens", JSON.stringify(authTokens));
   };
 
-  const logout = () => {
+  const logout = (memberInfo, authTokens) => {
     setAuth({
-      memberNo: null,
-      memberId: null,
-      memberName: null,
-      accessToken: null,
-      refreshToken: null,
+      memberInfo: {},
+      authTokens: {},
       isAuthenticated: false,
     });
-    localStorage.removeItem("memberId");
-    localStorage.removeItem("memberName");
-    localStorage.removeItem("memberNo");
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    window.location.href = "/";
+    localStorage.removeItem("memberInfo");
+    localStorage.removeItem("authTokens");
+    navi("/");
   };
 
   return (
