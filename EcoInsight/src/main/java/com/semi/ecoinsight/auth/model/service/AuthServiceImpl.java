@@ -1,5 +1,6 @@
 package com.semi.ecoinsight.auth.model.service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -10,6 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
 import com.semi.ecoinsight.auth.model.vo.CustomUserDetails;
+import com.semi.ecoinsight.auth.model.vo.LoginInfo;
 import com.semi.ecoinsight.exception.util.CustomAuthenticationException;
 import com.semi.ecoinsight.member.model.dto.MemberDTO;
 import com.semi.ecoinsight.token.model.service.TokenService;
@@ -25,7 +27,7 @@ public class AuthServiceImpl implements AuthService{
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
     @Override
-    public Map<String, String> login(MemberDTO member) {
+    public Map<String, Object> login(MemberDTO member) {
         Authentication authentication = null;
         try{
             authentication=
@@ -38,13 +40,17 @@ public class AuthServiceImpl implements AuthService{
         }
         CustomUserDetails loginMember = (CustomUserDetails)authentication.getPrincipal();
 
-        Map<String, String> loginResponse = tokenService.generateToken(loginMember.getUsername(), loginMember.getMemberNo());
+        Map<String, Object> loginResponse = new HashMap<String, Object>();
+        loginResponse.put("tokens",tokenService.generateToken(loginMember.getUsername(), loginMember.getMemberNo()));
+        LoginInfo loginInfo = LoginInfo.builder()
+                                       .memberNo(String.valueOf(loginMember.getMemberNo()))
+                                       .username(loginMember.getUsername())
+                                       .email(loginMember.getEmail())
+                                       .memberName(loginMember.getMemberName())
+                                       .memberRole(loginMember.getMemberRole())
+                                       .build();
 
-        loginResponse.put("memberNo", String.valueOf(loginMember.getMemberNo()));
-        loginResponse.put("username", loginMember.getUsername());
-        loginResponse.put("email", loginMember.getEmail());
-        loginResponse.put("memberName", loginMember.getMemberName());
-        loginResponse.put("memberRole", loginMember.getMemberRole());
+        loginResponse.put("loginInfo",loginInfo);
         return loginResponse;
     }
 

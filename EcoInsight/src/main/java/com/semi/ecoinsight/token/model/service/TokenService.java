@@ -2,10 +2,12 @@ package com.semi.ecoinsight.token.model.service;
 
 import java.util.Map;
 
+import com.semi.ecoinsight.token.model.vo.Tokens;
+
 public interface TokenService {
 
     // 토큰 생성
-    Map<String, String> generateToken(String memberId, Long memberNo);
+    Tokens generateToken(String memberId, Long memberNo);
 
-    Map<String, String> refreshToken(String refreshToken);
+    Tokens refreshToken(String refreshToken);
 }
