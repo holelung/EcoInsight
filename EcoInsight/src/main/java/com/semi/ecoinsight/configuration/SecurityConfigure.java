@@ -1,4 +1,4 @@
-package com.ecoinsight.configuration;
+package com.semi.ecoinsight.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
