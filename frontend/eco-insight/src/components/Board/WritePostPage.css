@@ -1,0 +1,88 @@
+.write-container {
+  border: 2px solid #009eff;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 800px;
+  margin: 40px auto;
+  background-color: #f9f9f9;
+}
+
+.title-input {
+  width: 100%;
+  padding: 12px;
+  font-size: 18px;
+  margin-bottom: 12px;
+  background-color: #e0e0e0;
+  border: none;
+  border-radius: 4px;
+}
+
+.category-button {
+  padding: 8px 16px;
+  background-color: #dddddd;
+  border: none;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.editor-wrapper {
+  background-color: #e0e0e0;
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 24px;
+}
+
+.toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.toolbar select,
+.toolbar input,
+.toolbar button {
+  padding: 4px 6px;
+  font-size: 14px;
+}
+
+.editor {
+  width: 100%;
+  height: 150px;
+  padding: 12px;
+  border: none;
+  background-color: #e0e0e0;
+  resize: none;
+  font-size: 16px;
+}
+
+.image-upload-area {
+  background-color: black;
+  color: white;
+  text-align: center;
+  padding: 48px 12px;
+  border-radius: 4px;
+  margin-bottom: 24px;
+}
+
+.image-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+.image-preview {
+  font-size: 14px;
+}
+
+.submit-wrapper {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submit-button {
+  background-color: #c6ffba;
+  padding: 10px 24px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+}
