@@ -4,35 +4,12 @@ import axios from "axios";
 
 const AuthListPage = () => {
     const navi = useNavigate();
+    const [boards, setBoards] = useState([]);
+    const [page, setPage] = useState(0);
 
-    useEffect(() => {
-        axios.get("http://localhost/boards", {
-            params : {
-                page : page,
-            },
-        }).then(response => {
-            setBoards([...boards, ...response.data]);
-            if(response.data.length < 6){
-                handleLoadMore(false);
-            }
-        });
-    }, [page]);
-    
-    const allPosts = new Array(30).fill({
-        title: "글 제목",
-        author: "김오리",
-        date: "20xx.xx.xx",
-        image: "https://via.placeholder.com/150",
-        subtitle: "아무리 생각해도 아무 생각이 없어",
-        star: 1,
-    });
-
-    function CertificationBoard() {
-        const [visibleCount, setVisibleCount] = useState(6);
-        
-        const handleLoadMore = () => {
-            setVisibleCount((prev) => prev + 6);
-        };
+    const handleLoadMore = () => {
+        setPage((page) => page + 1);
+    };
 
     return (
     
@@ -51,41 +28,40 @@ const AuthListPage = () => {
 
     <div className="overflow-y-auto mt-8 max-h-[600px] border rounded-xl p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-
-        {allPosts.slice(0, visibleCount).map((post, index) => (
-        <div key={index} className="border rounded-xl overflow-hidden shadow hover:shadow-lg transition">
+        <div className="border rounded-xl overflow-hidden shadow hover:shadow-lg transition">
+        
         <div className="bg-blue-100 flex items-center justify-center h-40">
-            <img src={post.image} alt="placeholder" className="w-20" />
+            이미지
         </div>
             <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold">
-                {post.subtitle}
+                글 제목
             </div>
+
             <div className="px-4 py-3 text-sm">
-                <div className="font-semibold">{post.title}</div>
                 <div className="text-gray-500 flex justify-between mt-1">
-                <span>작성자: {post.author}</span>
-                <span>작성일: {post.date}</span>
+                    <span>작성자: </span>
+                    <span>작성일: </span>
+                </div>
+                
+                <div className="text-black-500 font-bold mt-1">☆</div>
             </div>
-            <div className="text-gray-500 mt-1">★ {post.star}</div>
-            </div>
+            
         </div>
-        ))}
         </div>
     </div>
 
-    {visibleCount < allPosts.length && (
+    
     <div className="flex justify-center mt-6">
         <button
             onClick={handleLoadMore}
             className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">
-            더보기
+            더보기 ∇
         </button>
     </div>
-    )}
 
     </div>
 
     );
 };
-}
+
 export default AuthListPage;

@@ -14,7 +14,7 @@ function App() {
         <Header />
         <Routes>
           <Route path='/' element={<HomePage />} />
-          <Route path='/boards' element={<AuthListPage />} />
+          <Route path='/board/cert' element={<AuthListPage />} />
         </Routes>
       </AuthProvider>
     </>
