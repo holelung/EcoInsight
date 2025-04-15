@@ -55,4 +55,4 @@ build/
 .DS_Store
 Thumbs.db
 
-application-secret.yml
+application-private.yml

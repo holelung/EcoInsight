@@ -2,7 +2,7 @@ spring:
   application:
     name: EcoInsight
   profiles:
-    include: secret
+    include: private
   mvc:
     static-path-pattern: /uploads/**
   web:
