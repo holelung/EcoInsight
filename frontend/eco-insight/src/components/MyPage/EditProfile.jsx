@@ -14,9 +14,7 @@ function EditProfile() {
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [phone, setPhone] = useState('010-1234-5678');
   const [email, setEmail] = useState('hong@example.com');
-  const [address, setAddress] = useState('서울시 강남구 OO동');
-  const [addressDetail, setAddressDetail] = useState('101호');
-
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     if (password !== passwordConfirm) {
@@ -29,8 +27,6 @@ function EditProfile() {
       password,
       phone,
       email,
-      address,
-      addressDetail,
     });
     alert('회원정보가 수정되었습니다.');
     // 수정 완료 후 마이페이지로 이동
@@ -148,34 +144,7 @@ function EditProfile() {
               required
             />
           </div>
-          {/* 주소 */}
-          <div>
-            <label htmlFor="address" className="block mb-1 text-gray-700">
-              주소
-            </label>
-            <input
-              type="text"
-              id="address"
-              className="w-full px-3 py-2 border rounded focus:outline-none focus:border-blue-400"
-              placeholder="주소를 입력하세요"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-            />
-          </div>
-          {/* 상세주소 */}
-          <div>
-            <label htmlFor="addressDetail" className="block mb-1 text-gray-700">
-              상세 주소
-            </label>
-            <input
-              type="text"
-              id="addressDetail"
-              className="w-full px-3 py-2 border rounded focus:outline-none focus:border-blue-400"
-              placeholder="상세 주소를 입력하세요"
-              value={addressDetail}
-              onChange={(e) => setAddressDetail(e.target.value)}
-            />
-          </div>
+          
           {/* 버튼 그룹 */}
           <div className="flex justify-end space-x-4">
             <button
