@@ -9,22 +9,28 @@ import WithdrawalForm from './components/MyPage/Withdrawal/WithdrawalForm';
 import OkWithdrawal from './components/MyPage/Withdrawal/OkWithdrawal';
 import CheckWithdrawal from './components/MyPage/Withdrawal/CheckWithdrawal';
 import EditProfile from './components/MyPage/EditProfile';
+import Footer from './components/Common/Footer/Footer';
 
 function App() {
   
   return (
 
     <AuthProvider>
-      <Header />
-      <Routes>
-        <Route path='/' element={<HomePage />} />
-        <Route path='/mypage' element={<MyPage />} />
-        <Route path='/myposts' element={<Myposts />} />
-        <Route path='/withdrawal/form' element={<WithdrawalForm />} />
-        <Route path='/withdrawal/ok' element={<OkWithdrawal />} />
-        <Route path='/withdrawal/check' element={<CheckWithdrawal />} />
-        <Route path='/editprofile' element={<EditProfile />} />
-      </Routes>
+      <div className='min-h-screen flex flex-col'>
+        <Header />
+        <div className='flex-grow'>
+          <Routes>
+            <Route path='/' element={<HomePage />} />
+            <Route path='/mypage' element={<MyPage />} />
+            <Route path='/myposts' element={<Myposts />} />
+            <Route path='/withdrawal/form' element={<WithdrawalForm />} />
+            <Route path='/withdrawal/ok' element={<OkWithdrawal />} />
+            <Route path='/withdrawal/check' element={<CheckWithdrawal />} />
+            <Route path='/editprofile' element={<EditProfile />} />
+          </Routes>
+        </div>
+        <Footer />
+      </div>
     </AuthProvider>
 
   )
