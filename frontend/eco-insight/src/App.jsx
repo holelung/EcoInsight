@@ -1,13 +1,17 @@
+
+import './App.css'
+import { AuthProvider } from './components/Context/AuthContext'
 import { useState } from "react";
-import Header from "./Common/Header/Header";
-import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
+  
 
   return (
     <>
-      <Header />
+      <AuthProvider>
+        hihi
+
+      </AuthProvider>
     </>
   );
 }
