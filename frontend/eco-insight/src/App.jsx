@@ -26,7 +26,7 @@ import AdminDashBoard from "./pages/Admin/AdminDashBoard/AdminDashBoard.jsx";
 import AdminCommunityBoard from "./pages/Admin/AdminCommunityBoard/AdminCommunityBoard.jsx";
 import MainDashBoard from "./pages/User/UserDashBoard/MainDashBoard.jsx";
 import Notice from "./components/Board/Notice/Notice.jsx";
-
+import Login from "./components/Auth/Login.jsx";
 import FrequencyAskPage from "./components/Ask/FrequencyAskPage.jsx";
 import PrivateAskPage from "./components/Ask/PrivateAskPage.jsx";
 
