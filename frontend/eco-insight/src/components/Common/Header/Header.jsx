@@ -10,10 +10,14 @@ const Header = () => {
   const [subNav, setSubNav] = useState(false);
 
   const clickBoardItem = () => {
-    
+    navi('/board/cert');
     setSubNav(!subNav);
   };
 
+  const handleMenuClick = (path) => {
+    setSubNav(false);
+    navi(path);
+  }
 
   return (
     <>
@@ -24,11 +28,11 @@ const Header = () => {
           </div>
           <div className="nav-area">
             <ul className="flex space-x-4 py-3">
-              <ListItem onClick={() => navi("/")}>소개</ListItem>
-              <ListItem onClick={() => navi("/")}>대시보드</ListItem>
+              <ListItem onClick={() => handleMenuClick("/")}>소개</ListItem>
+              <ListItem onClick={() => handleMenuClick("/dashboard")}>대시보드</ListItem>
               <ListItem onClick={() => clickBoardItem()}>게시판</ListItem>
-              <ListItem onClick={() => navi("/")}>공지사항</ListItem>
-              <ListItem onClick={() => navi("/")}>문의하기</ListItem>
+              <ListItem onClick={() => handleMenuClick("/notice")}>공지사항</ListItem>
+              <ListItem onClick={() => handleMenuClick("/help")}>문의하기</ListItem>
             </ul>
           </div>
           <div className="button-area flex items-center space-x-4">
@@ -36,24 +40,29 @@ const Header = () => {
               <>
                 <button
                   className="px-4 py-2 rounded-lg bg-main"
-                  onClick={() => navi('/login')}>로그인</button>
+                  onClick={() => navi("/login")}
+                >
+                  로그인
+                </button>
                 <button
                   className="px-4 py-2 rounded-lg bg-sub text-white"
-                  onClick={() => navi('/signup')}>
+                  onClick={() => navi("/signup")}
+                >
                   회원가입
                 </button>
               </>
             ) : (
               <>
                 <button
-                    className="px-4 py-2 rounded-lg bg-main"
-                    onClick={()=> navi('/mypage')}
-                  >
+                  className="px-4 py-2 rounded-lg bg-main"
+                  onClick={() => navi("/mypage")}
+                >
                   마이페이지
                 </button>
-                <button 
-                    className="px-4 py-2 rounded-lg bg-sub text-white"
-                    onClick={logout}>
+                <button
+                  className="px-4 py-2 rounded-lg bg-sub text-white"
+                  onClick={logout}
+                >
                   로그아웃
                 </button>
               </>
