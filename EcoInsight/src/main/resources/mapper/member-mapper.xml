@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.semi.ecoinsight.member.model.dao.MemberMapper">
+    <select id="getMemberByMemberId"
+            parameterType="string"
+            resultType="MemberDTO">
+        SELECT
+            MEMBER_NO memberNo,
+            MEMBER_ID memberId,
+            MEMBER_PW memberPw,
+            MEMBER_NAME memberName,
+            EMAIL email,
+            MEMBER_PH memberPh,
+            MEMBER_SSN memberSsn,
+            MEMBER_ENROLL_DATE memberEnrollDate,
+            MEMBER_ROLE memberRole,
+            GRADE_NO gradeNo,
+            IS_ACTIVE isActive,
+            MEMBER_UPDATE_DATE memberUpdateDate
+        FROM
+            TB_MEMBER
+        WHERE
+            MEMBER_ID = #{memberId}
+    </select>
+
+    <insert id="signUp"
+            parameterType="Member">
+        INSERT INTO TB_MEMBER(
+            MEMBER_NAME,
+            MEMBER_PW,
+            MEMBER_ID,
+            EMAIL,
+            MEMBER_PH,
+            MEMBER_SSN,
+            MEMBER_ROLE
+        )
+        VALUES(
+            #{memberName},
+            #{memberPw},
+            #{memberId},
+            #{email},
+            #{memberPh},
+            #{memberSsn},
+            #{memberRole}
+        )
+    </insert>
+
+    <update id="updatePassword"
+            parameterType="UpdatePasswordDTO">
+    UPDATE
+        TB_MEMBER
+    SET 
+        MEMBER_PW = #{encodedPassword}
+    WHERE 
+        MEMBER_NO = #{memberNo}
+
+    </update>
+</mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.semi.ecoinsight.token.model.dao.TokenMapper">
+    <insert id="saveToken"
+            parameterType="RefreshToken">
+        INSERT INTO TB_TOKEN(MEMBER_NO, REFRESH_TOKEN, EXPIRED_DATE) VALUES(
+            #{memberNo},
+            #{refreshToken},
+            #{expiredDate}
+        )
+    </insert>
+
+    <select id="findByToken"
+            parameterType="RefreshToken"
+            resultType="RefreshToken">
+        SELECT 
+            MEMBER_NO AS memberNo, 
+            REFRESH_TOKEN AS refreshToken,
+            EXPIRED_DATE AS expiredDate
+        FROM
+            TB_TOKEN
+        WHERE
+            REFRESH_TOKEN = #{refreshToken}
+    </select>
+</mapper>

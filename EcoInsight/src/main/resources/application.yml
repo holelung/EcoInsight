@@ -23,8 +23,10 @@ mybatis:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     jdbc-type-for-null: VARCHAR
   mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.kh.start.board.model.vo, com.kh.start.member.model.vo
-
+  type-aliases-package: 
+    com.semi.ecoinsight.member.model.vo,
+    com.semi.ecoinsight.member.model.dto,
+    com.semi.ecoinsight.token.model.vo
 logging:
   level:
     org.apache.ibatis: DEBUG
