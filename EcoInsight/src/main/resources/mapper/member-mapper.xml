@@ -46,4 +46,15 @@
             #{memberRole}
         )
     </insert>
+
+    <update id="updatePassword"
+            parameterType="UpdatePasswordDTO">
+    UPDATE
+        TB_MEMBER
+    SET 
+        MEMBER_PW = #{encodedPassword}
+    WHERE 
+        MEMBER_NO = #{memberNo}
+
+    </update>
 </mapper>
