@@ -5,11 +5,12 @@ import { AuthContext } from "../Context/AuthContext";
 const AdminRoute = ({ children }) => {
   const { auth } = useContext(AuthContext);
 
-  return auth.isAuthenticated && auth.role === "ROLE_ADMIN" ? (
-    children
-  ) : (
-    <Navigate to="/" replace />
-  );
+  // return auth.isAuthenticated && auth.role === "ROLE_ADMIN" ? (
+  //   children
+  // ) : (
+  //   <Navigate to="/" replace />
+  // );
+  return children;
 };
 
 export default AdminRoute;
