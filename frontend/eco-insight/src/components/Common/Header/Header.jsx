@@ -1,8 +1,8 @@
-import { useNavigate } from 'react-router-dom';
-import logo from '../../../assets/EcoInsigthLogo2.png'
-import ListItem from '../../Button/ListItem';
-import { useContext, useState } from 'react';
-import { AuthContext } from '../../Context/AuthContext';
+import { useNavigate } from "react-router-dom";
+import logo from "../../../assets/EcoInsigthLogo2.png";
+import ListItem from "../../Button/ListItem";
+import { useContext, useState } from "react";
+import { AuthContext } from "../../Context/AuthContext";
 
 const Header = () => {
   const { auth, logout } = useContext(AuthContext);
@@ -31,8 +31,12 @@ const Header = () => {
               <ListItem onClick={() => handleMenuClick("/")}>소개</ListItem>
               <ListItem onClick={() => handleMenuClick("/dashboard")}>대시보드</ListItem>
               <ListItem onClick={() => clickBoardItem()}>게시판</ListItem>
+              
+
               <ListItem onClick={() => handleMenuClick("/notice")}>공지사항</ListItem>
-              <ListItem onClick={() => handleMenuClick("/help")}>문의하기</ListItem>
+              <ListItem onClick={() => navi("/frequencyAskPage")}>
+                문의하기
+              </ListItem>
             </ul>
           </div>
           <div className="button-area flex items-center space-x-4">
@@ -106,8 +110,6 @@ const Header = () => {
       </header>
     </>
   );
-
-}
-
+};
 
 export default Header;
