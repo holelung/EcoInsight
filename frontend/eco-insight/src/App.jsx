@@ -47,6 +47,7 @@ function App() {
           <Route path="/board/:type" element={<TipListPage />} />
           <Route path="/board/cert" element={<AuthListPage />} />
           <Route path="/write/:type" element={<WritePostPage />} />
+          <Route path="/post/:id" element={<PostDetailPage />} />
           <Route path="/dashboard" element={<MainDashBoard />} />
           <Route path="/notice" element={<Notice />} />
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />

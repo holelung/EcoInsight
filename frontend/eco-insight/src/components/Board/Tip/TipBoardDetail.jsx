@@ -110,6 +110,7 @@ export default function PostDetailPage() {
 
       {/* 수정/삭제/신고 버튼 */}
       <div className="flex justify-end gap-2">
+        {/* auth.isAuthenticated && */}
         {isEditing ? (
           <button
             onClick={handleSaveEdit}
