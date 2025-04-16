@@ -25,6 +25,9 @@ import AdminAuthBoard from "./pages/Admin/AdminAuthBoard/AdminAuthBoard.jsx";
 import AdminNoticeBoard from "./pages/Admin/AdminNoticeBoard/AdminNoticeBoard.jsx";
 import AdminDashBoard from "./pages/Admin/AdminDashBoard/AdminDashBoard.jsx";
 import AdminCommunityBoard from "./pages/Admin/AdminCommunityBoard/AdminCommunityBoard.jsx";
+import MainDashBoard from "./pages/User/UserDashBoard/MainDashBoard.jsx";
+import Notice from "./components/Board/Notice/Notice.jsx";
+
 import FrequencyAskPage from "./components/Ask/FrequencyAskPage.jsx";
 import PrivateAskPage from "./components/Ask/PrivateAskPage.jsx";
 
@@ -44,6 +47,8 @@ function App() {
           <Route path="/board/:type" element={<TipListPage />} />
           <Route path="/board/cert" element={<AuthListPage />} />
           <Route path="/write/:type" element={<WritePostPage />} />
+          <Route path="/dashboard" element={<MainDashBoard />} />
+          <Route path="/notice" element={<Notice />} />
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
           <Route path="/privateAskPage" element={<PrivateAskPage />} />
         </Route>
