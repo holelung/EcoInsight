@@ -1,4 +1,4 @@
-package com.ecoinsight.community.model.dto;
+package com.semi.ecoinsight.community.model.dto;
 
 public class CommunityDTO {
 
