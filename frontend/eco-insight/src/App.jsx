@@ -1,11 +1,10 @@
 import "./App.css";
 import { Navigate, Route, Routes } from "react-router-dom";
 
-
 import { AuthProvider } from "./components/Context/AuthContext";
 import HomePage from "./pages/User/HomePage/HomePage";
 import Header from "./components/Common/Header/Header";
-import AuthListPage from './components/Board/AuthBoard/AuthListPage';
+import AuthListPage from "./components/Board/AuthBoard/AuthListPage";
 import MyPage from "./components/MyPage/MyPage";
 import Myposts from "./components/MyPage/MyPosts";
 import WithdrawalForm from "./components/MyPage/Withdrawal/WithdrawalForm";
@@ -15,6 +14,7 @@ import EditProfile from "./components/MyPage/EditProfile";
 import Footer from "./components/Common/Footer/Footer";
 import TipListPage from "./components/Board/Tip/TipListPage";
 import WritePostPage from "./components/Board/WritePostPage";
+import PostDetailPage from "./components/Board/Tip/TipBoardDetail";
 import UserLayout from "./components/Layout/UserLayout";
 import AdminRoute from "./components/RouteGuard/AdminRoute";
 import AdminLogin from "./pages/Admin/AdminLogin/AdminLogin.jsx";
@@ -25,7 +25,8 @@ import AdminAuthBoard from "./pages/Admin/AdminAuthBoard/AdminAuthBoard.jsx";
 import AdminNoticeBoard from "./pages/Admin/AdminNoticeBoard/AdminNoticeBoard.jsx";
 import AdminDashBoard from "./pages/Admin/AdminDashBoard/AdminDashBoard.jsx";
 import AdminCommunityBoard from "./pages/Admin/AdminCommunityBoard/AdminCommunityBoard.jsx";
-
+import FrequencyAskPage from "./components/Ask/FrequencyAskPage.jsx";
+import PrivateAskPage from "./components/Ask/PrivateAskPage.jsx";
 
 function App() {
   return (
@@ -43,6 +44,8 @@ function App() {
           <Route path="/board/:type" element={<TipListPage />} />
           <Route path="/board/cert" element={<AuthListPage />} />
           <Route path="/write/:type" element={<WritePostPage />} />
+          <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
+          <Route path="/privateAskPage" element={<PrivateAskPage />} />
         </Route>
 
         {/* 관리자 전용 */}
@@ -64,7 +67,6 @@ function App() {
           <Route path="communityBoard" element={<AdminCommunityBoard />} />
           <Route path="noticeBoard" element={<AdminNoticeBoard />} />
         </Route>
-
       </Routes>
     </AuthProvider>
   );
