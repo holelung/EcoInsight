@@ -7,65 +7,145 @@ function MyPage() {
   // 로그인된 유저 정보 (예시)
   const userInfo = {
     name: '홍길동',
+    username: 'hong123',
+    membership: 'VIP',
+    joinDate: '2025-01-01',
+    auth: '1회',         // 임의 값
+    memUsage: '사용중',  // 임의 값
   };
 
   const handleViewEditInfo = () => {
-    // 내정보 조회/수정 → EditProfile 페이지
     navigate('/editprofile');
   };
 
   const handleBoardList = () => {
-    // 내가 작성한 게시글 조회 → Myposts 페이지
     navigate('/myposts');
   };
 
   const handleWithdrawal = () => {
-    // 회원탈퇴 → CheckWithdrawal 페이지
     navigate('/withdrawal/check');
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900 p-4">
-      <div className="max-w-6xl mx-auto mb-8 text-center">
-        <h1 className="text-2xl md:text-3xl font-bold mb-6 ">
+    <div className="min-h-screen bg-gray-50 text-gray-900">
+      {/* 상단 제목 + 버튼들 */}
+      <div className="max-w-6xl mx-auto text-center py-8 px-4">
+        <h1 className="text-3xl font-bold mb-6">
           {userInfo.name}님의 마이페이지
         </h1>
-        <div className="flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-4 sm:space-y-0 mb-6">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
           <button
             onClick={handleViewEditInfo}
-            className="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded hover:bg-blue-600 transition-colors"
+            className="px-4 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition-colors"
           >
             내정보 조회/수정
           </button>
           <button
             onClick={handleBoardList}
-            className="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded hover:bg-blue-600 transition-colors"
+            className="px-4 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition-colors"
           >
             내가 작성한 게시글 조회
           </button>
           <button
             onClick={handleWithdrawal}
-            className="w-full sm:w-auto px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
+            className="px-4 py-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition-colors"
           >
             회원탈퇴
           </button>
         </div>
       </div>
-      {/* 추가 컨텐츠 영역 (카드 예시) */}
-      <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="bg-white shadow rounded p-6">
-            <h3 className="text-lg font-medium mb-2">카드 제목 1</h3>
-            <p className="text-gray-600">카드 내용 예시...</p>
+
+      {/* 대시보드 영역 */}
+      <div className="max-w-6xl mx-auto px-4 pb-10">
+        {/*
+          1) 첫 번째 카드: 사용자 정보
+          2) 나머지 8개 카드: 대시보드(차트) 등
+        */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* === 1. 사용자 정보 카드 === */}
+          <div className="bg-white rounded-2xl shadow p-6 flex flex-col justify-between">
+            {/* 상단 영역: 유저 정보, 프로필/아이콘 자리(예시) */}
+            <div className="flex justify-between items-start mb-4">
+              <div>
+                {/* 예: 이름 */}
+                <p className="text-gray-500 text-sm">이름</p>
+                <p className="text-xl font-semibold text-gray-800">{userInfo.name}</p>
+              </div>
+              {/* 오른쪽 위 이미지(임시) */}
+              <div className="w-12 h-12 bg-gray-200 rounded-full" />
+            </div>
+
+            {/* 중간 영역: 사용자명, 가입일, NMI, MEM 등 */}
+            <div className="flex flex-col space-y-3 mb-4">
+              <div className="flex justify-between">
+                <div>
+                  <p className="text-gray-500 text-sm">아이디</p>
+                  <p className="text-base text-gray-700">{userInfo.username}</p>
+                </div>
+                <div>
+                  <p className="text-gray-500 text-sm">가입일</p>
+                  <p className="text-base text-gray-700">{userInfo.joinDate}</p>
+                </div>
+              </div>
+              <div className="flex justify-between">
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <p className="text-gray-500 text-sm">OOO인증</p>
+                    <p className="text-base text-gray-700">{userInfo.auth}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500 text-sm">OOO인증</p>
+                    <p className="text-base text-gray-700">{userInfo.auth}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500 text-sm">OOO인증</p>
+                    <p className="text-base text-gray-700">{userInfo.auth}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500 text-sm">OOO인증</p>
+                    <p className="text-base text-gray-700">{userInfo.auth}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500 text-sm">OOO인증</p>
+                    <p className="text-base text-gray-700">{userInfo.auth}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500 text-sm">OOO인증</p>
+                    <p className="text-base text-gray-700">{userInfo.auth}</p>
+                  </div>
+                </div>
+                <div>
+                  <div>
+                    <p className="text-gray-500 text-sm">MEM</p>
+                    <p className="text-base text-gray-700">{userInfo.membership}</p>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+
           </div>
-          <div className="bg-white shadow rounded p-6">
-            <h3 className="text-lg font-medium mb-2">카드 제목 2</h3>
-            <p className="text-gray-600">카드 내용 예시...</p>
-          </div>
-          <div className="bg-white shadow rounded p-6">
-            <h3 className="text-lg font-medium mb-2">카드 제목 3</h3>
-            <p className="text-gray-600">카드 내용 예시...</p>
-          </div>
+
+          {/* === 2 ~ 9. 대시보드 카드들 === */}
+          {/* 각 카드에 원형 차트/막대 차트/텍스트 등을 배치예정. */}
+          {Array.from({ length: 8 }).map((_, idx) => (
+            <div
+              key={idx}
+              className="bg-white rounded-2xl shadow p-6 flex flex-col items-center justify-center"
+            >
+              {/* 예시: 차트(이미지) 자리 */}
+              <div className="flex space-x-4 mb-4">
+                <div className="w-16 h-16 bg-pink-200 rounded-full" />
+                <div className="w-16 h-16 bg-blue-200 rounded" />
+              </div>
+              {/* 예시: 설명 텍스트 */}
+              <p className="text-center text-gray-700 font-medium">
+                여기는 대시보드처럼 보입니다.  
+                <br className="hidden sm:block" />
+                차트 이미지가 들어갈 예정입니다.
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </div>
