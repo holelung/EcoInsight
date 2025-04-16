@@ -19,6 +19,12 @@ import UserLayout from "./components/Layout/UserLayout";
 import AdminRoute from "./components/RouteGuard/AdminRoute";
 import AdminLogin from "./pages/Admin/AdminLogin/AdminLogin.jsx";
 import AdminLayout from "./components/Layout/AdminLayout.jsx";
+import AdminPoint from "./pages/Admin/AdminPoint/AdminPoint.jsx";
+import AdminUser from "./pages/Admin/AdminUser/AdminUser.jsx";
+import AdminAuthBoard from "./pages/Admin/AdminAuthBoard/AdminAuthBoard.jsx";
+import AdminNoticeBoard from "./pages/Admin/AdminNoticeBoard/AdminNoticeBoard.jsx";
+import AdminDashBoard from "./pages/Admin/AdminDashBoard/AdminDashBoard.jsx";
+import AdminCommunityBoard from "./pages/Admin/AdminCommunityBoard/AdminCommunityBoard.jsx";
 
 
 function App() {
@@ -40,18 +46,25 @@ function App() {
         </Route>
 
         {/* 관리자 전용 */}
+        <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+
         <Route
           path="/admin"
           element={
-            <Navigate to="/admin/login" replace />
+            <AdminRoute>
+              <AdminLayout />
+            </AdminRoute>
           }
-        />
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={
-          <AdminRoute>
-            <AdminLayout />
-          </AdminRoute>
-        } />
+        >
+          <Route path="dashboard" element={<AdminDashBoard />} />
+          <Route path="point" element={<AdminPoint />} />
+          <Route path="user" element={<AdminUser />} />
+          <Route path="authBoard" element={<AdminAuthBoard />} />
+          <Route path="communityBoard" element={<AdminCommunityBoard />} />
+          <Route path="noticeBoard" element={<AdminNoticeBoard />} />
+        </Route>
+
       </Routes>
     </AuthProvider>
   );

@@ -1,11 +1,11 @@
 import logo from "../../../assets/EcoInsigthLogo2.png";
 
 const AdminLogin = () => {
-  
+
 
   return (
-    <>
-      <div className="m-auto w-[50vw] flex flex-col justify-center mt-32">
+    <div className="flex h-screen items-center">
+      <div className="m-auto w-[50vw] flex flex-col justify-center">
         <div id="title" className="flex flex-row justify-center items-end">
           <img src={logo} alt="EcoInsightLogo" className="h-32 w-auto" />
           <p className="text-4xl pb-3">Admin Login</p>
@@ -28,7 +28,7 @@ const AdminLogin = () => {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
