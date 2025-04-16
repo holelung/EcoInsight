@@ -44,7 +44,7 @@ public class SecurityConfigure {
 					requests.requestMatchers(HttpMethod.GET).permitAll();
 					requests.requestMatchers(HttpMethod.POST).authenticated();
 					requests.requestMatchers(HttpMethod.GET).authenticated();
-					requests.requestMatchers(HttpMethod.PUT).authenticated();
+					requests.requestMatchers(HttpMethod.PUT, "/members/password").authenticated();
 					requests.requestMatchers(HttpMethod.DELETE).authenticated();
 					requests.anyRequest().authenticated();
 				})
