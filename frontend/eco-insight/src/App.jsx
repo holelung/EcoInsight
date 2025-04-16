@@ -8,7 +8,7 @@ import Header from "./components/Common/Header/Header";
 import AuthListPage from "./components/Board/AuthBoard/AuthListPage";
 =======
 import AuthListPage from './components/Board/AuthBoard/AuthListPage';
->>>>>>> 112466a14edc9bea0e6adfd84e94ea7e14f11f4c
+>>>>>>> cd77be2ec7a1791b192e5d2178f7929ca210706e
 import MyPage from "./components/MyPage/MyPage";
 import Myposts from "./components/MyPage/MyPosts";
 import WithdrawalForm from "./components/MyPage/Withdrawal/WithdrawalForm";
@@ -19,14 +19,20 @@ import Footer from "./components/Common/Footer/Footer";
 import TipListPage from "./components/Board/Tip/TipListPage";
 import WritePostPage from "./components/Board/WritePostPage";
 <<<<<<< HEAD
-import FrequencyAskPage from "./components/Ask/FrequencyAskPage";
+import PostDetailPage from "./components/Board/Tip/TipBoardDetail";
 =======
 import UserLayout from "./components/Layout/UserLayout";
 import AdminRoute from "./components/RouteGuard/AdminRoute";
 import AdminLogin from "./pages/Admin/AdminLogin/AdminLogin.jsx";
 import AdminLayout from "./components/Layout/AdminLayout.jsx";
+import AdminPoint from "./pages/Admin/AdminPoint/AdminPoint.jsx";
+import AdminUser from "./pages/Admin/AdminUser/AdminUser.jsx";
+import AdminAuthBoard from "./pages/Admin/AdminAuthBoard/AdminAuthBoard.jsx";
+import AdminNoticeBoard from "./pages/Admin/AdminNoticeBoard/AdminNoticeBoard.jsx";
+import AdminDashBoard from "./pages/Admin/AdminDashBoard/AdminDashBoard.jsx";
+import AdminCommunityBoard from "./pages/Admin/AdminCommunityBoard/AdminCommunityBoard.jsx";
 
->>>>>>> 112466a14edc9bea0e6adfd84e94ea7e14f11f4c
+>>>>>>> cd77be2ec7a1791b192e5d2178f7929ca210706e
 
 function App() {
   return (
@@ -46,7 +52,7 @@ function App() {
             <Route path="/board/:type" element={<TipListPage />} />
             <Route path="/write/:type" element={<WritePostPage />} />
             <Route path="/board/cert" element={<AuthListPage />} />
-            <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
+            <Route path="/post/:id" element={<PostDetailPage />} />
           </Routes>
         </div>
         <Footer />
@@ -68,20 +74,27 @@ function App() {
         </Route>
 
         {/* 관리자 전용 */}
+        <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+
         <Route
           path="/admin"
           element={
-            <Navigate to="/admin/login" replace />
+            <AdminRoute>
+              <AdminLayout />
+            </AdminRoute>
           }
-        />
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={
-          <AdminRoute>
-            <AdminLayout />
-          </AdminRoute>
-        } />
+        >
+          <Route path="dashboard" element={<AdminDashBoard />} />
+          <Route path="point" element={<AdminPoint />} />
+          <Route path="user" element={<AdminUser />} />
+          <Route path="authBoard" element={<AdminAuthBoard />} />
+          <Route path="communityBoard" element={<AdminCommunityBoard />} />
+          <Route path="noticeBoard" element={<AdminNoticeBoard />} />
+        </Route>
+
       </Routes>
->>>>>>> 112466a14edc9bea0e6adfd84e94ea7e14f11f4c
+>>>>>>> cd77be2ec7a1791b192e5d2178f7929ca210706e
     </AuthProvider>
   );
 }
