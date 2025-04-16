@@ -6,42 +6,42 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const navi = useNavigate();
   const [auth, setAuth] = useState({
-    memberInfo: {},
-    authTokens: {},
+    loginInfo: {},
+    tokens: {},
     isAuthenticated: false,
   });
 
   useEffect(() => {
-    const memberInfo = JSON.parse(localStorage.getItem("memberInfo"));
-    const authTokens = JSON.parse(localStorage.getItem("authTokens"));
+    const loginInfo = JSON.parse(localStorage.getItem("loginInfo"));
+    const tokens = JSON.parse(localStorage.getItem("tokens"));
 
-    if (memberInfo && authTokens) {
+    if (loginInfo && tokens) {
       setAuth({
-        memberInfo,
-        authTokens,
+        loginInfo,
+        tokens,
         isAuthenticated: true,
       });
     }
   }, []);
 
-  const login = (memberInfo, authTokens) => {
+  const login = (loginInfo, tokens) => {
     setAuth({
-      memberInfo,
-      authTokens,
+      loginInfo,
+      tokens,
       isAuthenticated: true,
     });
-    localStorage.setItem("memberInfo", JSON.stringify(memberInfo));
-    localStorage.setItem("authTokens", JSON.stringify(authTokens));
+    localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
+    localStorage.setItem("tokens", JSON.stringify(tokens));
   };
 
-  const logout = (memberInfo, authTokens) => {
+  const logout = (loginInfo, tokens) => {
     setAuth({
-      memberInfo: {},
-      authTokens: {},
+      loginInfo: {},
+      tokens: {},
       isAuthenticated: false,
     });
-    localStorage.removeItem("memberInfo");
-    localStorage.removeItem("authTokens");
+    localStorage.removeItem("loginInfo");
+    localStorage.removeItem("tokens");
     navi("/");
   };
 
