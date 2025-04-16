@@ -1,11 +1,10 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 
-
 import { AuthProvider } from "./components/Context/AuthContext";
 import HomePage from "./pages/HomePage/HomePage";
 import Header from "./components/Common/Header/Header";
-import AuthListPage from './components/Board/Auth/AuthListPage';
+import AuthListPage from "./components/Board/AuthBoard/AuthListPage";
 import MyPage from "./components/MyPage/MyPage";
 import Myposts from "./components/MyPage/MyPosts";
 import WithdrawalForm from "./components/MyPage/Withdrawal/WithdrawalForm";
@@ -15,7 +14,7 @@ import EditProfile from "./components/MyPage/EditProfile";
 import Footer from "./components/Common/Footer/Footer";
 import TipListPage from "./components/Board/Tip/TipListPage";
 import WritePostPage from "./components/Board/WritePostPage";
-
+import PostDetailPage from "./components/Board/Tip/TipBoardDetail";
 
 function App() {
   return (
@@ -33,7 +32,8 @@ function App() {
             <Route path="/editprofile" element={<EditProfile />} />
             <Route path="/board/:type" element={<TipListPage />} />
             <Route path="/write/:type" element={<WritePostPage />} />
-            <Route path='/board/cert' element={<AuthListPage />} />
+            <Route path="/board/cert" element={<AuthListPage />} />
+            <Route path="/post/:id" element={<PostDetailPage />} />
           </Routes>
         </div>
         <Footer />
