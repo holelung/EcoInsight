@@ -25,6 +25,8 @@ import AdminAuthBoard from "./pages/Admin/AdminAuthBoard/AdminAuthBoard.jsx";
 import AdminNoticeBoard from "./pages/Admin/AdminNoticeBoard/AdminNoticeBoard.jsx";
 import AdminDashBoard from "./pages/Admin/AdminDashBoard/AdminDashBoard.jsx";
 import AdminCommunityBoard from "./pages/Admin/AdminCommunityBoard/AdminCommunityBoard.jsx";
+import FrequencyAskPage from "./components/Ask/FrequencyAskPage.jsx";
+import PrivateAskPage from "./components/Ask/PrivateAskPage.jsx";
 
 function App() {
   return (
@@ -43,6 +45,8 @@ function App() {
           <Route path="/board/cert" element={<AuthListPage />} />
           <Route path="/write/:type" element={<WritePostPage />} />
           <Route path="/post/:id" element={<PostDetailPage />} />
+          <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
+          <Route path="/privateAskPage" element={<PrivateAskPage />} />
         </Route>
 
         {/* 관리자 전용 */}
