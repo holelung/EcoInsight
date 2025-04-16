@@ -64,7 +64,9 @@ public class TokenServiceImpl implements TokenService {
         Instant expiryInstant = Instant.ofEpochMilli(expiryMillis);
         LocalDateTime expiryDateTime = expiryInstant.atZone(ZoneId.systemDefault()).toLocalDateTime();
         RefreshToken token = RefreshToken.builder().memberNo(memberNo).refreshToken(refreshToken).expiredDate(expiryDateTime).build();
-
+        log.info("{}",memberNo);
+        log.info(refreshToken);
+        log.info("{}",expiryDateTime);
         tokenMapper.saveToken(token);
     }
 

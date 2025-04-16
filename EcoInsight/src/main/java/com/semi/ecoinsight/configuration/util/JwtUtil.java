@@ -1,4 +1,4 @@
-package com.semi.ecoinsight.auth.util;
+package com.semi.ecoinsight.configuration.util;
 
 import java.util.Base64;
 import java.util.Date;

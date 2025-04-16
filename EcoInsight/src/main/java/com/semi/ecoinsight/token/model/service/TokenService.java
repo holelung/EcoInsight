@@ -1,7 +1,5 @@
 package com.semi.ecoinsight.token.model.service;
 
-import java.util.Map;
-
 import com.semi.ecoinsight.token.model.vo.Tokens;
 
 public interface TokenService {

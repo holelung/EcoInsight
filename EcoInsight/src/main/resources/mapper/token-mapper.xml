@@ -5,7 +5,7 @@
 <mapper namespace="com.semi.ecoinsight.token.model.dao.TokenMapper">
     <insert id="saveToken"
             parameterType="RefreshToken">
-        INSERT INTO TB_TOKEN VALUES(
+        INSERT INTO TB_TOKEN(MEMBER_NO, REFRESH_TOKEN, EXPIRED_DATE) VALUES(
             #{memberNo},
             #{refreshToken},
             #{expiredDate}
