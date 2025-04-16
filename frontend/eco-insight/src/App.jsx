@@ -1,10 +1,14 @@
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import { AuthProvider } from "./components/Context/AuthContext";
-import HomePage from "./pages/HomePage/HomePage";
+import HomePage from "./pages/User/HomePage/HomePage";
 import Header from "./components/Common/Header/Header";
+<<<<<<< HEAD
 import AuthListPage from "./components/Board/AuthBoard/AuthListPage";
+=======
+import AuthListPage from './components/Board/AuthBoard/AuthListPage';
+>>>>>>> cd77be2ec7a1791b192e5d2178f7929ca210706e
 import MyPage from "./components/MyPage/MyPage";
 import Myposts from "./components/MyPage/MyPosts";
 import WithdrawalForm from "./components/MyPage/Withdrawal/WithdrawalForm";
@@ -14,11 +18,26 @@ import EditProfile from "./components/MyPage/EditProfile";
 import Footer from "./components/Common/Footer/Footer";
 import TipListPage from "./components/Board/Tip/TipListPage";
 import WritePostPage from "./components/Board/WritePostPage";
+<<<<<<< HEAD
 import PostDetailPage from "./components/Board/Tip/TipBoardDetail";
+=======
+import UserLayout from "./components/Layout/UserLayout";
+import AdminRoute from "./components/RouteGuard/AdminRoute";
+import AdminLogin from "./pages/Admin/AdminLogin/AdminLogin.jsx";
+import AdminLayout from "./components/Layout/AdminLayout.jsx";
+import AdminPoint from "./pages/Admin/AdminPoint/AdminPoint.jsx";
+import AdminUser from "./pages/Admin/AdminUser/AdminUser.jsx";
+import AdminAuthBoard from "./pages/Admin/AdminAuthBoard/AdminAuthBoard.jsx";
+import AdminNoticeBoard from "./pages/Admin/AdminNoticeBoard/AdminNoticeBoard.jsx";
+import AdminDashBoard from "./pages/Admin/AdminDashBoard/AdminDashBoard.jsx";
+import AdminCommunityBoard from "./pages/Admin/AdminCommunityBoard/AdminCommunityBoard.jsx";
+
+>>>>>>> cd77be2ec7a1791b192e5d2178f7929ca210706e
 
 function App() {
   return (
     <AuthProvider>
+<<<<<<< HEAD
       <div className="min-h-screen flex flex-col">
         <Header />
         <div className="flex-grow">
@@ -38,6 +57,44 @@ function App() {
         </div>
         <Footer />
       </div>
+=======
+      <Routes>
+        {/* 사용자 레이아웃 */}
+        <Route element={<UserLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/myposts" element={<Myposts />} />
+          <Route path="/withdrawal/form" element={<WithdrawalForm />} />
+          <Route path="/withdrawal/ok" element={<OkWithdrawal />} />
+          <Route path="/withdrawal/check" element={<CheckWithdrawal />} />
+          <Route path="/editprofile" element={<EditProfile />} />
+          <Route path="/board/:type" element={<TipListPage />} />
+          <Route path="/board/cert" element={<AuthListPage />} />
+          <Route path="/write/:type" element={<WritePostPage />} />
+        </Route>
+
+        {/* 관리자 전용 */}
+        <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminLayout />
+            </AdminRoute>
+          }
+        >
+          <Route path="dashboard" element={<AdminDashBoard />} />
+          <Route path="point" element={<AdminPoint />} />
+          <Route path="user" element={<AdminUser />} />
+          <Route path="authBoard" element={<AdminAuthBoard />} />
+          <Route path="communityBoard" element={<AdminCommunityBoard />} />
+          <Route path="noticeBoard" element={<AdminNoticeBoard />} />
+        </Route>
+
+      </Routes>
+>>>>>>> cd77be2ec7a1791b192e5d2178f7929ca210706e
     </AuthProvider>
   );
 }
