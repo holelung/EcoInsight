@@ -10,14 +10,14 @@ const Header = () => {
   const [subNav, setSubNav] = useState(false);
 
   const clickBoardItem = () => {
-    navi('/board/cert');
+    navi("/board/cert");
     setSubNav(!subNav);
   };
 
   const handleMenuClick = (path) => {
     setSubNav(false);
     navi(path);
-  }
+  };
 
   return (
     <>
@@ -29,12 +29,14 @@ const Header = () => {
           <div className="nav-area">
             <ul className="flex space-x-4 py-3">
               <ListItem onClick={() => handleMenuClick("/")}>소개</ListItem>
-              <ListItem onClick={() => handleMenuClick("/dashboard")}>대시보드</ListItem>
+              <ListItem onClick={() => handleMenuClick("/dashboard")}>
+                대시보드
+              </ListItem>
               <ListItem onClick={() => clickBoardItem()}>게시판</ListItem>
-              
-
-              <ListItem onClick={() => handleMenuClick("/notice")}>공지사항</ListItem>
-              <ListItem onClick={() => navi("/frequencyAskPage")}>
+              <ListItem onClick={() => handleMenuClick("/notice")}>
+                공지사항
+              </ListItem>
+              <ListItem onClick={() => handleMenuClick("/frequencyAskPage")}>
                 문의하기
               </ListItem>
             </ul>
