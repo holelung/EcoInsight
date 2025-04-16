@@ -5,7 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./components/Context/AuthContext";
 import HomePage from "./pages/HomePage/HomePage";
 import Header from "./components/Common/Header/Header";
-import AuthListPage from './components/Board/Auth/AuthListPage';
+import AuthListPage from './components/Board/AuthBoard/AuthListPage';
 import MyPage from "./components/MyPage/MyPage";
 import Myposts from "./components/MyPage/MyPosts";
 import WithdrawalForm from "./components/MyPage/Withdrawal/WithdrawalForm";
