@@ -49,7 +49,7 @@ const FrequencyAskPage = () => {
         {faqList.map((faq, index) => (
           <div key={index}>
             <button
-              className="w-full mb-1 p-4 text-lg text-left bg-gray-100 rounded hover:bg-gray-200"
+              className="w-full mb-1 p-4 text-lg text-left bg-gray-100 rounded hover:bg-gray-200 my-5"
               onClick={() => toggleAnswer(index)}
             >
               {faq.question}
