@@ -25,7 +25,7 @@ public class MemberServiceImpl implements MemberService {
         if(searchedMember != null){
             throw new MemberIdDuplicateException("이미 가입된 아이디입니다.");
         }
-
+        
         Member memberValue = Member.builder()
                                    .memberName(member.getMemberName())
                                    .memberPw(passwordEncoder.encode(member.getMemberPw()))
@@ -35,12 +35,13 @@ public class MemberServiceImpl implements MemberService {
                                    .memberSsn(member.getMemberSsn())
                                    .memberRole("ROLE_COMMON")
                                    .build();
+        log.info("----------------------------------------------- {}",member);
+        log.info("------------------------------------------------- {}",memberValue);
         mapper.signUp(memberValue);
     }
 
     @Override
     public void changePassword() {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'changePassword'");
     }
 

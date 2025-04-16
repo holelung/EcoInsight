@@ -10,9 +10,21 @@ const Header = () => {
   const [subNav, setSubNav] = useState(false);
 
   const clickBoardItem = () => {
+<<<<<<< HEAD
     setSubNav(!subNav);
   };
 
+=======
+    navi('/board/cert');
+    setSubNav(!subNav);
+  };
+
+  const handleMenuClick = (path) => {
+    setSubNav(false);
+    navi(path);
+  }
+
+>>>>>>> 112466a14edc9bea0e6adfd84e94ea7e14f11f4c
   return (
     <>
       <header className="w-full">
@@ -22,13 +34,18 @@ const Header = () => {
           </div>
           <div className="nav-area">
             <ul className="flex space-x-4 py-3">
-              <ListItem onClick={() => navi("/")}>소개</ListItem>
-              <ListItem onClick={() => navi("/")}>대시보드</ListItem>
+              <ListItem onClick={() => handleMenuClick("/")}>소개</ListItem>
+              <ListItem onClick={() => handleMenuClick("/dashboard")}>대시보드</ListItem>
               <ListItem onClick={() => clickBoardItem()}>게시판</ListItem>
+<<<<<<< HEAD
               <ListItem onClick={() => navi("/")}>공지사항</ListItem>
               <ListItem onClick={() => navi("/frequencyAskPage")}>
                 문의하기
               </ListItem>
+=======
+              <ListItem onClick={() => handleMenuClick("/notice")}>공지사항</ListItem>
+              <ListItem onClick={() => handleMenuClick("/help")}>문의하기</ListItem>
+>>>>>>> 112466a14edc9bea0e6adfd84e94ea7e14f11f4c
             </ul>
           </div>
           <div className="button-area flex items-center space-x-4">
