@@ -51,6 +51,7 @@ public class AuthServiceImpl implements AuthService{
                                        .build();
 
         loginResponse.put("loginInfo",loginInfo);
+        log.info("loginResponse = {}", loginResponse);
         return loginResponse;
     }
 

@@ -1,11 +1,18 @@
 package com.semi.ecoinsight.member.model.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.semi.ecoinsight.auth.model.vo.CustomUserDetails;
 import com.semi.ecoinsight.exception.util.MemberIdDuplicateException;
 import com.semi.ecoinsight.member.model.dao.MemberMapper;
 import com.semi.ecoinsight.member.model.dto.MemberDTO;
+import com.semi.ecoinsight.member.model.dto.UpdatePasswordDTO;
 import com.semi.ecoinsight.member.model.vo.Member;
 
 import lombok.RequiredArgsConstructor;
@@ -41,8 +48,22 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public void changePassword() {
-        throw new UnsupportedOperationException("Unimplemented method 'changePassword'");
-    }
+    public void updatePassword(UpdatePasswordDTO passwordEntity) {
+        Long memberNo = passwordMatches(passwordEntity.getCurrentPassword());
+        String encodedPassword = passwordEncoder.encode(passwordEntity.getNewPassword());
 
+        Map<String, Object> changeRequest = new HashMap();
+        changeRequest.put("memberNo", memberNo);
+        changeRequest.put("encodedPassword", encodedPassword);
+
+        mapper.updatePassword(changeRequest);
+    }
+	private Long passwordMatches(String password){
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails user = (CustomUserDetails)auth.getPrincipal();
+		if(!passwordEncoder.matches(password, user.getPassword())){
+			throw new RuntimeException("비밀번호가 일치하지 않습니다.");
+		}
+		return user.getMemberNo();
+	}
 }

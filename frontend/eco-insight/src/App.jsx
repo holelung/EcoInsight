@@ -19,6 +19,7 @@ import UserLayout from "./components/Layout/UserLayout";
 import AdminRoute from "./components/RouteGuard/AdminRoute";
 import AdminLogin from "./pages/Admin/AdminLogin/AdminLogin.jsx";
 import AdminLayout from "./components/Layout/AdminLayout.jsx";
+import Login from "./components/Auth/Login.jsx";
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         {/* 사용자 레이아웃 */}
         <Route element={<UserLayout />}>
           <Route path="/" element={<HomePage />} />
+
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/myposts" element={<Myposts />} />
           <Route path="/withdrawal/form" element={<WithdrawalForm />} />
@@ -38,7 +40,7 @@ function App() {
           <Route path="/board/cert" element={<AuthListPage />} />
           <Route path="/write/:type" element={<WritePostPage />} />
         </Route>
-
+        <Route path="/login" element={<Login />}/>
         {/* 관리자 전용 */}
         <Route
           path="/admin"
