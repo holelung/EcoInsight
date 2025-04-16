@@ -26,20 +26,20 @@ function MyPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900 p-4">
-      <div className="max-w-6xl mx-auto mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold mb-6">
+      <div className="max-w-6xl mx-auto mb-8 text-center">
+        <h1 className="text-2xl md:text-3xl font-bold mb-6 ">
           {userInfo.name}님의 마이페이지
         </h1>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-4 sm:space-y-0 mb-6">
+        <div className="flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-4 sm:space-y-0 mb-6">
           <button
             onClick={handleViewEditInfo}
-            className="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+            className="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded hover:bg-blue-600 transition-colors"
           >
             내정보 조회/수정
           </button>
           <button
             onClick={handleBoardList}
-            className="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
+            className="w-full sm:w-auto px-4 py-2 bg-green-500 text-white rounded hover:bg-blue-600 transition-colors"
           >
             내가 작성한 게시글 조회
           </button>
@@ -51,7 +51,7 @@ function MyPage() {
           </button>
         </div>
       </div>
-      {/* 추가 컨텐츠 영역 (예시 카드 그리드) */}
+      {/* 추가 컨텐츠 영역 (카드 예시) */}
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="bg-white shadow rounded p-6">
