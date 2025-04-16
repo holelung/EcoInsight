@@ -1,7 +1,5 @@
 import "./App.css";
 import { Navigate, Route, Routes } from "react-router-dom";
-
-
 import { AuthProvider } from "./components/Context/AuthContext";
 import HomePage from "./pages/User/HomePage/HomePage";
 import Header from "./components/Common/Header/Header";
@@ -15,11 +13,11 @@ import EditProfile from "./components/MyPage/EditProfile";
 import Footer from "./components/Common/Footer/Footer";
 import TipListPage from "./components/Board/Tip/TipListPage";
 import WritePostPage from "./components/Board/WritePostPage";
+import PostDetailPage from "./components/Board/Tip/TipBoardDetail";
 import UserLayout from "./components/Layout/UserLayout";
 import AdminRoute from "./components/RouteGuard/AdminRoute";
 import AdminLogin from "./pages/Admin/AdminLogin/AdminLogin.jsx";
 import AdminLayout from "./components/Layout/AdminLayout.jsx";
-import Login from "./components/Auth/Login.jsx";
 
 
 function App() {
@@ -42,18 +40,24 @@ function App() {
         </Route>
         <Route path="/login" element={<Login />}/>
         {/* 관리자 전용 */}
+        <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+
         <Route
           path="/admin"
           element={
-            <Navigate to="/admin/login" replace />
+            <AdminRoute>
+              <AdminLayout />
+            </AdminRoute>
           }
-        />
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={
-          <AdminRoute>
-            <AdminLayout />
-          </AdminRoute>
-        } />
+        >
+          <Route path="dashboard" element={<AdminDashBoard />} />
+          <Route path="point" element={<AdminPoint />} />
+          <Route path="user" element={<AdminUser />} />
+          <Route path="authBoard" element={<AdminAuthBoard />} />
+          <Route path="communityBoard" element={<AdminCommunityBoard />} />
+          <Route path="noticeBoard" element={<AdminNoticeBoard />} />
+        </Route>
       </Routes>
     </AuthProvider>
   );
