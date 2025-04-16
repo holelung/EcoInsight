@@ -27,7 +27,7 @@
 
     <insert id="signUp"
             parameterType="Member">
-        INSERT INTO PRIVATE_USER(
+        INSERT INTO TB_MEMBER(
             MEMBER_NAME,
             MEMBER_PW,
             MEMBER_ID,
