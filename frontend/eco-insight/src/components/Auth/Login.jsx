@@ -10,7 +10,7 @@ const Login = () => {
     memberPw: "",
   });
   const [msg, setMsg] = useState(""); // 에러 메시지, 안내 메시지 등
-  const { login } = useContext(AuthContext);
+  const { login, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   // 입력값 변경 처리
@@ -32,15 +32,19 @@ const Login = () => {
       setMsg("아이디 형식이 올바르지 않습니다.");
       return;
     }
-    // if (!pwRegex.test(memberPw)) {
-    //   setMsg("비밀번호 형식이 올바르지 않습니다.");
-    //   return;
-    // }
+    if (!pwRegex.test(memberPw)) {
+      setMsg("비밀번호 형식이 올바르지 않습니다.");
+      return;
+    }
 
     axios.post("http://localhost/auth/login", {memberId, memberPw}).
         then(response => {
             login(response.data.loginInfo, response.data.tokens);
             if(response.status === 200){
+              if(response.data.loginInfo.isActive === 'N'){
+                alert("비활성화된 계정이거나 정지된 계정입니다.");
+                logout();
+              }
                 navigate("/");
             }
         }).catch(error =>{
@@ -131,13 +135,21 @@ const Login = () => {
                    비밀번호 찾기
                 </div>
             </div>
-            
-            <button
-              type="submit"
-              className="bg-lime-400 text-white px-4 py-2 rounded hover:bg-lime-500 transition-colors font-semibold"
-            >
-              로그인
-            </button>
+            <div className="flex">
+              <button
+                type="button"
+                className="px-4 py-2 rounded bg-sub text-white mr-1 pr-3 pl-3 pt-2 pb-2"
+                onClick={() => navigate("/signup")}
+                >
+                회원가입
+              </button>
+              <button
+                type="submit"
+                className="bg-lime-400 text-white px-4 py-2 rounded hover:bg-lime-500 transition-colors font-semibold"
+              >
+                로그인
+              </button>
+            </div>
           </div>
         </form>
       </div>

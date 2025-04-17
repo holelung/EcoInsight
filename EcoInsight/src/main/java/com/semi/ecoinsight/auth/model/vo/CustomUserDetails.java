@@ -21,5 +21,6 @@ public class CustomUserDetails implements UserDetails{
     private final String email;
     private final String memberRole;        
     private final String memberName;
+    private final char isActive;
     private final Collection<? extends GrantedAuthority> authorities;
 }
