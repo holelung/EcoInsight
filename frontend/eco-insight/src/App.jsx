@@ -54,8 +54,8 @@ function App() {
           <Route path="/privateAskPage" element={<PrivateAskPage />} />
         </Route>
         <Route path="/login" element={<Login />}/>
+        
         {/* 관리자 전용 */}
-        <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
         <Route path="/admin/login" element={<AdminLogin />} />
 
         <Route
@@ -77,5 +77,6 @@ function App() {
     </AuthProvider>
   );
 }
+
 
 export default App;
