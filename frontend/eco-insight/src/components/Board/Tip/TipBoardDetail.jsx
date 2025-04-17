@@ -1,21 +1,18 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Editor } from "@toast-ui/react-editor";
-import "@toast-ui/editor/dist/toastui-editor.css";
-import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 import ReportPage from "../ReportPage";
 import { AuthContext } from "../../Context/AuthContext";
 
 export default function PostDetailPage() {
   const navigate = useNavigate();
   const { auth } = useContext(AuthContext);
-  const editorRef = useRef();
 
   const [isEditing, setIsEditing] = useState(false);
   const [likes, setLikes] = useState(5);
   const [title, setTitle] = useState("예쁜 게시글 제목 🎉");
   const [content, setContent] = useState("게시글 본문 내용입니다.");
   const [editedTitle, setEditedTitle] = useState(title);
+  const [editedContent, setEditedContent] = useState(content);
   const [isReportOpen, setIsReportOpen] = useState(false);
 
   const [comments, setComments] = useState([
@@ -28,7 +25,6 @@ export default function PostDetailPage() {
   const [newReply, setNewReply] = useState("");
 
   const handleLike = () => setLikes(likes + 1);
-
   const handleAddComment = () => {
     if (newComment.trim()) {
       setComments([...comments, { text: newComment.trim(), replies: [] }]);
@@ -47,9 +43,8 @@ export default function PostDetailPage() {
   };
 
   const handleSaveEdit = () => {
-    const editedMarkdown = editorRef.current?.getInstance().getMarkdown();
     setTitle(editedTitle);
-    setContent(editedMarkdown);
+    setContent(editedContent);
     setIsEditing(false);
   };
 
@@ -85,25 +80,11 @@ export default function PostDetailPage() {
       {/* 본문 */}
       <div className="p-4 bg-gray-50 border border-gray-200 rounded-md space-y-4">
         {isEditing ? (
-          <div className="mt-6">
-            <Editor
-              ref={editorRef}
-              height="400px"
-              initialEditType="wysiwyg"
-              previewStyle="vertical"
-              autofocus={true}
-              placeholder="내용을 입력해주세요. 마크다운을 자유롭게 활용할 수 있어요!"
-              plugins={[colorSyntax]}
-              hideModeSwitch={true}
-              toolbarItems={[
-                ["bold", "italic", "strike"],
-                ["hr", "quote"],
-                ["ul", "ol"],
-                ["image", "link"],
-                ["codeblock"],
-              ]}
-            />
-          </div>
+          <textarea
+            className="w-full h-40 p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
+            value={editedContent}
+            onChange={(e) => setEditedContent(e.target.value)}
+          />
         ) : (
           <p className="whitespace-pre-wrap">{content}</p>
         )}
@@ -129,6 +110,7 @@ export default function PostDetailPage() {
 
       {/* 수정/삭제/신고 버튼 */}
       <div className="flex justify-end gap-2">
+        {/* auth.isAuthenticated && */}
         {auth.isAuthenticated && isEditing ? (
           <button
             onClick={handleSaveEdit}
@@ -138,12 +120,13 @@ export default function PostDetailPage() {
           </button>
         ) : (
           <>
-            {auth.isAuthenticated && auth.loginInfo === auth && (
+            {auth.isAuthenticated && auth.loginInfo == auth && (
               <>
                 <button
                   onClick={() => {
                     setIsEditing(true);
                     setEditedTitle(title);
+                    setEditedContent(content);
                   }}
                   className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
                 >
@@ -169,29 +152,31 @@ export default function PostDetailPage() {
 
       {/* 댓글 목록 */}
       <div className="space-y-4">
-        {comments.map((cmt, idx) => (
+        {comments.map((cmt, index) => (
           <div
-            key={idx}
+            key={index}
             className="p-4 bg-white border border-gray-200 rounded-md space-y-2"
           >
             <div className="flex justify-between items-center">
               <span>{cmt.text}</span>
               <button
-                onClick={() => setReplyingTo(replyingTo === idx ? null : idx)}
+                onClick={() =>
+                  setReplyingTo(replyingTo === index ? null : index)
+                }
                 className="text-sm text-black hover:underline"
               >
                 답글 쓰기
               </button>
             </div>
-            {cmt.replies.map((reply, rIdx) => (
+            {cmt.replies.map((reply, rindex) => (
               <div
-                key={rIdx}
+                key={rindex}
                 className="ml-4 px-3 py-2 bg-gray-100 border border-gray-300 text-sm rounded"
               >
                 ↪ {reply}
               </div>
             ))}
-            {replyingTo === idx && (
+            {replyingTo === index && (
               <div className="flex gap-2 mt-2 ml-4">
                 <input
                   value={newReply}
@@ -200,7 +185,7 @@ export default function PostDetailPage() {
                   className="flex-grow px-2 py-1 border border-gray-300 rounded"
                 />
                 <button
-                  onClick={() => handleAddReply(idx)}
+                  onClick={() => handleAddReply(index)}
                   className="px-3 py-1 bg-black text-white border border-black rounded"
                 >
                   등록
