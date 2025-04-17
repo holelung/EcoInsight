@@ -29,6 +29,7 @@ import Notice from "./components/Board/Notice/Notice.jsx";
 import Login from "./components/Auth/Login.jsx";
 import FrequencyAskPage from "./components/Ask/FrequencyAskPage.jsx";
 import PrivateAskPage from "./components/Ask/PrivateAskPage.jsx";
+import SignUp from "./components/Auth/SignUp.jsx";
 
 function App() {
   return (
@@ -54,6 +55,7 @@ function App() {
           <Route path="/privateAskPage" element={<PrivateAskPage />} />
         </Route>
         <Route path="/login" element={<Login />}/>
+        <Route path="/signup" element={<SignUp />}/>
         {/* 관리자 전용 */}
         <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
         <Route path="/admin/login" element={<AdminLogin />} />

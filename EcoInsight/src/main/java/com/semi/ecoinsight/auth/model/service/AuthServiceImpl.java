@@ -48,6 +48,7 @@ public class AuthServiceImpl implements AuthService{
                                        .email(loginMember.getEmail())
                                        .memberName(loginMember.getMemberName())
                                        .memberRole(loginMember.getMemberRole())
+                                       .isActive(loginMember.getIsActive())
                                        .build();
 
         loginResponse.put("loginInfo",loginInfo);
