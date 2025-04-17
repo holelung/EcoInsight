@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-export default function WritePostPage() {
+const WritePostPage = () => {
   const { type } = useParams();
   const navigate = useNavigate();
 
@@ -67,4 +67,6 @@ export default function WritePostPage() {
       </div>
     </div>
   );
-}
+};
+
+export default WritePostPage;

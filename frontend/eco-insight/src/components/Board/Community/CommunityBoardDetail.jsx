@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ReportPage from "../ReportPage";
 import { AuthContext } from "../../Context/AuthContext";
 
-export default function PostDetailPage() {
+export default function CommunityBoardDetail() {
   const navigate = useNavigate();
   const { auth } = useContext(AuthContext);
 
