@@ -35,8 +35,6 @@ import IdResult from "./components/Auth/IdResult.jsx";
 import FindPasswordPage from "./components/Auth/FindPassword.jsx";
 import ResetPassword from "./components/Auth/ResetPassword.jsx";
 
-
-
 function App() {
   return (
     <AuthProvider>
@@ -60,12 +58,15 @@ function App() {
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
           <Route path="/privateAskPage" element={<PrivateAskPage />} />
           <Route path="/find-id/idresult" element={<IdResult />} />
-          <Route path="/findPassword/resetpassword" element={<ResetPassword />} />
-          
+          <Route
+            path="/findPassword/resetpassword"
+            element={<ResetPassword />}
+          />
         </Route>
-        <Route path="/login" element={<Login />}/>
-        <Route path="/signup" element={<SignUp />}/>
-        <Route path="/findid" element={<FindId />}/>
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/findid" element={<FindId />} />
         <Route path="/findpassword" element={<FindPasswordPage />} />
         {/* 관리자 전용 */}
         <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
