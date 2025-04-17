@@ -53,7 +53,7 @@ function App() {
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
           <Route path="/privateAskPage" element={<PrivateAskPage />} />
         </Route>
-        <Route path="/login" element={<Login />}/>
+        <Route path="/login" element={<Login />} />
         {/* 관리자 전용 */}
         <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
         <Route path="/admin/login" element={<AdminLogin />} />
