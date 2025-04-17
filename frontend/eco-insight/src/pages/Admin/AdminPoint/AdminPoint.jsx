@@ -13,7 +13,11 @@ const AdminPoint = () => {
   const [selectedUserId, setSelectedUserId] = useState(null);
 
   const filteredMembers = members
-    .filter((u) => u.memberId.toLowerCase().includes(search.toLowerCase()))
+    .filter((u) =>
+      [u.memberName, u.memberId, u.memberPh].some((field) =>
+        field.toLowerCase().includes(search.toLowerCase())
+      )
+    )
     .sort((a, b) => {
       if (sortOrder === "Newest") return b.id - a.id;
       if (sortOrder === "Oldest") return a.id - b.id;

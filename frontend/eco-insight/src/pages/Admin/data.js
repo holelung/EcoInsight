@@ -13,6 +13,8 @@ const memberList = [
     isActive: "Y",
     updatedDate: "2024-03-01",
     point: 3000,
+    banDate: null,
+    banPeriod: null,
   },
   {
     memberNo: 2,
@@ -28,6 +30,8 @@ const memberList = [
     isActive: "Y",
     updatedDate: "2024-03-02",
     point: 1500,
+    banDate: null,
+    banPeriod: null,
   },
   {
     memberNo: 3,
@@ -43,6 +47,8 @@ const memberList = [
     isActive: "Y",
     updatedDate: "2024-03-03",
     point: 0,
+    banDate: null,
+    banPeriod: null,
   },
   {
     memberNo: 4,
@@ -58,6 +64,8 @@ const memberList = [
     isActive: "Y",
     updatedDate: "2024-03-04",
     point: 500,
+    banDate: null,
+    banPeriod: null,
   },
   {
     memberNo: 5,
@@ -73,6 +81,8 @@ const memberList = [
     isActive: "Y",
     updatedDate: "2024-03-05",
     point: 0,
+    banDate: null,
+    banPeriod: null,
   },
   {
     memberNo: 6,
@@ -85,9 +95,11 @@ const memberList = [
     enrollDate: "2024-01-06",
     memberRole: "USER",
     gradeNo: "MG01",
-    isActive: "N",
+    isActive: "Y",
     updatedDate: "2024-03-06",
     point: 300,
+    banDate: null,
+    banPeriod: null,
   },
   {
     memberNo: 7,
@@ -100,9 +112,11 @@ const memberList = [
     enrollDate: "2024-01-07",
     memberRole: "USER",
     gradeNo: "MG02",
-    isActive: "Y",
+    isActive: "N",
     updatedDate: "2024-03-07",
     point: 1300,
+    banDate: "2024-03-04",
+    banPeriod: 30,
   },
   {
     memberNo: 8,
@@ -118,6 +132,8 @@ const memberList = [
     isActive: "Y",
     updatedDate: "2024-03-08",
     point: 2000,
+    banDate: null,
+    banPeriod: null,
   },
   {
     memberNo: 9,
@@ -130,9 +146,11 @@ const memberList = [
     enrollDate: "2024-01-09",
     memberRole: "USER",
     gradeNo: "MG01",
-    isActive: "Y",
+    isActive: "N",
     updatedDate: "2024-03-09",
     point: 2000,
+    banDate: "2025-04-12",
+    banPeriod: 14,
   },
   {
     memberNo: 10,
@@ -148,6 +166,8 @@ const memberList = [
     isActive: "Y",
     updatedDate: "2024-03-10",
     point: 2000,
+    banDate: null,
+    banPeriod: null,
   },
   {
     memberNo: 11,
@@ -163,6 +183,8 @@ const memberList = [
     isActive: "Y",
     updatedDate: "2024-03-11",
     point: 2000,
+    banDate: null,
+    banPeriod: null,
   },
   {
     memberNo: 12,
@@ -178,6 +200,8 @@ const memberList = [
     isActive: "N",
     updatedDate: "2024-03-12",
     point: 2000,
+    banDate: null,
+    banPeriod: null,
   },
   {
     memberNo: 13,
@@ -193,6 +217,8 @@ const memberList = [
     isActive: "Y",
     updatedDate: "2024-03-13",
     point: 2000,
+    banDate: null,
+    banPeriod: null,
   },
   {
     memberNo: 14,
@@ -208,6 +234,8 @@ const memberList = [
     isActive: "Y",
     updatedDate: "2024-03-14",
     point: 2000,
+    banDate: null,
+    banPeriod: null,
   },
   {
     memberNo: 15,
@@ -223,6 +251,8 @@ const memberList = [
     isActive: "Y",
     updatedDate: "2024-03-15",
     point: 2000,
+    banDate: null,
+    banPeriod: null,
   },
   {
     memberNo: 16,
@@ -238,6 +268,8 @@ const memberList = [
     isActive: "N",
     updatedDate: "2024-03-16",
     point: 2000,
+    banDate: null,
+    banPeriod: null,
   },
   {
     memberNo: 17,
@@ -253,6 +285,8 @@ const memberList = [
     isActive: "Y",
     updatedDate: "2024-03-17",
     point: 2000,
+    banDate: null,
+    banPeriod: null,
   },
   {
     memberNo: 18,
@@ -268,6 +302,8 @@ const memberList = [
     isActive: "N",
     updatedDate: "2024-03-18",
     point: 2000,
+    banDate: null,
+    banPeriod: null,
   },
   {
     memberNo: 19,
@@ -283,6 +319,8 @@ const memberList = [
     isActive: "Y",
     updatedDate: "2024-03-19",
     point: 2000,
+    banDate: null,
+    banPeriod: null,
   },
   {
     memberNo: 20,
@@ -298,6 +336,8 @@ const memberList = [
     isActive: "Y",
     updatedDate: "2024-03-20",
     point: 2000,
+    banDate: null,
+    banPeriod: null,
   },
 ];
 
