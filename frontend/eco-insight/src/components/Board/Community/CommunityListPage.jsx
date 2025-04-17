@@ -164,7 +164,7 @@ const datas = [
   },
 ];
 
-export default function TipListPage() {
+const CommunityListPage = () => {
   const { type } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -200,7 +200,6 @@ export default function TipListPage() {
 
       {/* 필터 + 검색 */}
       <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
-        {/* 버튼 그룹 */}
         <div className="flex gap-2">
           <button
             className="px-4 py-2 rounded border border-gray-300 bg-transparent text-black"
@@ -216,7 +215,6 @@ export default function TipListPage() {
           </button>
         </div>
 
-        {/* 검색 */}
         <div className="flex gap-2">
           <input
             value={searchQuery}
@@ -280,7 +278,7 @@ export default function TipListPage() {
         </div>
       ))}
 
-      {/* 페이지네이션 버튼 */}
+      {/* 페이지네이션 */}
       <div className="flex justify-center mt-6 gap-2">
         {Array.from(
           { length: Math.ceil(filteredPosts.length / postsPerPage) },
@@ -304,4 +302,6 @@ export default function TipListPage() {
       </div>
     </div>
   );
-}
+};
+
+export default CommunityListPage;

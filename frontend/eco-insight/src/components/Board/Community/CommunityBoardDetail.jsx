@@ -1,12 +1,14 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
+import React, { useContext, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Editor } from "@toast-ui/react-editor";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 import ReportPage from "../ReportPage";
 import { AuthContext } from "../../Context/AuthContext";
+import CommunityComment from "./CommunityComment";
 
-export default function PostDetailPage() {
+const CommunityBoardDetail = () => {
   const navigate = useNavigate();
   const { auth } = useContext(AuthContext);
   const editorRef = useRef();
@@ -166,67 +168,7 @@ export default function PostDetailPage() {
           </>
         )}
       </div>
-
-      {/* 댓글 목록 */}
-      <div className="space-y-4">
-        {comments.map((cmt, idx) => (
-          <div
-            key={idx}
-            className="p-4 bg-white border border-gray-200 rounded-md space-y-2"
-          >
-            <div className="flex justify-between items-center">
-              <span>{cmt.text}</span>
-              <button
-                onClick={() => setReplyingTo(replyingTo === idx ? null : idx)}
-                className="text-sm text-black hover:underline"
-              >
-                답글 쓰기
-              </button>
-            </div>
-            {cmt.replies.map((reply, rIdx) => (
-              <div
-                key={rIdx}
-                className="ml-4 px-3 py-2 bg-gray-100 border border-gray-300 text-sm rounded"
-              >
-                ↪ {reply}
-              </div>
-            ))}
-            {replyingTo === idx && (
-              <div className="flex gap-2 mt-2 ml-4">
-                <input
-                  value={newReply}
-                  onChange={(e) => setNewReply(e.target.value)}
-                  placeholder="대댓글 입력"
-                  className="flex-grow px-2 py-1 border border-gray-300 rounded"
-                />
-                <button
-                  onClick={() => handleAddReply(idx)}
-                  className="px-3 py-1 bg-black text-white border border-black rounded"
-                >
-                  등록
-                </button>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* 댓글 작성 */}
-      <div className="flex gap-2 mt-4">
-        <input
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-          placeholder="댓글을 입력하세요"
-          className="flex-grow px-4 py-2 border border-gray-300 rounded"
-        />
-        <button
-          onClick={handleAddComment}
-          className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
-        >
-          등록
-        </button>
-      </div>
-
+      <CommunityComment />
       {/* 돌아가기 */}
       <button
         onClick={() => navigate(-1)}
@@ -246,4 +188,6 @@ export default function PostDetailPage() {
       )}
     </div>
   );
-}
+};
+
+export default CommunityBoardDetail;

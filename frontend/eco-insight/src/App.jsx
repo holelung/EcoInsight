@@ -13,7 +13,7 @@ import EditProfile from "./components/MyPage/EditProfile";
 import Footer from "./components/Common/Footer/Footer";
 import TipListPage from "./components/Board/Tip/TipListPage";
 import WritePostPage from "./components/Board/WritePostPage";
-import PostDetailPage from "./components/Board/Tip/TipBoardDetail";
+import TipBoardDetail from "./components/Board/Tip/TipBoardDetail";
 import UserLayout from "./components/Layout/UserLayout";
 import AdminRoute from "./components/RouteGuard/AdminRoute";
 import AdminLogin from "./pages/Admin/AdminLogin/AdminLogin.jsx";
@@ -52,7 +52,7 @@ function App() {
           <Route path="/board/:type" element={<TipListPage />} />
           <Route path="/board/cert" element={<AuthListPage />} />
           <Route path="/write/:type" element={<WritePostPage />} />
-          <Route path="/post/:id" element={<PostDetailPage />} />
+          <Route path="/post/:id" element={<TipBoardDetail />} />
           <Route path="/dashboard" element={<MainDashBoard />} />
           <Route path="/notice" element={<Notice />} />
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />

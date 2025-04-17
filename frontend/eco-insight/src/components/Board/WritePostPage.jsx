@@ -4,7 +4,7 @@ import { Editor } from "@toast-ui/react-editor";
 import "@toast-ui/editor/dist/toastui-editor.css"; // ✅ 다크 모드 아닌 기본 CSS만 import
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 
-export default function WritePostPage() {
+const WritePostPage = () => {
   const { type } = useParams();
   const navigate = useNavigate();
   const editorRef = useRef();
@@ -86,4 +86,6 @@ export default function WritePostPage() {
       </div>
     </div>
   );
-}
+};
+
+export default WritePostPage;
