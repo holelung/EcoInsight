@@ -138,21 +138,25 @@ export default function PostDetailPage() {
           </button>
         ) : (
           <>
-            <button
-              onClick={() => {
-                setIsEditing(true);
-                setEditedTitle(title);
-              }}
-              className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
-            >
-              수정하기
-            </button>
-            <button
-              onClick={handleDelete}
-              className="px-4 py-2 border border-red-500 text-red-600 rounded hover:bg-red-50"
-            >
-              삭제하기
-            </button>
+            {auth.isAuthenticated && auth.loginInfo === auth && (
+              <>
+                <button
+                  onClick={() => {
+                    setIsEditing(true);
+                    setEditedTitle(title);
+                  }}
+                  className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
+                >
+                  수정하기
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="px-4 py-2 border border-red-500 text-red-600 rounded hover:bg-red-50"
+                >
+                  삭제하기
+                </button>
+              </>
+            )}
             <button
               onClick={() => setIsReportOpen(true)}
               className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
