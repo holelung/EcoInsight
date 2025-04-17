@@ -1,7 +1,8 @@
 import { useState } from "react";
 import SummaryCard from "../../../components/DashBoard/SummaryCard";
-import memberList from "../data";
+import {memberList} from "../data";
 import dayjs from "dayjs";
+import SelectOptions from "../../../components/Button/SelectOptions";
 
 const AccountManagementPage = () => {
   const [members] = useState(memberList);
@@ -96,9 +97,7 @@ const AccountManagementPage = () => {
                 setCurrentPage(1);
               }}
             >
-              <option value={5}>5</option>
-              <option value={10}>10</option>
-              <option value={20}>20</option>
+              <SelectOptions />
             </select>
           </div>
           <div className="flex items-center gap-2">
@@ -195,7 +194,7 @@ const AccountManagementPage = () => {
             key={n}
             onClick={() => setCurrentPage(n)}
             className={`px-3 py-1 rounded ${
-              n === currentPage ? "bg-purple-600 text-white" : "bg-gray-200"
+              n === currentPage ? "bg-lime-400 text-white" : "bg-gray-200"
             }`}
           >
             {n}
