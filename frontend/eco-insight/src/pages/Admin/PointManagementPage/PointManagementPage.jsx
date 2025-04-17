@@ -3,7 +3,7 @@ import SummaryCard from "../../../components/DashBoard/SummaryCard";
 import memberList from "../data";
 
 
-const AdminPoint = () => {
+const PointManagementPage = () => {
   const [members] = useState(memberList);
   const [pointValue, setPointValue] = useState(0);
   const [search, setSearch] = useState("");
@@ -26,7 +26,10 @@ const AdminPoint = () => {
 
   const indexOfLastUser = currentPage * rowsPerPage;
   const indexOfFirstUser = indexOfLastUser - rowsPerPage;
-  const currentMembers = filteredMembers.slice(indexOfFirstUser, indexOfLastUser);
+  const currentMembers = filteredMembers.slice(
+    indexOfFirstUser,
+    indexOfLastUser
+  );
   const totalPages = Math.ceil(filteredMembers.length / rowsPerPage);
 
   const handleApplyPoint = (memberName) => {
@@ -41,7 +44,7 @@ const AdminPoint = () => {
     } else {
       setSelectedUserId(userId);
     }
-  }
+  };
 
   return (
     <div className="p-6 space-y-6">
@@ -194,6 +197,6 @@ const AdminPoint = () => {
       </div>
     </div>
   );
-}
+};
 
-export default AdminPoint;
+export default PointManagementPage;

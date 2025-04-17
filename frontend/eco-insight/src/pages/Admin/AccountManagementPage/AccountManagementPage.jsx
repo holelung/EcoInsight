@@ -3,7 +3,7 @@ import SummaryCard from "../../../components/DashBoard/SummaryCard";
 import memberList from "../data";
 import dayjs from "dayjs";
 
-const AdminUser = () => {
+const AccountManagementPage = () => {
   const [members] = useState(memberList);
   const [banPeriod, setBanPeriod] = useState();
   const [search, setSearch] = useState("");
@@ -138,17 +138,23 @@ const AdminUser = () => {
                 <td>{user.memberId}</td>
                 <td>{user.memberPh}</td>
                 <td>{user.email}</td>
-                <td>{user.banDate !=null ? ( `${user.banDate} - ${dayjs(user.banDate).add(user.banPeriod,"day").format("YYYY-MM-DD")}(${user.banPeriod}일) ` ) :("정지정보 없음")}</td>
+                <td>
+                  {user.banDate != null
+                    ? `${user.banDate} - ${dayjs(user.banDate)
+                        .add(user.banPeriod, "day")
+                        .format("YYYY-MM-DD")}(${user.banPeriod}일) `
+                    : "정지정보 없음"}
+                </td>
                 <td>
                   <span
                     className={`px-2 py-1 rounded text-sm cursor-pointer ${
-                      user.isActive === 'Y'
+                      user.isActive === "Y"
                         ? "bg-green-100 text-green-600"
                         : "bg-red-100 text-red-600"
                     }`}
                     onClick={() => handleSelectUserTable(user.memberId)}
                   >
-                    {user.isActive === 'Y' ? `Active` : "Inactive"}
+                    {user.isActive === "Y" ? `Active` : "Inactive"}
                   </span>
                 </td>
               </tr>
@@ -200,4 +206,4 @@ const AdminUser = () => {
   );
 };
 
-export default AdminUser;
+export default AccountManagementPage;
