@@ -28,32 +28,32 @@ const AdminLayout = () => {
         <ul className="space-y-4 text-gray-700">
           <MenuItem onClick={() => navi("/admin/dashboard")}>대시보드</MenuItem>
           <MenuItem
-            onClick={() => navi("/admin/point")}
-            isActive={location.pathname === "/admin/point"}
+            onClick={() => navi("/admin/point-manage")}
+            isActive={location.pathname === "/admin/point-manage"}
           >
             포인트 관리
           </MenuItem>
           <MenuItem
-            onClick={() => navi("/admin/user")}
-            isActive={location.pathname === "/admin/user"}
+            onClick={() => navi("/admin/account-manage")}
+            isActive={location.pathname === "/admin/account-manage"}
           >
             계정 관리
           </MenuItem>
           <MenuItem
-            onClick={() => navi("/admin/authBoard")}
-            isActive={location.pathname === "/admin/authBoard"}
+            onClick={() => navi("/admin/authboard-manage")}
+            isActive={location.pathname === "/admin/authboard-manage"}
           >
             인증 게시물
           </MenuItem>
           <MenuItem
-            onClick={() => navi("/admin/communityBoard")}
-            isActive={location.pathname === "/admin/communityBoard"}
+            onClick={() => navi("/admin/communityboard-manage")}
+            isActive={location.pathname === "/admin/communityboard-manage"}
           >
             게시글 관리
           </MenuItem>
           <MenuItem
-            onClick={() => navi("/admin/noticeBoard")}
-            isActive={location.pathname === "/admin/noticeBoard"}
+            onClick={() => navi("/admin/noticeboard-manage")}
+            isActive={location.pathname === "/admin/noticeboard-manage"}
           >
             공지사항 작성
           </MenuItem>

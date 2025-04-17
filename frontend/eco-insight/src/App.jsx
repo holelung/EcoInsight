@@ -18,17 +18,17 @@ import UserLayout from "./components/Layout/UserLayout";
 import AdminRoute from "./components/RouteGuard/AdminRoute";
 import AdminLogin from "./pages/Admin/AdminLogin/AdminLogin.jsx";
 import AdminLayout from "./components/Layout/AdminLayout.jsx";
-import AdminPoint from "./pages/Admin/PointManagementPage/PointManagementPage.jsx";
-import AdminUser from "./pages/Admin/AccountManagementPage/AccountManagementPage.jsx";
-import AdminAuthBoard from "./pages/Admin/AdminAuthBoard/AdminAuthBoard.jsx";
-import AdminNoticeBoard from "./pages/Admin/AdminNoticeBoard/AdminNoticeBoard.jsx";
 import AdminDashBoard from "./pages/Admin/AdminDashBoard/AdminDashBoard.jsx";
-import AdminCommunityBoard from "./pages/Admin/AdminCommunityBoard/AdminCommunityBoard.jsx";
 import MainDashBoard from "./pages/User/UserDashBoard/MainDashBoard.jsx";
 import Notice from "./components/Board/Notice/Notice.jsx";
 import Login from "./components/Auth/Login.jsx";
 import FrequencyAskPage from "./components/Ask/FrequencyAskPage.jsx";
 import PrivateAskPage from "./components/Ask/PrivateAskPage.jsx";
+import CommunityBoardManagementPage from "./pages/Admin/CommunityBoardManagementPage/CommunityBoardManagementPage.jsx";
+import PointManagementPage from "./pages/Admin/PointManagementPage/PointManagementPage.jsx";
+import AccountManagementPage from "./pages/Admin/AccountManagementPage/AccountManagementPage.jsx";
+import AuthBoardManagementPage from "./pages/Admin/AuthBoardManagementPage/AuthBoardManagementPage.jsx";
+import NoticeBoardManagementPage from "./pages/Admin/NoticeBoardManagementPage/NoticeBoardManagementPage.jsx";
 
 function App() {
   return (
@@ -69,9 +69,9 @@ function App() {
           <Route path="dashboard" element={<AdminDashBoard />} />
           <Route path="point-manage" element={<PointManagementPage />} />
           <Route path="account-manage" element={<AccountManagementPage />} />
-          <Route path="authBoard" element={<AdminAuthBoard />} />
-          <Route path="communityBoard" element={<AdminCommunityBoard />} />
-          <Route path="noticeBoard" element={<AdminNoticeBoard />} />
+          <Route path="authboard-manage" element={<AuthBoardManagementPage />} />
+          <Route path="communityboard-manage" element={<CommunityBoardManagementPage />} />
+          <Route path="noticeboard-manage" element={<NoticeBoardManagementPage />} />
         </Route>
       </Routes>
     </AuthProvider>

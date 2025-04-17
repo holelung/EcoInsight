@@ -8,7 +8,7 @@ const PointManagementPage = () => {
   const [pointValue, setPointValue] = useState(0);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortOrder, setSortOrder] = useState("Newest");
   const [selectedUserId, setSelectedUserId] = useState(null);
 
@@ -96,7 +96,6 @@ const PointManagementPage = () => {
                 setCurrentPage(1);
               }}
             >
-              <option value={5}>5</option>
               <option value={10}>10</option>
               <option value={20}>20</option>
             </select>
