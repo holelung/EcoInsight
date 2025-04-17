@@ -29,6 +29,7 @@ import Notice from "./components/Board/Notice/Notice.jsx";
 import Login from "./components/Auth/Login.jsx";
 import FrequencyAskPage from "./components/Ask/FrequencyAskPage.jsx";
 import PrivateAskPage from "./components/Ask/PrivateAskPage.jsx";
+import WriteAuthPage from "./components/Board/AuthBoard/WriteAuthPage.jsx";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
           <Route path="/editprofile" element={<EditProfile />} />
           <Route path="/board/:type" element={<TipListPage />} />
           <Route path="/board/cert" element={<AuthListPage />} />
+          <Route path="/board/cert:type" element={<WriteAuthPage />} />
           <Route path="/write/:type" element={<WritePostPage />} />
           <Route path="/post/:id" element={<PostDetailPage />} />
           <Route path="/dashboard" element={<MainDashBoard />} />
