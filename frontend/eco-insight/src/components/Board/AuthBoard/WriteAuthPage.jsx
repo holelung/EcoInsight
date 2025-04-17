@@ -6,18 +6,16 @@ import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 
 export default function WriteAuthPage() {
     const { type } = useParams();
-    const navigate = useNavigate();
+    const navi = useNavigate();
     const editorRef = useRef();
     const [title, setTitle] = useState("");
     const [previewImage, setPreviewImage] = useState(null); // 🖼️ 이미지 미리보기용 상태
+    const [option, setOption] = useState("");
 
-    const boardNames = {
-        free: "자유게시판",
-        qna: "질문 게시판",
-        tips: "팁 게시판",
+    const handleOnChange = (e) => {
+        setOption(e.target.value);
     };
 
-    const boardName = boardNames[type] || "게시판";
 
     const handleUpload = () => {
         try {
@@ -33,7 +31,7 @@ export default function WriteAuthPage() {
             console.log("내용:", content);
 
             alert("게시물 업로드 완료!");
-            navigate(`/board/${type}`);
+            navi(`/board/cert`);
         } catch (error) {
             console.error("업로드 중 오류 발생:", error);
             alert("업로드에 실패했습니다.");
@@ -43,8 +41,17 @@ export default function WriteAuthPage() {
     return (
         <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md">
         
+        <div className="mb-4 text-sm text-gray-500">인증게시판</div>
         {/* 카테고리 */}
-        <div className="mb-4 text-sm text-gray-500">{boardName}</div>
+        <div>
+            <select value={option} defaultValue="category" onChange={handleOnChange} className="mb-3 border px-11 py-2 rounded">
+                <option value="category">카테고리 선택</option>
+                <option value="item1">인증1</option>
+                <option value="item2">인증2</option>
+                <option value="item3">인증3</option>
+                <option value="item4">인증4</option>
+            </select>
+        </div>
 
         {/* 제목 입력 */}
         <input
@@ -77,10 +84,10 @@ export default function WriteAuthPage() {
         </div>
 
         {/* 업로드 버튼 */}
-        <div className="flex justify-end">
+        <div className="mt-4 flex justify-end">
             <button
                 onClick={handleUpload}
-                className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-md font-bold transition">
+                className="bg-lime-400 hover:bg-green-600 text-white px-6 py-2 rounded-md font-bold transition">
             업로드
             </button>
         </div>

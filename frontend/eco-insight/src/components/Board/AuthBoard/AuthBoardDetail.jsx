@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ReportPage from "../ReportPage";
 import { AuthContext } from "../../Context/AuthContext";
 
-export default function AuthDetailPage() {
+function AuthBoardDetail() {
     const navi = useNavigate();
     const { auth } = useContext(AuthContext);
 
@@ -217,3 +217,5 @@ export default function AuthDetailPage() {
     </div>
     );
 }
+
+export default AuthBoardDetail;

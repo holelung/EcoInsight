@@ -49,7 +49,8 @@ const AuthListPage = () => {
                 이미지
             </div>
 
-            <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold">
+            <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold"
+                onClick={() => navi("/board/cert:id")}>
                 글 제목1
             </div>
 
@@ -68,7 +69,8 @@ const AuthListPage = () => {
                 이미지
             </div>
                 
-            <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold">
+            <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold"
+                onClick={() => navi("/board/cert:id")}>
                 글 제목2
             </div>
         
@@ -87,7 +89,8 @@ const AuthListPage = () => {
                 이미지
             </div>
                 
-            <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold">
+            <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold"
+                onClick={() => navi("/board/cert:id")}>
                 글 제목3
             </div>
         
@@ -106,7 +109,8 @@ const AuthListPage = () => {
                 이미지
             </div>
                 
-            <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold">
+            <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold"
+                onClick={() => navi("/board/cert:id")}>
                 글 제목4
             </div>
         
@@ -125,7 +129,8 @@ const AuthListPage = () => {
                 이미지
             </div>
                 
-            <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold">
+            <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold"
+                onClick={() => navi("/board/cert:id")}>
                 글 제목5
             </div>
         
@@ -144,7 +149,8 @@ const AuthListPage = () => {
                 이미지
             </div>
                 
-            <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold">
+            <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold"
+                onClick={() => navi("/board/cert:id")}>
                 글 제목6
             </div>
         
