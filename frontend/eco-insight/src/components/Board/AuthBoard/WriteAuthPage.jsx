@@ -1,8 +1,5 @@
 import React, { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Editor } from "@toast-ui/react-editor";
-import "@toast-ui/editor/dist/toastui-editor.css"; // ✅ 다크 모드 아닌 기본 CSS만 import
-import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 
 export default function WriteAuthPage() {
     const { type } = useParams();
