@@ -40,9 +40,6 @@ import CommunityBoardDetail from "./components/Board/Community/CommunityBoardDet
 import AuthBoardDetail from "./components/Board/AuthBoard/AuthBoardDetail.jsx";
 import ChangePassword from "./components/MyPage/ChangePassword.jsx";
 
-
-
-
 function App() {
   return (
     <AuthProvider>
@@ -68,9 +65,11 @@ function App() {
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
           <Route path="/privateAskPage" element={<PrivateAskPage />} />
           <Route path="/find-id/result-id" element={<ResultId />} />
-          <Route path="/findPassword/resetpassword" element={<ResetPassword />}/>
-          <Route path="/changepassword" element={<ChangePassword />}/>
-
+          <Route
+            path="/findPassword/resetpassword"
+            element={<ResetPassword />}
+          />
+          <Route path="/changepassword" element={<ChangePassword />} />
         </Route>
 
         <Route path="/login" element={<Login />} />
@@ -91,14 +90,22 @@ function App() {
           <Route path="dashboard" element={<AdminDashBoard />} />
           <Route path="point-manage" element={<PointManagementPage />} />
           <Route path="account-manage" element={<AccountManagementPage />} />
-          <Route path="authboard-manage" element={<AuthBoardManagementPage />} />
-          <Route path="communityboard-manage" element={<CommunityBoardManagementPage />} />
-          <Route path="noticeboard-manage" element={<NoticeBoardManagementPage />} />
+          <Route
+            path="authboard-manage"
+            element={<AuthBoardManagementPage />}
+          />
+          <Route
+            path="communityboard-manage"
+            element={<CommunityBoardManagementPage />}
+          />
+          <Route
+            path="noticeboard-manage"
+            element={<NoticeBoardManagementPage />}
+          />
         </Route>
       </Routes>
     </AuthProvider>
   );
 }
-
 
 export default App;
