@@ -11,9 +11,9 @@ import OkWithdrawal from "./components/MyPage/Withdrawal/OkWithdrawal";
 import CheckWithdrawal from "./components/MyPage/Withdrawal/CheckWithdrawal";
 import EditProfile from "./components/MyPage/EditProfile";
 import Footer from "./components/Common/Footer/Footer";
-import TipListPage from "./components/Board/Tip/TipListPage";
+
 import WritePostPage from "./components/Board/WritePostPage";
-import PostDetailPage from "./components/Board/Tip/TipBoardDetail";
+
 import UserLayout from "./components/Layout/UserLayout";
 import AdminRoute from "./components/RouteGuard/AdminRoute";
 import AdminLogin from "./pages/Admin/AdminLogin/AdminLogin.jsx";
@@ -35,8 +35,12 @@ import FindId from "./components/Auth/FindId.jsx";
 import ResultId from "./components/Auth/ResultId.jsx";
 import FindPasswordPage from "./components/Auth/FindPassword.jsx";
 import ResetPassword from "./components/Auth/ResetPassword.jsx";
+import CommunityListPage from "./components/Board/Community/CommunityListPage.jsx";
+import CommunityBoardDetail from "./components/Board/Community/CommunityBoardDetail.jsx";
 import AuthBoardDetail from "./components/Board/AuthBoard/AuthBoardDetail.jsx";
 import ChangePassword from "./components/MyPage/ChangePassword.jsx";
+
+
 
 
 function App() {
@@ -53,12 +57,12 @@ function App() {
           <Route path="/withdrawal/ok" element={<OkWithdrawal />} />
           <Route path="/withdrawal/check" element={<CheckWithdrawal />} />
           <Route path="/editprofile" element={<EditProfile />} />
-          <Route path="/board/:type" element={<TipListPage />} />
+          <Route path="/board/:type" element={<CommunityListPage />} />
           <Route path="/board/cert" element={<AuthListPage />} />
           <Route path="/board/cert:id" element={<AuthBoardDetail />} />
           <Route path="/board/cert:type" element={<WriteAuthPage />} />
           <Route path="/write/:type" element={<WritePostPage />} />
-          <Route path="/post/:id" element={<PostDetailPage />} />
+          <Route path="/post/:id" element={<CommunityBoardDetail />} />
           <Route path="/dashboard" element={<MainDashBoard />} />
           <Route path="/notice" element={<Notice />} />
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
