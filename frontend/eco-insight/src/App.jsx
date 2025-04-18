@@ -31,9 +31,10 @@ import FrequencyAskPage from "./components/Ask/FrequencyAskPage.jsx";
 import PrivateAskPage from "./components/Ask/PrivateAskPage.jsx";
 import SignUp from "./components/Auth/SignUp.jsx";
 import FindId from "./components/Auth/FindId.jsx";
-import IdResult from "./components/Auth/IdResult.jsx";
+import ResultId from "./components/Auth/ResultId.jsx";
 import FindPasswordPage from "./components/Auth/FindPassword.jsx";
 import ResetPassword from "./components/Auth/ResetPassword.jsx";
+import ChangePassword from "./components/MyPage/ChangePassword.jsx";
 
 function App() {
   return (
@@ -57,11 +58,10 @@ function App() {
           <Route path="/notice" element={<Notice />} />
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
           <Route path="/privateAskPage" element={<PrivateAskPage />} />
-          <Route path="/find-id/idresult" element={<IdResult />} />
-          <Route
-            path="/findPassword/resetpassword"
-            element={<ResetPassword />}
-          />
+          <Route path="/find-id/result-id" element={<ResultId />} />
+          <Route path="/findPassword/resetpassword" element={<ResetPassword />}/>
+          <Route path="/changepassword" element={<ChangePassword />}/>
+
         </Route>
 
         <Route path="/login" element={<Login />} />

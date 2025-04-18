@@ -41,7 +41,7 @@ const FindIdResultPage = () => {
         <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
           <button
             onClick={() => navigate('/login')}
-            className="w-full sm:w-auto px-6 py-2 bg-green-400 text-white rounded hover:bg-green-500 transition"
+            className="w-full sm:w-auto px-6 py-2 bg-lime-400 text-white rounded hover:bg-green-500 transition"
           >
             로그인하기
           </button>

@@ -21,6 +21,9 @@ function MyPage() {
   const handleBoardList = () => {
     navigate('/myposts');
   };
+  const handleChangePassword = () => {
+    navigate('/changepassword');
+  };
 
   const handleWithdrawal = () => {
     navigate('/withdrawal/check');
@@ -36,15 +39,21 @@ function MyPage() {
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
           <button
             onClick={handleViewEditInfo}
-            className="px-4 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition-colors"
+            className="px-4 py-2 bg-lime-400 text-white rounded-lg shadow hover:bg-green-600 transition-colors"
           >
             내정보 조회/수정
           </button>
           <button
             onClick={handleBoardList}
-            className="px-4 py-2 bg-green-500 text-white rounded-lg shadow hover:bg-green-600 transition-colors"
+            className="px-4 py-2 bg-lime-400 text-white rounded-lg shadow hover:bg-green-600 transition-colors"
           >
             내가 작성한 게시글 조회
+          </button>
+          <button
+            onClick={handleChangePassword}
+            className="px-4 py-2 bg-lime-400 text-white rounded-lg shadow hover:bg-green-600 transition-colors"
+          >
+            비밀번호 변경
           </button>
           <button
             onClick={handleWithdrawal}
@@ -116,7 +125,7 @@ function MyPage() {
                 </div>
                 <div>
                   <div>
-                    <p className="text-gray-500 text-sm">MEM</p>
+                    <p className="text-gray-500 text-sm">등급</p>
                     <p className="text-base text-gray-700">{userInfo.membership}</p>
                   </div>
                 </div>
