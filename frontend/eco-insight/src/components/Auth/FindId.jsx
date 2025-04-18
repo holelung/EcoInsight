@@ -30,7 +30,7 @@ const FindIdPage = () => {
       return;
     }
     // 아이디 조회 결과 페이지로 이동
-    navigate('/find-id/idresult');
+    navigate('/find-id/result-id');
   };
 
   return (
@@ -73,7 +73,7 @@ const FindIdPage = () => {
                   type="button"
                   onClick={handleSendCode}
                   className={`h-12 px-4 rounded-lg text-white ${
-                    isCodeSent ? 'bg-gray-400' : 'bg-green-400 hover:bg-green-500'
+                    isCodeSent ? 'bg-gray-400' : 'bg-lime-400 hover:bg-green-500'
                   }`}
                 >
                   {isCodeSent ? '다시받기' : '인증번호 받기'}
@@ -96,7 +96,7 @@ const FindIdPage = () => {
                   type="button"
                   onClick={handleVerifyCode}
                   className={`h-12 px-4 rounded-lg text-white ${
-                    isCodeVerified ? 'bg-gray-400' : 'bg-green-400 hover:bg-green-500'
+                    isCodeVerified ? 'bg-gray-400' : 'bg-lime-400 hover:bg-green-500'
                   }`}
                 >
                   인증번호 확인
@@ -108,7 +108,7 @@ const FindIdPage = () => {
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="mt-4 w-32 h-12 bg-green-400 hover:bg-green-500 text-white rounded-lg"
+                  className="mt-4 w-32 h-12 bg-lime-400 hover:bg-green-500 text-white rounded-lg"
                 >
                   다음
                 </button>
