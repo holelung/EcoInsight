@@ -1,4 +1,4 @@
-package com.ecoinsight.community.model.service;
+package com.semi.ecoinsight.community.model.service;
 
 public interface CommunityService {
 

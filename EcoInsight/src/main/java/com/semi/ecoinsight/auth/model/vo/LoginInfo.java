@@ -11,4 +11,5 @@ public class LoginInfo {
     private String email;
     private String memberName;
     private String memberRole;
+    private char isActive;
 }

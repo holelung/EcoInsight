@@ -1,18 +1,21 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { Editor } from "@toast-ui/react-editor";
+import "@toast-ui/editor/dist/toastui-editor.css";
+import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 import ReportPage from "../ReportPage";
 import { AuthContext } from "../../Context/AuthContext";
 
 export default function PostDetailPage() {
   const navigate = useNavigate();
   const { auth } = useContext(AuthContext);
+  const editorRef = useRef();
 
   const [isEditing, setIsEditing] = useState(false);
   const [likes, setLikes] = useState(5);
   const [title, setTitle] = useState("예쁜 게시글 제목 🎉");
   const [content, setContent] = useState("게시글 본문 내용입니다.");
   const [editedTitle, setEditedTitle] = useState(title);
-  const [editedContent, setEditedContent] = useState(content);
   const [isReportOpen, setIsReportOpen] = useState(false);
 
   const [comments, setComments] = useState([
@@ -25,6 +28,7 @@ export default function PostDetailPage() {
   const [newReply, setNewReply] = useState("");
 
   const handleLike = () => setLikes(likes + 1);
+
   const handleAddComment = () => {
     if (newComment.trim()) {
       setComments([...comments, { text: newComment.trim(), replies: [] }]);
@@ -43,8 +47,9 @@ export default function PostDetailPage() {
   };
 
   const handleSaveEdit = () => {
+    const editedMarkdown = editorRef.current?.getInstance().getMarkdown();
     setTitle(editedTitle);
-    setContent(editedContent);
+    setContent(editedMarkdown);
     setIsEditing(false);
   };
 
@@ -80,11 +85,25 @@ export default function PostDetailPage() {
       {/* 본문 */}
       <div className="p-4 bg-gray-50 border border-gray-200 rounded-md space-y-4">
         {isEditing ? (
-          <textarea
-            className="w-full h-40 p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
-            value={editedContent}
-            onChange={(e) => setEditedContent(e.target.value)}
-          />
+          <div className="mt-6">
+            <Editor
+              ref={editorRef}
+              height="400px"
+              initialEditType="wysiwyg"
+              previewStyle="vertical"
+              autofocus={true}
+              placeholder="내용을 입력해주세요. 마크다운을 자유롭게 활용할 수 있어요!"
+              plugins={[colorSyntax]}
+              hideModeSwitch={true}
+              toolbarItems={[
+                ["bold", "italic", "strike"],
+                ["hr", "quote"],
+                ["ul", "ol"],
+                ["image", "link"],
+                ["codeblock"],
+              ]}
+            />
+          </div>
         ) : (
           <p className="whitespace-pre-wrap">{content}</p>
         )}
@@ -110,7 +129,7 @@ export default function PostDetailPage() {
 
       {/* 수정/삭제/신고 버튼 */}
       <div className="flex justify-end gap-2">
-        {isEditing ? (
+        {auth.isAuthenticated && isEditing ? (
           <button
             onClick={handleSaveEdit}
             className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
@@ -119,27 +138,30 @@ export default function PostDetailPage() {
           </button>
         ) : (
           <>
-            <button
-              onClick={() => {
-                setIsEditing(true);
-                setEditedTitle(title);
-                setEditedContent(content);
-              }}
-              className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
-            >
-              수정하기
-            </button>
+            {auth.isAuthenticated && auth.loginInfo === auth && (
+              <>
+                <button
+                  onClick={() => {
+                    setIsEditing(true);
+                    setEditedTitle(title);
+                  }}
+                  className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
+                >
+                  수정하기
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="px-4 py-2 border border-red-500 text-red-600 rounded hover:bg-red-50"
+                >
+                  삭제하기
+                </button>
+              </>
+            )}
             <button
               onClick={() => setIsReportOpen(true)}
               className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
             >
               신고
-            </button>
-            <button
-              onClick={handleDelete}
-              className="px-4 py-2 border border-red-500 text-red-600 rounded hover:bg-red-50"
-            >
-              삭제하기
             </button>
           </>
         )}

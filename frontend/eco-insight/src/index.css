@@ -3,4 +3,19 @@
 @theme {
   --color-main: #b9ff66;
   --color-sub: #191a23;
+  --color-button1: #f3f3f3;
+}
+
+/* ✅ Toast UI 커스텀 툴바 아이콘 스타일 */
+.toastui-editor-toolbar-icons.color {
+  font-size: 0 !important;
+  position: relative;
+}
+
+.toastui-editor-toolbar-icons.color::after {
+  content: "🎨"; /* 원하는 아이콘 */
+  font-size: 16px;
+  position: absolute;
+  top: 0;
+  left: 0;
 }

@@ -33,6 +33,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
                 .email(member.getEmail())
                 .memberRole(member.getMemberRole())
                 .memberName(member.getMemberName())
+                .isActive(member.getIsActive())
                 .authorities(Collections.singletonList(new SimpleGrantedAuthority(member.getMemberRole())))
                 .build();
     }
