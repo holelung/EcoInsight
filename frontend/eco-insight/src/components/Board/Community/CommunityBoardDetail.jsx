@@ -2,8 +2,9 @@ import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReportPage from "../ReportPage";
 import { AuthContext } from "../../Context/AuthContext";
+import CommunityComment from "../../Comment/CommunityComment/CommunityComment";
 
-export default function CommunityBoardDetail() {
+const CommunityBoardDetail = () => {
   const navigate = useNavigate();
   const { auth } = useContext(AuthContext);
 
@@ -15,32 +16,7 @@ export default function CommunityBoardDetail() {
   const [editedContent, setEditedContent] = useState(content);
   const [isReportOpen, setIsReportOpen] = useState(false);
 
-  const [comments, setComments] = useState([
-    { text: "첫 번째 댓글입니다.", replies: [] },
-    { text: "두 번째 댓글이에요!", replies: [] },
-  ]);
-
-  const [newComment, setNewComment] = useState("");
-  const [replyingTo, setReplyingTo] = useState(null);
-  const [newReply, setNewReply] = useState("");
-
   const handleLike = () => setLikes(likes + 1);
-  const handleAddComment = () => {
-    if (newComment.trim()) {
-      setComments([...comments, { text: newComment.trim(), replies: [] }]);
-      setNewComment("");
-    }
-  };
-
-  const handleAddReply = (index) => {
-    if (newReply.trim()) {
-      const updatedComments = [...comments];
-      updatedComments[index].replies.push(newReply.trim());
-      setComments(updatedComments);
-      setNewReply("");
-      setReplyingTo(null);
-    }
-  };
 
   const handleSaveEdit = () => {
     setTitle(editedTitle);
@@ -93,7 +69,7 @@ export default function CommunityBoardDetail() {
         </div>
       </div>
 
-      {/* 좋아요 + 댓글 수 */}
+      {/* 좋아요 */}
       {!isEditing && (
         <div className="flex justify-between items-center">
           <button
@@ -102,32 +78,24 @@ export default function CommunityBoardDetail() {
           >
             👍 좋아요 {likes}
           </button>
-          <span className="text-sm text-gray-500">
-            💬 댓글 {comments.length}개
-          </span>
         </div>
       )}
 
       {/* 수정/삭제/신고 버튼 */}
       <div className="flex justify-end gap-2">
-        {/* auth.isAuthenticated && */}
-        {auth.isAuthenticated && isEditing ? (
+        {!(auth.isAuthenticated && isEditing) ? (
           <button
-            onClick={handleSaveEdit}
-            className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
+            onClick={() => setIsReportOpen(true)}
+            className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
           >
-            저장
+            신고
           </button>
         ) : (
           <>
             {auth.isAuthenticated && auth.loginInfo == auth && (
               <>
                 <button
-                  onClick={() => {
-                    setIsEditing(true);
-                    setEditedTitle(title);
-                    setEditedContent(content);
-                  }}
+                  onClick={handleSaveEdit}
                   className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
                 >
                   수정하기
@@ -140,76 +108,8 @@ export default function CommunityBoardDetail() {
                 </button>
               </>
             )}
-            <button
-              onClick={() => setIsReportOpen(true)}
-              className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
-            >
-              신고
-            </button>
           </>
         )}
-      </div>
-
-      {/* 댓글 목록 */}
-      <div className="space-y-4">
-        {comments.map((cmt, index) => (
-          <div
-            key={index}
-            className="p-4 bg-white border border-gray-200 rounded-md space-y-2"
-          >
-            <div className="flex justify-between items-center">
-              <span>{cmt.text}</span>
-              <button
-                onClick={() =>
-                  setReplyingTo(replyingTo === index ? null : index)
-                }
-                className="text-sm text-black hover:underline"
-              >
-                답글 쓰기
-              </button>
-            </div>
-            {cmt.replies.map((reply, rindex) => (
-              <div
-                key={rindex}
-                className="ml-4 px-3 py-2 bg-gray-100 border border-gray-300 text-sm rounded"
-              >
-                ↪ {reply}
-              </div>
-            ))}
-            {replyingTo === index && (
-              <div className="flex gap-2 mt-2 ml-4">
-                <input
-                  value={newReply}
-                  onChange={(e) => setNewReply(e.target.value)}
-                  placeholder="대댓글 입력"
-                  className="flex-grow px-2 py-1 border border-gray-300 rounded"
-                />
-                <button
-                  onClick={() => handleAddReply(index)}
-                  className="px-3 py-1 bg-black text-white border border-black rounded"
-                >
-                  등록
-                </button>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* 댓글 작성 */}
-      <div className="flex gap-2 mt-4">
-        <input
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-          placeholder="댓글을 입력하세요"
-          className="flex-grow px-4 py-2 border border-gray-300 rounded"
-        />
-        <button
-          onClick={handleAddComment}
-          className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
-        >
-          등록
-        </button>
       </div>
 
       {/* 돌아가기 */}
@@ -229,6 +129,9 @@ export default function CommunityBoardDetail() {
           postTitle={title}
         />
       )}
+      <CommunityComment />
     </div>
   );
-}
+};
+
+export default CommunityBoardDetail;

@@ -199,16 +199,16 @@ const CommunityListPage = () => {
       <h1 className="text-2xl font-bold text-center mb-6">{boardName}</h1>
 
       {/* 필터 + 검색 */}
-      <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
         <div className="flex gap-2">
           <button
-            className="px-4 py-2 rounded border border-gray-300 bg-transparent text-black"
+            className="px-4 py-2 border border-gray-300 rounded bg-transparent text-black"
             onClick={() => handleButtonClick("전체글")}
           >
             전체글
           </button>
           <button
-            className="px-4 py-2 rounded border border-gray-300 bg-transparent text-black"
+            className="px-4 py-2 border border-gray-300 rounded bg-transparent text-black"
             onClick={() => handleButtonClick("인기글")}
           >
             인기글
@@ -220,7 +220,7 @@ const CommunityListPage = () => {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="검색할 내용을 입력해주세요."
-            className="w-[400px] px-4 py-2 text-base border border-gray-300 rounded"
+            className="w-[400px] px-4 py-2 border border-gray-300 rounded text-base"
           />
           <button
             className="px-4 py-2 rounded border border-black bg-white text-black"
@@ -230,7 +230,7 @@ const CommunityListPage = () => {
           </button>
           <Link
             to={`/write/${type}`}
-            className="px-4 py-2 rounded border border-gray-300 bg-transparent text-black"
+            className="px-4 py-2 border border-gray-300 rounded bg-transparent text-black"
           >
             글쓰기
           </Link>
@@ -238,7 +238,7 @@ const CommunityListPage = () => {
       </div>
 
       {/* 테이블 헤더 */}
-      <div className="grid grid-cols-6 border-y border-gray-200 font-semibold text-center text-sm py-2">
+      <div className="grid grid-cols-6 py-2 text-sm font-semibold text-center border-y border-gray-200">
         <div>번호</div>
         <div>작성자</div>
         <div className="col-span-2">제목</div>
@@ -247,7 +247,7 @@ const CommunityListPage = () => {
       </div>
 
       {/* 공지사항 */}
-      <div className="grid grid-cols-6 text-green-500 font-semibold py-2 border-b border-gray-200 text-sm">
+      <div className="grid grid-cols-6 py-2 text-sm font-semibold text-green-500 border-b border-gray-200">
         <div>-</div>
         <div className="text-green-500 font-semibold">공지사항</div>
         <div className="col-span-2 text-left font-bold">
@@ -279,7 +279,7 @@ const CommunityListPage = () => {
       ))}
 
       {/* 페이지네이션 */}
-      <div className="flex justify-center mt-6 gap-2">
+      <div className="flex justify-center gap-2 mt-6">
         {Array.from(
           { length: Math.ceil(filteredPosts.length / postsPerPage) },
           (_, index) => {
