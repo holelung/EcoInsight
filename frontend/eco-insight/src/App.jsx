@@ -24,6 +24,7 @@ import Notice from "./components/Board/Notice/Notice.jsx";
 import Login from "./components/Auth/Login.jsx";
 import FrequencyAskPage from "./components/Ask/FrequencyAskPage.jsx";
 import PrivateAskPage from "./components/Ask/PrivateAskPage.jsx";
+import WriteAuthPage from "./components/Board/AuthBoard/WriteAuthPage.jsx";
 import CommunityBoardManagementPage from "./pages/Admin/CommunityBoardManagementPage/CommunityBoardManagementPage.jsx";
 import PointManagementPage from "./pages/Admin/PointManagementPage/PointManagementPage.jsx";
 import AccountManagementPage from "./pages/Admin/AccountManagementPage/AccountManagementPage.jsx";
@@ -36,6 +37,7 @@ import FindPasswordPage from "./components/Auth/FindPassword.jsx";
 import ResetPassword from "./components/Auth/ResetPassword.jsx";
 import CommunityListPage from "./components/Board/Community/CommunityListPage.jsx";
 import CommunityBoardDetail from "./components/Board/Community/CommunityBoardDetail.jsx";
+import AuthBoardDetail from "./components/Board/AuthBoard/AuthBoardDetail.jsx";
 import ChangePassword from "./components/MyPage/ChangePassword.jsx";
 
 
@@ -57,6 +59,8 @@ function App() {
           <Route path="/editprofile" element={<EditProfile />} />
           <Route path="/board/:type" element={<CommunityListPage />} />
           <Route path="/board/cert" element={<AuthListPage />} />
+          <Route path="/board/cert:id" element={<AuthBoardDetail />} />
+          <Route path="/board/cert:type" element={<WriteAuthPage />} />
           <Route path="/write/:type" element={<WritePostPage />} />
           <Route path="/post/:id" element={<CommunityBoardDetail />} />
           <Route path="/dashboard" element={<MainDashBoard />} />
