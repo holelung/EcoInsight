@@ -1,27 +1,24 @@
 import { useState } from "react";
 import SummaryCard from "../../../components/DashBoard/SummaryCard";
+import {memberList} from "../data";
+import SelectOptions from "../../../components/Button/SelectOptions";
 
-// Mock 데이터
-const mockUsers = Array.from({ length: 20 }, (_, i) => ({
-  id: i + 1,
-  name: `User ${i + 1}`,
-  company: ["Microsoft", "Google", "Yahoo", "Adobe", "Tesla"][i % 5],
-  phone: `(200) 555-01${String(i + 10).padStart(2, "0")}`,
-  email: `user${i + 1}@example.com`,
-  country: ["United States", "Israel", "Iran", "Brazil", "Japan"][i % 5],
-  point: i % 3 === 0 ? 0 : (i + 1) * 100,
-}));
 
-const AdminPoint = () => {
-  const [users] = useState(mockUsers);
+const PointManagementPage = () => {
+  const [members] = useState(memberList);
   const [pointValue, setPointValue] = useState(0);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortOrder, setSortOrder] = useState("Newest");
+  const [selectedUserId, setSelectedUserId] = useState(null);
 
-  const filteredUsers = users
-    .filter((u) => u.name.toLowerCase().includes(search.toLowerCase()))
+  const filteredMembers = members
+    .filter((u) =>
+      [u.memberName, u.memberId, u.memberPh].some((field) =>
+        field.toLowerCase().includes(search.toLowerCase())
+      )
+    )
     .sort((a, b) => {
       if (sortOrder === "Newest") return b.id - a.id;
       if (sortOrder === "Oldest") return a.id - b.id;
@@ -30,12 +27,24 @@ const AdminPoint = () => {
 
   const indexOfLastUser = currentPage * rowsPerPage;
   const indexOfFirstUser = indexOfLastUser - rowsPerPage;
-  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
-  const totalPages = Math.ceil(filteredUsers.length / rowsPerPage);
+  const currentMembers = filteredMembers.slice(
+    indexOfFirstUser,
+    indexOfLastUser
+  );
+  const totalPages = Math.ceil(filteredMembers.length / rowsPerPage);
 
-  const handleApplyPoint = () => {
-    alert(`${pointValue} 포인트가 적용됩니다.`);
+  const handleApplyPoint = (memberName) => {
+    alert(`${memberName} 님에게 ${pointValue} 포인트가 적용됩니다.`);
     setPointValue(0);
+    setSelectedUserId(null);
+  };
+
+  const handleSelectUserTable = (userId) => {
+    if (selectedUserId == userId) {
+      setSelectedUserId(null);
+    } else {
+      setSelectedUserId(userId);
+    }
   };
 
   return (
@@ -88,9 +97,7 @@ const AdminPoint = () => {
                 setCurrentPage(1);
               }}
             >
-              <option value={5}>5</option>
-              <option value={10}>10</option>
-              <option value={20}>20</option>
+              <SelectOptions />
             </select>
           </div>
           <div className="flex items-center gap-2">
@@ -114,54 +121,64 @@ const AdminPoint = () => {
       <table className="w-full border-collapse bg-white rounded-xl overflow-hidden text-sm shadow">
         <thead className="bg-gray-100 text-left">
           <tr>
-            <th className="p-3">Customer Name</th>
-            <th>Company</th>
-            <th>Phone</th>
+            <th className="p-3">유저 이름</th>
+            <th>아이디</th>
+            <th>전화번호</th>
             <th>Email</th>
-            <th>Country</th>
+            <th>가입일자</th>
             <th>Points</th>
           </tr>
         </thead>
         <tbody>
-          {currentUsers.map((user) => (
-            <tr key={user.id} className="border-t hover:bg-gray-50">
-              <td className="px-4 py-3">{user.name}</td>
-              <td>{user.company}</td>
-              <td>{user.phone}</td>
-              <td>{user.email}</td>
-              <td>{user.country}</td>
-              <td>
-                {user.point > 0 ? (
-                  <span className="bg-green-100 text-green-600 px-2 py-1 rounded text-sm">
-                    {user.point}p
+          {currentMembers.map((user) => (
+            <>
+              <tr key={user.memberNo} className="border-t hover:bg-gray-50">
+                <td className="px-4 py-3">{user.memberName}</td>
+                <td>{user.memberId}</td>
+                <td>{user.memberPh}</td>
+                <td>{user.email}</td>
+                <td>{user.enrollDate}</td>
+                <td>
+                  <span
+                    className={`px-2 py-1 rounded text-sm cursor-pointer ${
+                      user.point > 0
+                        ? "bg-green-100 text-green-600"
+                        : "bg-red-100 text-red-600"
+                    }`}
+                    onClick={() => handleSelectUserTable(user.memberId)}
+                  >
+                    {user.point > 0 ? `${user.point}p` : "noPoint"}
                   </span>
-                ) : (
-                  <span className="bg-red-100 text-red-600 px-2 py-1 rounded text-sm">
-                    noPoint
-                  </span>
-                )}
-              </td>
-            </tr>
+                </td>
+              </tr>
+              {selectedUserId === user.memberId && (
+                <tr className="bg-gray-50">
+                  <td colSpan={6} className="px-4 py-3">
+                    <div className="flex gap-2 items-center justify-end">
+                      <span className="text-sm font-medium">
+                        {user.memberName} 님에게 포인트 지급:
+                      </span>
+                      <input
+                        type="number"
+                        value={pointValue}
+                        onChange={(e) => setPointValue(e.target.value)}
+                        className="border px-3 py-2 w-32 rounded"
+                        placeholder="포인트 입력"
+                      />
+                      <button
+                        className="bg-black text-white px-4 py-2 rounded"
+                        onClick={() => handleApplyPoint(user.memberName)}
+                      >
+                        적용
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              )}
+            </>
           ))}
         </tbody>
       </table>
-
-      {/* 하단 포인트 입력 */}
-      <div className="mt-4 flex gap-2">
-        <input
-          type="number"
-          value={pointValue}
-          onChange={(e) => setPointValue(e.target.value)}
-          className="border px-3 py-2 w-32 rounded"
-          placeholder="포인트 입력"
-        />
-        <button
-          className="bg-black text-white px-4 py-2 rounded"
-          onClick={handleApplyPoint}
-        >
-          적용
-        </button>
-      </div>
 
       {/* 페이지네이션 */}
       <div className="flex items-center justify-center gap-2 mt-6">
@@ -170,7 +187,7 @@ const AdminPoint = () => {
             key={n}
             onClick={() => setCurrentPage(n)}
             className={`px-3 py-1 rounded ${
-              n === currentPage ? "bg-purple-600 text-white" : "bg-gray-200"
+              n === currentPage ? "bg-lime-400 text-white" : "bg-gray-200"
             }`}
           >
             {n}
@@ -179,6 +196,6 @@ const AdminPoint = () => {
       </div>
     </div>
   );
-}
+};
 
-export default AdminPoint;
+export default PointManagementPage;

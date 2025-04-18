@@ -71,8 +71,8 @@ const FindPasswordPage = () => {
               <button
                 type="button"
                 onClick={handleSendCode}
-                className={`h-12 px-4 rounded-lg text-white ${
-                  isCodeSent ? 'bg-gray-400' : 'bg-green-400 hover:bg-green-500'
+                className={`h-12 px-4 mt-7 rounded-lg text-white ${
+                  isCodeSent ? 'bg-gray-400' : 'bg-lime-400 hover:bg-green-500'
                 }`}
               >
                 {isCodeSent ? '다시받기' : '인증번호 받기'}
@@ -94,8 +94,8 @@ const FindPasswordPage = () => {
               <button
                 type="button"
                 onClick={handleVerifyCode}
-                className={`h-12 px-4 rounded-lg text-white ${
-                  isCodeVerified ? 'bg-gray-400' : 'bg-green-400 hover:bg-green-500'
+                className={`h-12 px-4 rounded-lg mt-7 text-white ${
+                  isCodeVerified ? 'bg-gray-400' : 'bg-lime-400 hover:bg-green-500'
                 }`}
               >
                 인증번호 확인
@@ -107,7 +107,7 @@ const FindPasswordPage = () => {
               <button
                 type="button"
                 onClick={handleNext}
-                className="mt-4 w-32 h-12 bg-green-400 hover:bg-green-500 text-white rounded-lg transition"
+                className="mt-4 w-32 h-12 bg-lime-400 hover:bg-green-500 text-white rounded-lg transition"
               >
                 다음
               </button>
