@@ -12,7 +12,7 @@ const mockUsers = Array.from({ length: 20 }, (_, i) => ({
   point: i % 3 === 0 ? 0 : (i + 1) * 100,
 }));
 
-const AdminNoticeBoard = () => {
+const CommunityBoardManagementPage = () => {
   const [users] = useState(mockUsers);
   const [pointValue, setPointValue] = useState(0);
   const [search, setSearch] = useState("");
@@ -181,4 +181,4 @@ const AdminNoticeBoard = () => {
   );
 };
 
-export default AdminNoticeBoard;
+export default CommunityBoardManagementPage;

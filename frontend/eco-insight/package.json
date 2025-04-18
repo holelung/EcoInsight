@@ -15,6 +15,7 @@
     "@toast-ui/react-editor": "^3.2.3",
     "axios": "^1.8.4",
     "chart.js": "^4.4.9",
+    "dayjs": "^1.11.13",
     "eco-insight": "file:",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
