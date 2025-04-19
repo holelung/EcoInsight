@@ -1,6 +1,5 @@
 import { useContext, useState } from "react";
 import SummaryCard from "../../../components/DashBoard/SummaryCard";
-import dayjs from "dayjs";
 import SelectOptions from "../../../components/Button/SelectOptions";
 import { authBoardList } from "../data";
 import { AuthContext } from "../../../components/Context/AuthContext";
@@ -10,7 +9,6 @@ import Pagination from "../../../components/Pagination/Pagination";
 const AuthBoardManagementPage = () => {
   const { auth } = useContext(AuthContext);
   const [authBoards] = useState(authBoardList);
-  const [banPeriod, setBanPeriod] = useState();
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -39,7 +37,7 @@ const AuthBoardManagementPage = () => {
 
   const handleAuthBoard = (memberName) => {
     alert(`${memberName} 님의 게시글이 인증처리 되었습니다.`);
-    setBanPeriod(0);
+    
     setSelectedBoardNo(null);
   };
 
@@ -166,8 +164,8 @@ const AuthBoardManagementPage = () => {
                       {/* value = {auth.loginInfo.memberName} 으로 변경해야함 */}
                       <input
                         type="text"
+                        // value={auth.memberInfo.memberName}
                         value="관리자명"
-                        onChange={(e) => setBanPeriod(e.target.value)}
                         className="border px-3 py-2 w-32 rounded"
                       />
                       <button
