@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import SelectOptions from "../../../components/Button/SelectOptions";
 import { authBoardList } from "../data";
 import { AuthContext } from "../../../components/Context/AuthContext";
+import Pagination from "../../../components/Pagination/Pagination";
 
 
 const AuthBoardManagementPage = () => {
@@ -185,19 +186,11 @@ const AuthBoardManagementPage = () => {
       </table>
 
       {/* 페이지네이션 */}
-      <div className="flex items-center justify-center gap-2 mt-6">
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
-          <button
-            key={n}
-            onClick={() => setCurrentPage(n)}
-            className={`px-3 py-1 rounded ${
-              n === currentPage ? "bg-lime-400 text-white" : "bg-gray-200"
-            }`}
-          >
-            {n}
-          </button>
-        ))}
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 };
