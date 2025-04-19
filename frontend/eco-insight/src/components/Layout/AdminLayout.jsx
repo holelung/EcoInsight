@@ -1,22 +1,15 @@
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import logo from "../../assets/EcoInsigthLogo2.png";
 import MenuItem from "../Button/MenuItem";
-import { use, useState } from "react";
 
 
 const AdminLayout = () => {
   const navi = useNavigate();
   const location = useLocation();
-  const [isClicked, setIsClicked] = useState(false);
 
   const clickLogout = () => {
     localStorage.clear();
     navi("/");
-  }
-
-  const clickMenuItem = (link) => {
-    navi(link);
-
   }
 
   return (

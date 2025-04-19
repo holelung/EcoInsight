@@ -1,5 +1,7 @@
 import { useState } from "react";
 import SummaryCard from "../../../components/DashBoard/SummaryCard";
+import Pagination from "../../../components/Pagination/Pagination";
+import SelectOptions from "../../../components/Button/SelectOptions";
 
 // Mock 데이터
 const mockUsers = Array.from({ length: 20 }, (_, i) => ({
@@ -88,9 +90,7 @@ const NoticeBoardManagementPage = () => {
                 setCurrentPage(1);
               }}
             >
-              <option value={5}>5</option>
-              <option value={10}>10</option>
-              <option value={20}>20</option>
+              <SelectOptions />
             </select>
           </div>
           <div className="flex items-center gap-2">
@@ -164,19 +164,11 @@ const NoticeBoardManagementPage = () => {
       </div>
 
       {/* 페이지네이션 */}
-      <div className="flex items-center justify-center gap-2 mt-6">
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
-          <button
-            key={n}
-            onClick={() => setCurrentPage(n)}
-            className={`px-3 py-1 rounded ${
-              n === currentPage ? "bg-purple-600 text-white" : "bg-gray-200"
-            }`}
-          >
-            {n}
-          </button>
-        ))}
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   );
 };
