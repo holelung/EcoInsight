@@ -118,6 +118,7 @@ function MyPage() {
                     <p className="text-gray-500 text-sm">OOO인증</p>
                     <p className="text-base text-gray-700">{userInfo.auth}</p>
                   </div>
+                  
                   <div>
                     <p className="text-gray-500 text-sm">OOO인증</p>
                     <p className="text-base text-gray-700">{userInfo.auth}</p>
