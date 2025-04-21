@@ -63,7 +63,24 @@ const dummyData = [
         writer: "happyday",
         createdDate: "2025.04.09"
     },
-    // ✨ 여기에 계속 추가 가능
+    {
+        id: 11,
+        title: "ㅁㄴ옴ㄴ옴ㄴ오",
+        writer: "happadfjadfjadyday",
+        createdDate: "2025.04.08"
+    },
+    {
+        id: 12,
+        title: "ㄴㅇㅎ뮨호ㅠ민ㅇㅎ!",
+        writer: "dahsafd",
+        createdDate: "2025.04.08"
+    },
+    {
+        id: 13,
+        title: "ㅁㄴ옴ㄴ옴ㄴ옴",
+        writer: "fxc",
+        createdDate: "2025.04.07"
+    },
 ];
 
 const PAGE_SIZE = 6;
@@ -97,20 +114,20 @@ const AuthListPage = () => {
                     placeholder="검색할 내용을 입력해주세요."
                     className="border px-4 py-2 rounded w-1/2"
                 />
-                <button className="bg-gray-300 px-4 py-2 rounded" onClick={() => navi("/boards/search")}>
+                <button className="bg-gray-300 px-4 py-2 rounded cursor-pointer" onClick={() => navi("/boards/search")}>
                     검색
                 </button>
-                <button className="bg-gray-300 px-4 py-2 rounded" onClick={() => navi("/board/cert:type")}>
+                <button className="bg-gray-300 px-4 py-2 rounded cursor-pointer" onClick={() => navi("/board/cert:type")}>
                     글쓰기
                 </button>
             </div>
 
-            <div className="overflow-y-auto mt-8 max-h-[600px] border rounded-xl p-4">
+            <div className="overflow-y-auto mt-8 border rounded-xl p-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                     {boards.map((board) => (
                         <div
                             key={board.id}
-                            className="border rounded-xl overflow-hidden shadow hover:shadow-lg transition"
+                            className="border rounded-xl overflow-hidden shadow hover:shadow-lg transition cursor-pointer hover:border-2 hover:border-green-500"
                             onClick={() => navi(`/board/cert/${board.id}`)}
                         >
                             <div className="bg-blue-100 flex items-center justify-center h-40">이미지</div>
@@ -132,7 +149,7 @@ const AuthListPage = () => {
                 <div className="flex justify-center mt-6">
                     <button
                         onClick={loadMoreHandler}
-                        className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
+                        className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 cursor-pointer hover:border-2 hover:border-green-500"
                     >
                         더보기 ∇
                     </button>
