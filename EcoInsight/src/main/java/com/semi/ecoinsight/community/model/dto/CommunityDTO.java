@@ -21,7 +21,7 @@ public class CommunityDTO {
 	private String cBoardContent;
 	private Date createDate;
 	private Date modifiedDate;
-	private int viewCount;
+	private Long viewCount;
 	private String isDeleted;
 
 }
