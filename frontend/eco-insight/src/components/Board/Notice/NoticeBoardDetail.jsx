@@ -1,12 +1,8 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ReportPage from "../ReportPage";
-import { AuthContext } from "../../Context/AuthContext";
-import CommunityComment from "../../Comment/CommunityComment/CommunityComment";
 
-const CommunityBoardDetail = () => {
+const NoticeBoardDetail = () => {
   const navigate = useNavigate();
-  const { auth } = useContext(AuthContext);
 
   const [isEditing, setIsEditing] = useState(false);
   const [likes, setLikes] = useState(5);
@@ -83,33 +79,22 @@ const CommunityBoardDetail = () => {
 
       {/* 수정/삭제/신고 버튼 */}
       <div className="flex justify-end gap-2">
-        {!(auth.isAuthenticated && isEditing) ? (
-          <button
-            onClick={() => setIsReportOpen(true)}
-            className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
-          >
-            신고
-          </button>
-        ) : (
+        <>
           <>
-            {auth.isAuthenticated && (
-              /* auth.loginInfo.memberId === Detail.author && */ <>
-                <button
-                  onClick={handleSaveEdit}
-                  className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
-                >
-                  수정하기
-                </button>
-                <button
-                  onClick={handleDelete}
-                  className="px-4 py-2 border border-red-500 text-red-600 rounded hover:bg-red-50"
-                >
-                  삭제하기
-                </button>
-              </>
-            )}
+            <button
+              onClick={handleSaveEdit}
+              className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
+            >
+              수정하기
+            </button>
+            <button
+              onClick={handleDelete}
+              className="px-4 py-2 border border-red-500 text-red-600 rounded hover:bg-red-50"
+            >
+              삭제하기
+            </button>
           </>
-        )}
+        </>
       </div>
 
       {/* 돌아가기 */}
@@ -119,19 +104,8 @@ const CommunityBoardDetail = () => {
       >
         게시글 목록으로 돌아가기
       </button>
-
-      {/* 신고 모달 */}
-      {isReportOpen && (
-        <ReportPage
-          isOpen={isReportOpen}
-          onClose={() => setIsReportOpen(false)}
-          author={"사용자123"}
-          postTitle={title}
-        />
-      )}
-      <CommunityComment />
     </div>
   );
 };
 
-export default CommunityBoardDetail;
+export default NoticeBoardDetail;

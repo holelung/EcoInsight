@@ -1,21 +1,24 @@
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import SummaryCard from "../../../components/DashBoard/SummaryCard";
-import SelectOptions from "../../../components/Button/SelectOptions";
+
 import { authBoardList } from "../data";
 import { AuthContext } from "../../../components/Context/AuthContext";
 import Pagination from "../../../components/Pagination/Pagination";
+import SelectRowNumber from "../../../components/Input/Select/SelectRowNumber";
+import Search from "../../../components/Input/Search/Search";
+import Select from "../../../components/Input/Select/Select";
 
 
 const AuthBoardManagementPage = () => {
   const { auth } = useContext(AuthContext);
-  const [authBoards] = useState(authBoardList);
+  const [list, setList] = useState(authBoardList);
   const [search, setSearch] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortOrder, setSortOrder] = useState("Newest");
   const [selectedBoardNo, setSelectedBoardNo] = useState(null);
 
-  const filteredAuthBoards = authBoards
+  const filteredList = list
     .filter((board) =>
       [board.memberName, board.memberId, board.title].some((field) =>
         field.toLowerCase().includes(search.toLowerCase())
@@ -27,13 +30,11 @@ const AuthBoardManagementPage = () => {
       return 0;
     });
 
-  const indexOfLastBoard = currentPage * rowsPerPage;
-  const indexOfFirstBoard = indexOfLastBoard - rowsPerPage;
-  const currentBoards = filteredAuthBoards.slice(
-    indexOfFirstBoard,
-    indexOfLastBoard
-  );
-  const totalPages = Math.ceil(filteredAuthBoards.length / rowsPerPage);
+    const currentList = useMemo(() => {
+      const startIndex = currentPage * rowsPerPage;
+      return filteredList.slice(startIndex, startIndex + rowsPerPage);
+    }, [filteredList, currentPage, rowsPerPage]); 
+    const totalPages = Math.ceil(filteredList.length / rowsPerPage);
 
   const handleAuthBoard = (memberName) => {
     alert(`${memberName} 님의 게시글이 인증처리 되었습니다.`);
@@ -78,44 +79,31 @@ const AuthBoardManagementPage = () => {
 
       {/* 검색창 + 정렬 */}
       <div className="flex justify-between items-center">
-        <input
-          type="text"
-          placeholder="Search..."
-          className="border px-3 py-2 rounded w-64"
+        <Search
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          searchResult={setList}
+          type={"AuthBoardList"}
         />
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <label htmlFor="rowsPerPage" className="text-sm text-gray-600">
-              행 개수
-            </label>
-            <select
-              id="rowsPerPage"
-              className="border px-2 py-2 rounded"
-              value={rowsPerPage}
-              onChange={(e) => {
-                setRowsPerPage(Number(e.target.value));
-                setCurrentPage(1);
-              }}
-            >
-              <SelectOptions />
-            </select>
-          </div>
-          <div className="flex items-center gap-2">
-            <label htmlFor="sortOrder" className="text-sm text-gray-600">
-              정렬
-            </label>
-            <select
-              id="sortOrder"
-              className="border px-2 py-2 rounded"
-              value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value)}
-            >
-              <option value="Newest">Newest</option>
-              <option value="Oldest">Oldest</option>
-            </select>
-          </div>
+          <Select
+            selectValue={rowsPerPage}
+            onChange={(e) => {
+              setRowsPerPage(Number(e.target.value));
+              setCurrentPage(1);
+            }}
+            labelName={"행 개수"}
+          >
+            <SelectRowNumber />
+          </Select>
+          <Select
+            selectValue={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+            labelName={"정렬"}
+          >
+            <option value="Newest">최신순</option>
+            <option value="Oldest">오래된순</option>
+          </Select>
         </div>
       </div>
 
@@ -124,7 +112,7 @@ const AuthBoardManagementPage = () => {
         <thead className="bg-gray-100 text-left">
           <tr>
             <th className="p-3">아이디</th>
-            <th>유저명</th>
+            <th>글 번호</th>
             <th>제목</th>
             <th>내용</th>
             <th>업로드일</th>
@@ -132,28 +120,28 @@ const AuthBoardManagementPage = () => {
           </tr>
         </thead>
         <tbody>
-          {currentBoards.map((board) => (
+          {currentList.map((board) => (
             <>
-              <tr key={board.authBoardNo} className="border-t hover:bg-gray-50">
+              <tr key={board.boardNo} className="border-t hover:bg-gray-50">
                 <td className="px-4 py-3">{board.memberId}</td>
-                <td>{board.memberName}</td>
+                <td>{board.boardNo}</td>
                 <td>{board.title}</td>
                 <td>{board.content}</td>
                 <td>{board.createdDate}</td>
                 <td>
                   <span
                     className={`px-2 py-1 rounded text-sm cursor-pointer ${
-                      board.status === "Complete"
+                      board.status === "Y"
                         ? "bg-green-100 text-green-600"
                         : "bg-red-100 text-red-600"
                     }`}
-                    onClick={() => handleSelectBoardTable(board.authBoardNo)}
+                    onClick={() => handleSelectBoardTable(board.boardNo)}
                   >
-                    {board.status === "Complete" ? `Complete` : "Require"}
+                    {board.status === "Y" ? `Complete` : "Require"}
                   </span>
                 </td>
               </tr>
-              {selectedBoardNo === board.authBoardNo && (
+              {selectedBoardNo === board.boardNo && (
                 <tr className="bg-gray-50">
                   <td colSpan={6} className="px-4 py-3">
                     <div className="flex gap-2 items-center justify-end">

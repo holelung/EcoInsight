@@ -17,7 +17,7 @@ public class Community {
 	private String cBoardContent;
 	private Date createDate;
 	private Date modifiedDate;
-	private Long viewCount;
+	private int viewCount;
 	private String isDeleted;
 
 }

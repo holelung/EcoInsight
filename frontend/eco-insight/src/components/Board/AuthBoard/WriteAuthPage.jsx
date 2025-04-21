@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -62,6 +61,26 @@ export default function WriteAuthPage() {
         placeholder="제목을 입력하세요"
         className="w-full p-4 text-xl font-semibold border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300"
       />
+
+      {/* Toast UI 에디터 */}
+      <div className="mt-6">
+        <Editor
+          ref={editorRef}
+          height="400px"
+          initialEditType="wysiwyg"
+          previewStyle="vertical"
+          autofocus={true}
+          placeholder="내용을 입력해주세요. 마크다운을 자유롭게 활용할 수 있어요!"
+          hideModeSwitch={true}
+          toolbarItems={[
+            ["bold", "italic", "strike"],
+            ["hr", "quote"],
+            ["ul", "ol"],
+            ["image", "link"],
+            ["codeblock"],
+          ]}
+        />
+      </div>
 
       {/* 텍스트 에디터 */}
       <textarea

@@ -6,7 +6,7 @@ const CommunityComment = () => {
     { text: "두 번째 댓글이에요!", replies: [] },
   ]);
   const [newComment, setNewComment] = useState("");
-  const [replyingTo, setReplyingTo] = useState(null);
+  const [replyingWrite, setReplyingWrite] = useState(null);
   const [newReply, setNewReply] = useState("");
 
   const handleAddComment = () => {
@@ -22,12 +22,14 @@ const CommunityComment = () => {
       updated[index].replies.push(newReply.trim());
       setComments(updated);
       setNewReply("");
-      setReplyingTo(null);
+      setReplyingWrite(null);
     }
   };
 
   return (
-    <div>
+    <div className="mt-6">
+      <h2 className="text-xl font-semibold mb-4">댓글({comments.length})</h2>
+
       {/* 댓글 목록 */}
       <div className="space-y-4">
         {comments.map((cmt, index) => (
@@ -39,7 +41,7 @@ const CommunityComment = () => {
               <span>{cmt.text}</span>
               <button
                 onClick={() =>
-                  setReplyingTo(replyingTo === index ? null : index)
+                  setReplyingWrite(replyingWrite === index ? null : index)
                 }
                 className="text-sm text-black hover:underline"
               >
@@ -54,7 +56,7 @@ const CommunityComment = () => {
                 ↪ {reply}
               </div>
             ))}
-            {replyingTo === index && (
+            {replyingWrite === index && (
               <div className="flex gap-2 mt-2 ml-4">
                 <input
                   value={newReply}
@@ -75,7 +77,7 @@ const CommunityComment = () => {
       </div>
 
       {/* 댓글 작성 */}
-      <div className="flex gap-2 mt-4">
+      <div className="flex gap-2 mt-6">
         <input
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
