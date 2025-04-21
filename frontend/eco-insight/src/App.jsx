@@ -39,6 +39,7 @@ import CommunityListPage from "./components/Board/Community/CommunityListPage.js
 import CommunityBoardDetail from "./components/Board/Community/CommunityBoardDetail.jsx";
 import AuthBoardDetail from "./components/Board/AuthBoard/AuthBoardDetail.jsx";
 import ChangePassword from "./components/MyPage/ChangePassword.jsx";
+import NoticeWrite from "./pages/Admin/NoticeBoardManagementPage/NoticeWrite.jsx";
 
 
 
@@ -94,6 +95,7 @@ function App() {
           <Route path="authboard-manage" element={<AuthBoardManagementPage />} />
           <Route path="communityboard-manage" element={<CommunityBoardManagementPage />} />
           <Route path="noticeboard-manage" element={<NoticeBoardManagementPage />} />
+          <Route path="notice-write" element={<NoticeWrite />} />
         </Route>
       </Routes>
     </AuthProvider>
