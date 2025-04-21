@@ -1,21 +1,25 @@
 import { Fragment, useMemo, useState } from "react";
 import SummaryCard from "../../../components/DashBoard/SummaryCard";
 import {memberList} from "../data";
-import SelectOptions from "../../../components/Button/SelectOptions";
-import { PageButton } from "../../../components/Button/Button";
+
 import Pagination from "../../../components/Pagination/Pagination";
+import Select from "../../../components/Input/Select/Select";
+import SelectRowNumber from "../../../components/Input/Select/SelectRowNumber";
+import Search from "../../../components/Input/Search/Search";
 
 
 
 const PointManagementPage = () => {
-  const [members] = useState(memberList);
+  const [members, setMembers] = useState(memberList);
   const [pointValue, setPointValue] = useState(0);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortOrder, setSortOrder] = useState("Newest");
   const [selectedUserId, setSelectedUserId] = useState(null);
+  
 
+  // 검색 DB로갈 경우 필요없음
   const filteredMembers = useMemo(() => {
     return members
       .filter((u) =>
@@ -24,8 +28,8 @@ const PointManagementPage = () => {
         )
       )
       .sort((a, b) => {
-        if (sortOrder === "Newest") return b.id - a.id;
-        if (sortOrder === "Oldest") return a.id - b.id;
+        if (sortOrder === "Newest") return b.memberNo - a.memberNo;
+        if (sortOrder === "Oldest") return a.memberNo - b.memberNo;
         return 0;
       });
   }, [members, search, sortOrder]);
@@ -79,44 +83,31 @@ const PointManagementPage = () => {
 
       {/* 검색창 + 정렬 */}
       <div className="flex justify-between items-center">
-        <input
-          type="text"
-          placeholder="Search..."
-          className="border px-3 py-2 rounded w-64"
+        <Search
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          searchResult={setMembers}
+          type={"memberPointList"}
         />
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <label htmlFor="rowsPerPage" className="text-sm text-gray-600">
-              행 개수
-            </label>
-            <select
-              id="rowsPerPage"
-              className="border px-2 py-2 rounded"
-              value={rowsPerPage}
-              onChange={(e) => {
-                setRowsPerPage(Number(e.target.value));
-                setCurrentPage(1);
-              }}
-            >
-              <SelectOptions />
-            </select>
-          </div>
-          <div className="flex items-center gap-2">
-            <label htmlFor="sortOrder" className="text-sm text-gray-600">
-              정렬
-            </label>
-            <select
-              id="sortOrder"
-              className="border px-2 py-2 rounded"
-              value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value)}
-            >
-              <option value="Newest">Newest</option>
-              <option value="Oldest">Oldest</option>
-            </select>
-          </div>
+          <Select
+            selectValue={rowsPerPage}
+            onChange={(e) => {
+              setRowsPerPage(Number(e.target.value));
+              setCurrentPage(1);
+            }}
+            labelName={"행 개수"}
+          >
+            <SelectRowNumber />
+          </Select>
+          <Select
+            selectValue={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+            labelName={"정렬"}
+          >
+            <option value="Newest">최신순</option>
+            <option value="Oldest">오래된순</option>
+          </Select>
         </div>
       </div>
 
@@ -189,7 +180,6 @@ const PointManagementPage = () => {
         totalPages={totalPages}
         onPageChange={setCurrentPage}
       />
-
     </div>
   );
 };
