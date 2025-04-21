@@ -28,7 +28,7 @@ const datas = [
   },
 ];
 
-const Notice = () => {
+const NoticeBoard = () => {
   const { type } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -109,7 +109,7 @@ const Notice = () => {
           </div>
           <div className="col-span-2 text-left">
             <Link
-              to={`/post/${post.id}`}
+              to={`/board/notice/${post.id}`}
               state={{ postType: post.type }}
               onClick={() => handlePostClick(post.id)}
               className="hover:underline"
@@ -144,4 +144,4 @@ const Notice = () => {
   );
 };
 
-export default Notice;
+export default NoticeBoard;

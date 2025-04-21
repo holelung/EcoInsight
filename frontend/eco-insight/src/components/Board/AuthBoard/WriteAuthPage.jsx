@@ -82,6 +82,12 @@ export default function WriteAuthPage() {
         />
       </div>
 
+      {/* 텍스트 에디터 */}
+      <textarea
+        className="w-full h-60 p-4 border border-gray-300 rounded-md bg-gray-50 text-base focus:outline-none focus:ring-2 focus:ring-green-200"
+        placeholder="내용을 입력해주세요. 사진, 링크, 코드 등 자유롭게 작성할 수 있어요!"
+      />
+
       {/* 업로드 버튼 */}
       <div className="mt-4 flex justify-end">
         <button
