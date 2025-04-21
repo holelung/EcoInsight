@@ -59,26 +59,11 @@ export default function WriteAuthPage() {
             className="w-full p-4 text-xl font-semibold border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300"
         />
 
-        {/* Toast UI 에디터 */}
-        <div className="mt-6">
-        <Editor
-            ref={editorRef}
-            height="400px"
-            initialEditType="wysiwyg"
-            previewStyle="vertical"
-            autofocus={true}
-            plugins={[colorSyntax]}
-            placeholder="내용을 입력해주세요. 마크다운을 자유롭게 활용할 수 있어요!"
-            hideModeSwitch={true}
-            toolbarItems={[
-                ["bold", "italic", "strike"],
-                ["hr", "quote"],
-                ["ul", "ol"],
-                ["image", "link"],
-                ["codeblock"],
-            ]}
+        {/* 텍스트 에디터 */}
+        <textarea
+            className="w-full h-60 p-4 border border-gray-300 rounded-md bg-gray-50 text-base focus:outline-none focus:ring-2 focus:ring-green-200"
+            placeholder="내용을 입력해주세요. 사진, 링크, 코드 등 자유롭게 작성할 수 있어요!"
         />
-        </div>
 
         {/* 업로드 버튼 */}
         <div className="mt-4 flex justify-end">
