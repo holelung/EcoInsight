@@ -45,7 +45,7 @@ const FrequencyAskPage = () => {
       <br />
       <hr />
       <br />
-      <div id="mb-6">
+      <div className="mb-6">
         {faqList.map((faq, index) => (
           <div key={index}>
             <button
