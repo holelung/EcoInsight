@@ -19,7 +19,7 @@ export default function ReportPage({ isOpen, onClose, author, postTitle }) {
   const handleSubmit = () => {
     if (selectedReason) {
       alert("신고가 완료되었습니다.");
-      onClose(); // navigate(-1) 제거 → 게시글 화면 유지
+      onClose();
     }
   };
 
