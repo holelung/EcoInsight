@@ -1,10 +1,17 @@
-// src/pages/EditProfile/EditProfile.jsx
+import { useContext, useEffect } from 'react';
+import { AuthContext } from '../Context/AuthContext';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; // axios 임포트
 
 function EditProfile() {
   const navigate = useNavigate();
+  const { auth } = useContext(AuthContext);
+   useEffect(() => {
+     if (!auth.isAuthenticated) {
+       navigate('/login', { replace: true });
+     }
+   }, [auth.isAuthenticated, navigate]);
 
   // 본인 확인용
   const [currentPw, setCurrentPw] = useState('');
@@ -159,20 +166,6 @@ function EditProfile() {
               id="name"
               type="text"
               defaultValue="홍길동"
-              readOnly
-              className="w-full p-2 border border-gray-200 bg-gray-100 rounded"
-            />
-          </div>
-
-          {/* 주민등록번호 (읽기 전용) */}
-          <div className="mb-6">
-            <label htmlFor="ssn" className="block font-semibold text-gray-700 mb-1">
-              주민등록번호
-            </label>
-            <input
-              id="ssn"
-              type="text"
-              defaultValue="921010-1******"
               readOnly
               className="w-full p-2 border border-gray-200 bg-gray-100 rounded"
             />

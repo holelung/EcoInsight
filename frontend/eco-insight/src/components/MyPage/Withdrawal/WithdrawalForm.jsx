@@ -1,3 +1,5 @@
+import { useContext, useEffect } from 'react';
+import { AuthContext } from '../../Context/AuthContext';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -5,6 +7,12 @@ function WithdrawalForm() {
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const { auth } = useContext(AuthContext);
+   useEffect(() => {
+     if (!auth.isAuthenticated) {
+       navigate('/login', { replace: true });
+     }
+   }, [auth.isAuthenticated, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

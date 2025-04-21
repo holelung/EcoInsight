@@ -1,8 +1,16 @@
+import { useContext, useEffect } from 'react';
+import { AuthContext } from '../Context/AuthContext';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function MyPage() {
   const navigate = useNavigate();
+  const { auth } = useContext(AuthContext);
+     useEffect(() => {
+       if (!auth.isAuthenticated) {
+         navigate('/login', { replace: true });
+       }
+     }, [auth.isAuthenticated, navigate]);
 
   // 로그인된 유저 정보 (예시)
   const userInfo = {

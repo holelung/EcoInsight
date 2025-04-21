@@ -39,7 +39,7 @@ import CommunityListPage from "./components/Board/Community/CommunityListPage.js
 import CommunityBoardDetail from "./components/Board/Community/CommunityBoardDetail.jsx";
 import AuthBoardDetail from "./components/Board/AuthBoard/AuthBoardDetail.jsx";
 import ChangePassword from "./components/MyPage/ChangePassword.jsx";
-
+import UserRoute from "./components/RouteGuard/UserRoute.jsx";
 
 
 
@@ -50,13 +50,6 @@ function App() {
         {/* 사용자 레이아웃 */}
         <Route element={<UserLayout />}>
           <Route path="/" element={<HomePage />} />
-
-          <Route path="/mypage" element={<MyPage />} />
-          <Route path="/myposts" element={<Myposts />} />
-          <Route path="/withdrawal/form" element={<WithdrawalForm />} />
-          <Route path="/withdrawal/ok" element={<OkWithdrawal />} />
-          <Route path="/withdrawal/check" element={<CheckWithdrawal />} />
-          <Route path="/editprofile" element={<EditProfile />} />
           <Route path="/board/:type" element={<CommunityListPage />} />
           <Route path="/board/cert" element={<AuthListPage />} />
           <Route path="/board/cert:id" element={<AuthBoardDetail />} />
@@ -70,6 +63,16 @@ function App() {
           <Route path="/find-id/result-id" element={<ResultId />} />
           <Route path="/findPassword/resetpassword" element={<ResetPassword />}/>
           <Route path="/changepassword" element={<ChangePassword />}/>
+
+
+          {/* 로그인 유저 전용 */}
+          <Route path="/mypage" element={<UserRoute><MyPage /></UserRoute>} />
+          <Route path="/myposts" element={<UserRoute><Myposts /></UserRoute>} />
+          <Route path="/editprofile" element={<UserRoute><EditProfile /></UserRoute>} />
+          <Route path="/changepassword" element={<UserRoute><ChangePassword /></UserRoute>} />
+          <Route path="/withdrawal/form" element={<UserRoute><WithdrawalForm /></UserRoute>} />
+          <Route path="/withdrawal/ok" element={<UserRoute><OkWithdrawal /></UserRoute>} />
+          <Route path="/withdrawal/check" element={<UserRoute><CheckWithdrawal /></UserRoute>} />
 
         </Route>
 
