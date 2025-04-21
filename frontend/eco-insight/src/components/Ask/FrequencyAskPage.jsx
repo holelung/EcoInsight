@@ -23,8 +23,6 @@ const FrequencyAskPage = () => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  const searchQuestion = () => {};
-
   const filteredList = faqList.filter((faq) => {
     const matchCategory =
       selectedCategory === "all" || faq.category === selectedCategory;
