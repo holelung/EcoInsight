@@ -4,81 +4,81 @@ import axios from "axios";
 
 const dummyData = [
     {
-        id: 1,
+        no: 1,
         title: "인증샷 올려요!",
         writer: "gunam90",
         createdDate: "2025.04.18"
     },
     {
-        id: 2,
+        no: 2,
         title: "오늘도 인증 성공",
         writer: "minji23",
         createdDate: "2025.04.17"
     },
     {
-        id: 3,
+        no: 3,
         title: "이건 좀 자랑하고 싶어요",
         writer: "sunny",
         createdDate: "2025.04.16"
     },
     {
-        id: 4,
+        no: 4,
         title: "꾸준함이 답이다",
         writer: "hoya",
         createdDate: "2025.04.15"
     },
     {
-        id: 5,
-        title: "첫 인증입니다!",
+        no: 5,
+        title: "뉴비 첫 인증입니다!",
         writer: "newbie",
         createdDate: "2025.04.14"
     },
     {
-        id: 6,
+        no: 6,
         title: "도전 100일!",
         writer: "prouser",
         createdDate: "2025.04.13"
     },
     {
-        id: 7,
+        no: 7,
         title: "일상 공유",
         writer: "dailyjoy",
         createdDate: "2025.04.12"
     },
     {
-        id: 8,
+        no: 8,
         title: "또 성공!",
         writer: "minji23",
         createdDate: "2025.04.11"
     },
     {
-        id: 9,
+        no: 9,
         title: "진짜 힘들었어요ㅠㅠ",
         writer: "gunam90",
         createdDate: "2025.04.10"
     },
     {
-        id: 10,
+        no: 10,
         title: "보람찬 하루!",
         writer: "happyday",
         createdDate: "2025.04.09"
     },
     {
-        id: 11,
-        title: "ㅁㄴ옴ㄴ옴ㄴ오",
+        no: 11,
+        title: "333",
         writer: "happadfjadfjadyday",
         createdDate: "2025.04.08"
     },
     {
-        id: 12,
-        title: "ㄴㅇㅎ뮨호ㅠ민ㅇㅎ!",
+        no: 12,
+        title: "2빠다",
         writer: "dahsafd",
         createdDate: "2025.04.08"
     },
     {
-        id: 13,
-        title: "ㅁㄴ옴ㄴ옴ㄴ옴",
-        writer: "fxc",
+        no: 13,
+        title: "1빠다",
+        writer: "fxcker",
         createdDate: "2025.04.07"
     },
 ];
@@ -126,9 +126,9 @@ const AuthListPage = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                     {boards.map((board) => (
                         <div
-                            key={board.id}
+                            key={board.no}
                             className="border rounded-xl overflow-hidden shadow hover:shadow-lg transition cursor-pointer hover:border-2 hover:border-green-500"
-                            onClick={() => navi(`/board/cert/${board.id}`)}
+                            onClick={() => navi(`/board/cert/${board.no}`)}
                         >
                             <div className="bg-blue-100 flex items-center justify-center h-40">이미지</div>
                             <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold">
@@ -149,8 +149,7 @@ const AuthListPage = () => {
                 <div className="flex justify-center mt-6">
                     <button
                         onClick={loadMoreHandler}
-                        className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 cursor-pointer hover:border-2 hover:border-green-500"
-                    >
+                        className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 cursor-pointer hover:border-2 hover:border-green-500">
                         더보기 ∇
                     </button>
                 </div>
