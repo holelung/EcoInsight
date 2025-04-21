@@ -1,36 +1,39 @@
-import { useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import SummaryCard from "../../../components/DashBoard/SummaryCard";
 import {memberList} from "../data";
 import SelectOptions from "../../../components/Button/SelectOptions";
+import { PageButton } from "../../../components/Button/Button";
+import Pagination from "../../../components/Pagination/Pagination";
+
 
 
 const PointManagementPage = () => {
   const [members] = useState(memberList);
   const [pointValue, setPointValue] = useState(0);
   const [search, setSearch] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortOrder, setSortOrder] = useState("Newest");
   const [selectedUserId, setSelectedUserId] = useState(null);
 
-  const filteredMembers = members
-    .filter((u) =>
-      [u.memberName, u.memberId, u.memberPh].some((field) =>
-        field.toLowerCase().includes(search.toLowerCase())
+  const filteredMembers = useMemo(() => {
+    return members
+      .filter((u) =>
+        [u.memberName, u.memberId, u.memberPh].some((field) =>
+          field.toLowerCase().includes(search.toLowerCase())
+        )
       )
-    )
-    .sort((a, b) => {
-      if (sortOrder === "Newest") return b.id - a.id;
-      if (sortOrder === "Oldest") return a.id - b.id;
-      return 0;
-    });
+      .sort((a, b) => {
+        if (sortOrder === "Newest") return b.id - a.id;
+        if (sortOrder === "Oldest") return a.id - b.id;
+        return 0;
+      });
+  }, [members, search, sortOrder]);
 
-  const indexOfLastUser = currentPage * rowsPerPage;
-  const indexOfFirstUser = indexOfLastUser - rowsPerPage;
-  const currentMembers = filteredMembers.slice(
-    indexOfFirstUser,
-    indexOfLastUser
-  );
+  const currentMembers = useMemo(() => {
+    const startIndex = currentPage * rowsPerPage;
+    return filteredMembers.slice(startIndex, startIndex + rowsPerPage);
+  },[filteredMembers, currentPage, rowsPerPage]); 
   const totalPages = Math.ceil(filteredMembers.length / rowsPerPage);
 
   const handleApplyPoint = (memberName) => {
@@ -131,8 +134,8 @@ const PointManagementPage = () => {
         </thead>
         <tbody>
           {currentMembers.map((user) => (
-            <>
-              <tr key={user.memberNo} className="border-t hover:bg-gray-50">
+            <Fragment key={user.MemberNo}>
+              <tr className="border-t hover:bg-gray-50">
                 <td className="px-4 py-3">{user.memberName}</td>
                 <td>{user.memberId}</td>
                 <td>{user.memberPh}</td>
@@ -159,7 +162,7 @@ const PointManagementPage = () => {
                         {user.memberName} 님에게 포인트 지급:
                       </span>
                       <input
-                        type="number"
+                        type="text"
                         value={pointValue}
                         onChange={(e) => setPointValue(e.target.value)}
                         className="border px-3 py-2 w-32 rounded"
@@ -175,25 +178,18 @@ const PointManagementPage = () => {
                   </td>
                 </tr>
               )}
-            </>
+            </Fragment>
           ))}
         </tbody>
       </table>
 
       {/* 페이지네이션 */}
-      <div className="flex items-center justify-center gap-2 mt-6">
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
-          <button
-            key={n}
-            onClick={() => setCurrentPage(n)}
-            className={`px-3 py-1 rounded ${
-              n === currentPage ? "bg-lime-400 text-white" : "bg-gray-200"
-            }`}
-          >
-            {n}
-          </button>
-        ))}
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
+
     </div>
   );
 };
