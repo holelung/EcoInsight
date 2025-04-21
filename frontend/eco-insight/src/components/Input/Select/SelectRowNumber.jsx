@@ -1,5 +1,5 @@
 
-const SelectOptions = () => {
+const SelectRowNumber = () => {
   return (
     <>
       <option value={1}>1</option>
@@ -9,7 +9,6 @@ const SelectOptions = () => {
       <option value={20}>20</option>
     </>
   );
+};
 
-}
-
-export default SelectOptions;
+export default SelectRowNumber;

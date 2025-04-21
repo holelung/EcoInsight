@@ -41,6 +41,9 @@ import AuthBoardDetail from "./components/Board/AuthBoard/AuthBoardDetail.jsx";
 import ChangePassword from "./components/MyPage/ChangePassword.jsx";
 import NoticeBoard from "./components/Board/Notice/NoticeBoard.jsx";
 import NoticeBoardDetail from "./components/Board/Notice/NoticeBoardDetail.jsx";
+import NoticeWrite from "./pages/Admin/NoticeBoardManagementPage/NoticeWrite.jsx";
+
+
 
 function App() {
   return (
@@ -93,18 +96,10 @@ function App() {
           <Route path="dashboard" element={<AdminDashBoard />} />
           <Route path="point-manage" element={<PointManagementPage />} />
           <Route path="account-manage" element={<AccountManagementPage />} />
-          <Route
-            path="authboard-manage"
-            element={<AuthBoardManagementPage />}
-          />
-          <Route
-            path="communityboard-manage"
-            element={<CommunityBoardManagementPage />}
-          />
-          <Route
-            path="noticeboard-manage"
-            element={<NoticeBoardManagementPage />}
-          />
+          <Route path="authboard-manage" element={<AuthBoardManagementPage />} />
+          <Route path="communityboard-manage" element={<CommunityBoardManagementPage />} />
+          <Route path="noticeboard-manage" element={<NoticeBoardManagementPage />} />
+          <Route path="notice-write" element={<NoticeWrite />} />
         </Route>
       </Routes>
     </AuthProvider>
