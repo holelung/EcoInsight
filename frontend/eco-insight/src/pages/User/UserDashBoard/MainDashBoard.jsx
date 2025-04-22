@@ -20,8 +20,8 @@ const MainDashBoard = () => {
         <div className="flex-[1] min-w-[220px] max-w-[260px] flex flex-col gap-4 border border-dashed border-gray-300 p-4">
           <RegionRankingChart />
           <div className="border border-gray-300 p-3">
-            인증게시판 글? 아니면 실천방법? 아직 모르겠어요 안정했어요
-            살려주세요 감사합니다 (예정)
+            인증게시판 글? 아니면 실천방법? 아직모르겠어요 안정했어요 살려주세요
+            감사합니다 (예정)
           </div>
         </div>
       </div>
