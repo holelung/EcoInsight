@@ -1,13 +1,13 @@
 import React, { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-export default function WriteAuthPage() {
-  const { type } = useParams();
-  const navi = useNavigate();
-  const editorRef = useRef();
-  const [title, setTitle] = useState("");
-  const [previewImage, setPreviewImage] = useState(null); // 🖼️ 이미지 미리보기용 상태
-  const [option, setOption] = useState("");
+export default function AuthBoardWritePage() {
+    const { type } = useParams();
+    const navi = useNavigate();
+    const editorRef = useRef();
+    const [title, setTitle] = useState("");
+    const [previewImage, setPreviewImage] = useState(null); // 🖼️ 이미지 미리보기용 상태
+    const [option, setOption] = useState("");
 
   const handleOnChange = (e) => {
     setOption(e.target.value);
@@ -62,25 +62,20 @@ export default function WriteAuthPage() {
         className="w-full p-4 text-xl font-semibold border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300"
       />
 
-      {/* Toast UI 에디터 */}
-      <div className="mt-6">
-        <Editor
-          ref={editorRef}
-          height="400px"
-          initialEditType="wysiwyg"
-          previewStyle="vertical"
-          autofocus={true}
-          placeholder="내용을 입력해주세요. 마크다운을 자유롭게 활용할 수 있어요!"
-          hideModeSwitch={true}
-          toolbarItems={[
-            ["bold", "italic", "strike"],
-            ["hr", "quote"],
-            ["ul", "ol"],
-            ["image", "link"],
-            ["codeblock"],
-          ]}
+        {/* 제목 입력 */}
+        <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="제목을 입력하세요"
+            className="w-full p-4 text-xl font-semibold border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300"
         />
-      </div>
+
+        {/* 텍스트 에디터 */}
+        <textarea
+            className="w-full h-60 p-4 border border-gray-300 rounded-md bg-gray-50 text-base focus:outline-none focus:ring-2 focus:ring-green-200"
+            placeholder="내용을 입력해주세요. 사진, 링크, 코드 등 자유롭게 작성할 수 있어요!"
+        />
 
       {/* 텍스트 에디터 */}
       <textarea
