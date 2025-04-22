@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-const WritePostPage = () => {
+export default function WritePostPage() {
   const { type } = useParams();
   const navigate = useNavigate();
 
@@ -46,7 +46,7 @@ const WritePostPage = () => {
 
       {/* 텍스트 에디터 */}
       <textarea
-        className="w-full h-60 p-4 border border-gray-300 rounded-md bg-gray-50 text-base focus:outline-none focus:ring-2 focus:ring-green-200"
+        className="w-full h-60 p-4 border border-gray-300 rounded-md bg-gray-50 text-base resize-none focus:outline-none focus:ring-2 focus:ring-green-200"
         placeholder="내용을 입력해주세요. 사진, 링크, 코드 등 자유롭게 작성할 수 있어요!"
       />
 
@@ -67,6 +67,4 @@ const WritePostPage = () => {
       </div>
     </div>
   );
-};
-
-export default WritePostPage;
+}

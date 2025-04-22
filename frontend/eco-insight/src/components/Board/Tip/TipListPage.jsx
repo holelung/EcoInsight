@@ -5,7 +5,7 @@ const datas = [
   {
     id: 1,
     title: "첫 번째 게시글 제목",
-    username: "admin01",
+    author: "사용자1",
     date: "2025-04-15",
     content: "이것은 첫 번째 게시글 내용입니다.",
     views: 3,
@@ -13,7 +13,7 @@ const datas = [
   {
     id: 2,
     title: "두 번째 게시글 제목",
-    username: "사용자2",
+    author: "사용자2",
     date: "2025-04-14",
     content: "이것은 두 번째 게시글 내용입니다.",
     views: 1,
@@ -21,7 +21,7 @@ const datas = [
   {
     id: 3,
     title: "자유 게시판 글 작성해요",
-    username: "사용자3",
+    author: "사용자3",
     date: "2025-04-13",
     content: "자유 게시판에 작성한 글입니다.",
     views: 5,
@@ -29,7 +29,7 @@ const datas = [
   {
     id: 4,
     title: "팁 게시판을 잘 활용하기",
-    username: "사용자4",
+    author: "사용자4",
     date: "2025-04-12",
     content: "이 게시글에서는 팁 게시판을 잘 활용하는 방법에 대해 다룹니다.",
     views: 2,
@@ -37,7 +37,7 @@ const datas = [
   {
     id: 5,
     title: "인증 게시판 사용 방법",
-    username: "사용자5",
+    author: "사용자5",
     date: "2025-04-11",
     content: "인증 게시판을 어떻게 사용하는지 설명하는 글입니다.",
     views: 0,
@@ -45,7 +45,7 @@ const datas = [
   {
     id: 6,
     title: "자유롭게 이야기 나누는 게시판",
-    username: "사용자6",
+    author: "사용자6",
     date: "2025-04-10",
     content: "여기서는 자유롭게 이야기를 나눌 수 있습니다.",
     views: 4,
@@ -53,7 +53,7 @@ const datas = [
   {
     id: 7,
     title: "개발 관련 팁 공유",
-    username: "사용자7",
+    author: "사용자7",
     date: "2025-04-09",
     content: "개발에 유용한 팁들을 공유하는 게시글입니다.",
     views: 6,
@@ -61,7 +61,7 @@ const datas = [
   {
     id: 8,
     title: "인증 게시판 참여 방법",
-    username: "사용자8",
+    author: "사용자8",
     date: "2025-04-08",
     content: "인증 게시판에 참여하는 방법에 대해 다룹니다.",
     views: 2,
@@ -69,7 +69,7 @@ const datas = [
   {
     id: 9,
     title: "질문 게시판에 질문하기",
-    username: "사용자9",
+    author: "사용자9",
     date: "2025-04-07",
     content: "질문 게시판에 올릴 수 있는 질문들에 대해 설명합니다.",
     views: 3,
@@ -77,7 +77,7 @@ const datas = [
   {
     id: 10,
     title: "자유게시판에 글 남기기",
-    username: "사용자10",
+    author: "사용자10",
     date: "2025-04-06",
     content: "자유게시판에 글을 남기는 방법에 대한 팁을 제공합니다.",
     views: 0,
@@ -85,7 +85,7 @@ const datas = [
   {
     id: 11,
     title: "리액트 프로젝트 질문",
-    username: "사용자11",
+    author: "사용자11",
     date: "2025-04-05",
     content: "리액트 프로젝트에 대한 질문을 올려봅니다.",
     views: 2,
@@ -93,7 +93,7 @@ const datas = [
   {
     id: 12,
     title: "인증 게시판을 활용하는 방법",
-    username: "사용자12",
+    author: "사용자12",
     date: "2025-04-04",
     content: "인증 게시판을 어떻게 잘 활용할 수 있는지 설명합니다.",
     views: 1,
@@ -101,7 +101,7 @@ const datas = [
   {
     id: 13,
     title: "팁 게시판에 유용한 정보 올리기",
-    username: "사용자13",
+    author: "사용자13",
     date: "2025-04-03",
     content: "팁 게시판에 올릴 수 있는 유용한 정보들을 소개합니다.",
     views: 3,
@@ -109,7 +109,7 @@ const datas = [
   {
     id: 14,
     title: "개발자 팁과 트릭",
-    username: "사용자14",
+    author: "사용자14",
     date: "2025-04-02",
     content: "개발자가 알아두면 유용한 팁과 트릭을 공유합니다.",
     views: 0,
@@ -117,7 +117,7 @@ const datas = [
   {
     id: 15,
     title: "자유게시판에서 대화하기",
-    username: "사용자15",
+    author: "사용자15",
     date: "2025-04-01",
     content: "자유게시판에서 어떤 주제로 대화할지에 대해 이야기합니다.",
     views: 5,
@@ -125,7 +125,7 @@ const datas = [
   {
     id: 16,
     title: "인증 게시판 글 작성하기",
-    username: "사용자16",
+    author: "사용자16",
     date: "2025-03-31",
     content: "인증 게시판에 글을 작성하는 방법에 대해 설명합니다.",
     views: 2,
@@ -133,7 +133,7 @@ const datas = [
   {
     id: 17,
     title: "리액트로 웹 애플리케이션 만들기",
-    username: "사용자17",
+    author: "사용자17",
     date: "2025-03-30",
     content: "리액트로 웹 애플리케이션을 만드는 방법을 소개합니다.",
     views: 4,
@@ -141,7 +141,7 @@ const datas = [
   {
     id: 18,
     title: "질문 게시판에 질문 작성하기",
-    username: "사용자18",
+    author: "사용자18",
     date: "2025-03-29",
     content: "질문 게시판에 질문을 작성하는 방법에 대해 다룹니다.",
     views: 3,
@@ -149,7 +149,7 @@ const datas = [
   {
     id: 19,
     title: "개발 팁: 코드 최적화 방법",
-    username: "사용자19",
+    author: "사용자19",
     date: "2025-03-28",
     content: "개발 과정에서 코드 최적화 방법을 다룹니다.",
     views: 2,
@@ -157,14 +157,14 @@ const datas = [
   {
     id: 20,
     title: "리액트 최적화 팁",
-    username: "사용자20",
+    author: "사용자20",
     date: "2025-03-27",
     content: "리액트 애플리케이션을 최적화하는 팁을 공유합니다.",
     views: 1,
   },
 ];
 
-const CommunityListPage = () => {
+export default function TipListPage() {
   const { type } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -200,6 +200,7 @@ const CommunityListPage = () => {
 
       {/* 필터 + 검색 */}
       <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
+        {/* 버튼 그룹 */}
         <div className="flex gap-2">
           <button
             className="px-4 py-2 rounded border border-gray-300 bg-transparent text-black"
@@ -215,6 +216,7 @@ const CommunityListPage = () => {
           </button>
         </div>
 
+        {/* 검색 */}
         <div className="flex gap-2">
           <input
             value={searchQuery}
@@ -264,7 +266,7 @@ const CommunityListPage = () => {
           className="grid grid-cols-6 border-b border-gray-200 text-center text-sm py-2 hover:bg-gray-50"
         >
           <div>{data.id}</div>
-          <div>{data.username}</div>
+          <div>{data.author}</div>
           <div className="col-span-2 text-left">
             <Link
               to={`/post/${data.id}`}
@@ -278,7 +280,7 @@ const CommunityListPage = () => {
         </div>
       ))}
 
-      {/* 페이지네이션 */}
+      {/* 페이지네이션 버튼 */}
       <div className="flex justify-center mt-6 gap-2">
         {Array.from(
           { length: Math.ceil(filteredPosts.length / postsPerPage) },
@@ -302,6 +304,4 @@ const CommunityListPage = () => {
       </div>
     </div>
   );
-};
-
-export default CommunityListPage;
+}

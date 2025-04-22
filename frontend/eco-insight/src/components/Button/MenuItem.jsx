@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 
-const MenuItem = ({ children, onClick, isActive }) => {
+const MenuItem = ({ children, onClick }) => {
   const navi = useNavigate();
 
   return (
     <>
       <li
-        className={`cursor-pointer hover:text-lime-500 ${isActive ? "text-lime-400" : "text-gray-700"}`}
+        className="cursor-pointer hover:text-green-600"
         onClick={onClick}
       >
         {children}

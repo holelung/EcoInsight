@@ -1,7 +1,5 @@
 import { useState } from "react";
 import SummaryCard from "../../../components/DashBoard/SummaryCard";
-import Pagination from "../../../components/Pagination/Pagination";
-import SelectOptions from "../../../components/Button/SelectOptions";
 
 // Mock 데이터
 const mockUsers = Array.from({ length: 20 }, (_, i) => ({
@@ -14,7 +12,7 @@ const mockUsers = Array.from({ length: 20 }, (_, i) => ({
   point: i % 3 === 0 ? 0 : (i + 1) * 100,
 }));
 
-const NoticeBoardManagementPage = () => {
+const AdminAuthBoard = () => {
   const [users] = useState(mockUsers);
   const [pointValue, setPointValue] = useState(0);
   const [search, setSearch] = useState("");
@@ -90,7 +88,9 @@ const NoticeBoardManagementPage = () => {
                 setCurrentPage(1);
               }}
             >
-              <SelectOptions />
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={20}>20</option>
             </select>
           </div>
           <div className="flex items-center gap-2">
@@ -164,13 +164,21 @@ const NoticeBoardManagementPage = () => {
       </div>
 
       {/* 페이지네이션 */}
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={setCurrentPage}
-      />
+      <div className="flex items-center justify-center gap-2 mt-6">
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+          <button
+            key={n}
+            onClick={() => setCurrentPage(n)}
+            className={`px-3 py-1 rounded ${
+              n === currentPage ? "bg-purple-600 text-white" : "bg-gray-200"
+            }`}
+          >
+            {n}
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
 
-export default NoticeBoardManagementPage;
+export default AdminAuthBoard;

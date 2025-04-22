@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import ReportPage from "../ReportPage";
 import { AuthContext } from "../../Context/AuthContext";
 
-export default function CommunityBoardDetail() {
+export default function PostDetailPage() {
   const navigate = useNavigate();
   const { auth } = useContext(AuthContext);
 
@@ -111,7 +111,7 @@ export default function CommunityBoardDetail() {
       {/* 수정/삭제/신고 버튼 */}
       <div className="flex justify-end gap-2">
         {/* auth.isAuthenticated && */}
-        {auth.isAuthenticated && isEditing ? (
+        {isEditing ? (
           <button
             onClick={handleSaveEdit}
             className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
@@ -120,31 +120,27 @@ export default function CommunityBoardDetail() {
           </button>
         ) : (
           <>
-            {auth.isAuthenticated && auth.loginInfo == auth && (
-              <>
-                <button
-                  onClick={() => {
-                    setIsEditing(true);
-                    setEditedTitle(title);
-                    setEditedContent(content);
-                  }}
-                  className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
-                >
-                  수정하기
-                </button>
-                <button
-                  onClick={handleDelete}
-                  className="px-4 py-2 border border-red-500 text-red-600 rounded hover:bg-red-50"
-                >
-                  삭제하기
-                </button>
-              </>
-            )}
+            <button
+              onClick={() => {
+                setIsEditing(true);
+                setEditedTitle(title);
+                setEditedContent(content);
+              }}
+              className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
+            >
+              수정하기
+            </button>
             <button
               onClick={() => setIsReportOpen(true)}
               className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
             >
               신고
+            </button>
+            <button
+              onClick={handleDelete}
+              className="px-4 py-2 border border-red-500 text-red-600 rounded hover:bg-red-50"
+            >
+              삭제하기
             </button>
           </>
         )}
@@ -152,31 +148,29 @@ export default function CommunityBoardDetail() {
 
       {/* 댓글 목록 */}
       <div className="space-y-4">
-        {comments.map((cmt, index) => (
+        {comments.map((cmt, idx) => (
           <div
-            key={index}
+            key={idx}
             className="p-4 bg-white border border-gray-200 rounded-md space-y-2"
           >
             <div className="flex justify-between items-center">
               <span>{cmt.text}</span>
               <button
-                onClick={() =>
-                  setReplyingTo(replyingTo === index ? null : index)
-                }
+                onClick={() => setReplyingTo(replyingTo === idx ? null : idx)}
                 className="text-sm text-black hover:underline"
               >
                 답글 쓰기
               </button>
             </div>
-            {cmt.replies.map((reply, rindex) => (
+            {cmt.replies.map((reply, rIdx) => (
               <div
-                key={rindex}
+                key={rIdx}
                 className="ml-4 px-3 py-2 bg-gray-100 border border-gray-300 text-sm rounded"
               >
                 ↪ {reply}
               </div>
             ))}
-            {replyingTo === index && (
+            {replyingTo === idx && (
               <div className="flex gap-2 mt-2 ml-4">
                 <input
                   value={newReply}
@@ -185,7 +179,7 @@ export default function CommunityBoardDetail() {
                   className="flex-grow px-2 py-1 border border-gray-300 rounded"
                 />
                 <button
-                  onClick={() => handleAddReply(index)}
+                  onClick={() => handleAddReply(idx)}
                   className="px-3 py-1 bg-black text-white border border-black rounded"
                 >
                   등록

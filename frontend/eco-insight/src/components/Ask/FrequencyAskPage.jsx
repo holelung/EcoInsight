@@ -34,7 +34,7 @@ const FrequencyAskPage = () => {
   });
 
   return (
-    <div className="max-w-[1000px] mx-auto p-10FA-container">
+    <div className="max-w-[1000px] mx-auto p-10">
       <Title>자주하는 질문</Title>
       <br />
       <br />
@@ -50,10 +50,9 @@ const FrequencyAskPage = () => {
           }
         }}
       />
-
       <button
         onClick={() => setSearchTerm(searchInput.trim())}
-        className="ml-2 px-4 py-2 bg-main text-black rounded hover:cursor-pointer"
+        className="ml-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
       >
         검색
       </button>
@@ -64,10 +63,10 @@ const FrequencyAskPage = () => {
           <button
             key={cat.value}
             onClick={() => setSelectedCategory(cat.value)}
-            className={`px-10 py-2 text-lg rounded 
+            className={`px-4 py-2 text-lg rounded 
               ${
                 selectedCategory === cat.value
-                  ? "bg-main text-black"
+                  ? "bg-blue-500 text-white"
                   : "bg-gray-100 hover:bg-gray-200"
               }`}
           >
@@ -75,9 +74,9 @@ const FrequencyAskPage = () => {
           </button>
         ))}
       </div>
-      <br />
+
       <hr className="mb-6" />
-      <br />
+
       <div className="flex flex-col gap-3">
         {filteredList.map((faq, index) => (
           <div key={index}>
@@ -88,17 +87,17 @@ const FrequencyAskPage = () => {
               {faq.question}
             </button>
             {openIndex === index && (
-              <div className="p-4 bg-gray-50 border-l-4 border-main rounded-b text-base animate-fadeIn">
+              <div className="p-4 bg-gray-50 border-l-4 border-blue-400 rounded-b text-base animate-fadeIn">
                 {faq.answer}
               </div>
             )}
           </div>
         ))}
       </div>
-      <br />
+
       <button
-        className="mt-10 float-right w-[250px] h-[50px] text-[20px] bg-gray-100 rounded hover:bg-gray-200"
         onClick={() => navi("/privateAskPage")}
+        className="mt-10 float-right w-[250px] h-[50px] text-[20px] bg-gray-100 rounded hover:bg-gray-200"
       >
         찾는 질문이 없어요!
       </button>

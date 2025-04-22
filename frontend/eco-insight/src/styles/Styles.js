@@ -6,4 +6,3 @@ export const Title = styled.div`
   background-color: #b9ff66;
   font-weight: bold;
 `;
-

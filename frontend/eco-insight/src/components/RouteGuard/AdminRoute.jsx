@@ -8,7 +8,7 @@ const AdminRoute = ({ children }) => {
   // return auth.isAuthenticated && auth.role === "ROLE_ADMIN" ? (
   //   children
   // ) : (
-  //   <Navigate to="/admin/login" replace />
+  //   <Navigate to="/" replace />
   // );
   return children;
 };
