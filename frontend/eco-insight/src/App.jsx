@@ -44,6 +44,7 @@ import NoticeBoard from "./components/Board/Notice/NoticeBoard.jsx";
 import NoticeBoardDetail from "./components/Board/Notice/NoticeBoardDetail.jsx";
 import NoticeBoardWrite from "./components/Board/Notice/NoticeBoardWrite.jsx";
 import NoticeWrite from "./pages/Admin/NoticeBoardManagementPage/NoticeWrite.jsx";
+import Notice from "./components/Board/Notice/NoticeBoard.jsx"
 
 
 function App() {
@@ -65,16 +66,16 @@ function App() {
           <Route path="/privateAskPage" element={<PrivateAskPage />} />
           <Route path="/find-id/result-id" element={<ResultId />} />
 
-           {/* 로그인 유저 전용 */}
-           <Route element={<UserRoute />}>
-            <Route path="/mypage"          element={<MyPage />} />
-            <Route path="/myposts"         element={<Myposts />} />
-            <Route path="/editprofile"     element={<EditProfile />} />
-            <Route path="/changepassword"  element={<ChangePassword />} />
-            <Route path="/withdrawal/check" element={<CheckWithdrawal />} />
-            <Route path="/withdrawal/form"  element={<WithdrawalForm />} />
-            <Route path="/withdrawal/ok"    element={<OkWithdrawal />} />
-          </Route>
+        {/* 로그인 유저 전용 */}
+        <Route element={<UserRoute />}>
+          <Route path="/mypage"          element={<MyPage />} />
+          <Route path="/myposts"         element={<Myposts />} />
+          <Route path="/editprofile"     element={<EditProfile />} />
+          <Route path="/changepassword"  element={<ChangePassword />} />
+          <Route path="/withdrawal/check" element={<CheckWithdrawal />} />
+          <Route path="/withdrawal/form"  element={<WithdrawalForm />} />
+          <Route path="/withdrawal/ok"    element={<OkWithdrawal />} />
+        </Route>
 
           <Route path="/notice" element={<Notice />} />
           <Route path="/board/notice/:id" element={<NoticeBoardDetail />} />

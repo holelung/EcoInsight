@@ -2,21 +2,12 @@ import React, { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 export default function AuthBoardWritePage() {
-<<<<<<< HEAD
-  const { type } = useParams();
-  const navi = useNavigate();
-  const editorRef = useRef();
-  const [title, setTitle] = useState("");
-  const [previewImage, setPreviewImage] = useState(null); // 🖼️ 이미지 미리보기용 상태
-  const [option, setOption] = useState("");
-=======
     const { type } = useParams();
     const navi = useNavigate();
     const editorRef = useRef();
     const [title, setTitle] = useState("");
     const [previewImage, setPreviewImage] = useState(null); // 🖼️ 이미지 미리보기용 상태
     const [option, setOption] = useState("");
->>>>>>> e95079299b6b89211c06bdeb53404e3f5a05fe8e
 
     const handleOnChange = (e) => {
     setOption(e.target.value);
