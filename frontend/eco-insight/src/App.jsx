@@ -20,11 +20,10 @@ import AdminLogin from "./pages/Admin/AdminLogin/AdminLogin.jsx";
 import AdminLayout from "./components/Layout/AdminLayout.jsx";
 import AdminDashBoard from "./pages/Admin/AdminDashBoard/AdminDashBoard.jsx";
 import MainDashBoard from "./pages/User/UserDashBoard/MainDashBoard.jsx";
-import Notice from "./components/Board/Notice/NoticeBoard.jsx";
 import Login from "./components/Auth/Login.jsx";
 import FrequencyAskPage from "./components/Ask/FrequencyAskPage.jsx";
 import PrivateAskPage from "./components/Ask/PrivateAskPage.jsx";
-import WriteAuthPage from "./components/Board/AuthBoard/WriteAuthPage.jsx";
+import WriteAuthPage from "./components/Board/AuthBoard/AuthBoardWritePage.jsx";
 import CommunityBoardManagementPage from "./pages/Admin/CommunityBoardManagementPage/CommunityBoardManagementPage.jsx";
 import PointManagementPage from "./pages/Admin/PointManagementPage/PointManagementPage.jsx";
 import AccountManagementPage from "./pages/Admin/AccountManagementPage/AccountManagementPage.jsx";
@@ -41,7 +40,7 @@ import AuthBoardDetail from "./components/Board/AuthBoard/AuthBoardDetail.jsx";
 import ChangePassword from "./components/MyPage/ChangePassword.jsx";
 import NoticeBoard from "./components/Board/Notice/NoticeBoard.jsx";
 import NoticeBoardDetail from "./components/Board/Notice/NoticeBoardDetail.jsx";
-import NoticeWrite from "./pages/Admin/NoticeBoardManagementPage/NoticeWrite.jsx";
+import NoticeBoardWrite from "./components/Board/Notice/NoticeBoardWrite.jsx";
 
 
 
@@ -99,7 +98,7 @@ function App() {
           <Route path="authboard-manage" element={<AuthBoardManagementPage />} />
           <Route path="communityboard-manage" element={<CommunityBoardManagementPage />} />
           <Route path="noticeboard-manage" element={<NoticeBoardManagementPage />} />
-          <Route path="notice-write" element={<NoticeWrite />} />
+          <Route path="notice-write" element={<NoticeBoardWrite />} />
         </Route>
       </Routes>
     </AuthProvider>

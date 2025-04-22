@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-export default function WriteAuthPage() {
+export default function AuthBoardWritePage() {
   const { type } = useParams();
   const navi = useNavigate();
   const editorRef = useRef();
