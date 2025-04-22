@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const WritePostPage = () => {
+const PostWritePage = () => {
   const { type } = useParams();
   const navigate = useNavigate();
 
@@ -125,4 +125,4 @@ const WritePostPage = () => {
   );
 };
 
-export default WritePostPage;
+export default PostWritePage;
