@@ -24,6 +24,7 @@ import Login from "./components/Auth/Login.jsx";
 import FrequencyAskPage from "./components/Ask/FrequencyAskPage.jsx";
 import PrivateAskPage from "./components/Ask/PrivateAskPage.jsx";
 import WriteAuthPage from "./components/Board/AuthBoard/AuthBoardWritePage.jsx";
+import AuthBoardWritePage from "./components/Board/AuthBoard/AuthBoardWritePage.jsx";
 import CommunityBoardManagementPage from "./pages/Admin/CommunityBoardManagementPage/CommunityBoardManagementPage.jsx";
 import PointManagementPage from "./pages/Admin/PointManagementPage/PointManagementPage.jsx";
 import AccountManagementPage from "./pages/Admin/AccountManagementPage/AccountManagementPage.jsx";
@@ -44,6 +45,7 @@ import NoticeBoardWrite from "./components/Board/Notice/NoticeBoardWrite.jsx";
 
 
 
+
 function App() {
   return (
     <AuthProvider>
@@ -51,17 +53,10 @@ function App() {
         {/* 사용자 레이아웃 */}
         <Route element={<UserLayout />}>
           <Route path="/" element={<HomePage />} />
-
-          <Route path="/mypage" element={<MyPage />} />
-          <Route path="/myposts" element={<Myposts />} />
-          <Route path="/withdrawal/form" element={<WithdrawalForm />} />
-          <Route path="/withdrawal/ok" element={<OkWithdrawal />} />
-          <Route path="/withdrawal/check" element={<CheckWithdrawal />} />
-          <Route path="/editprofile" element={<EditProfile />} />
           <Route path="/board/:type" element={<CommunityListPage />} />
           <Route path="/board/cert" element={<AuthListPage />} />
-          <Route path="/board/cert:id" element={<AuthBoardDetail />} />
-          <Route path="/board/cert:type" element={<WriteAuthPage />} />
+          <Route path="/board/cert/:no" element={<AuthBoardDetail />} />
+          <Route path="/board/cert:type" element={<AuthBoardWritePage />} />
           <Route path="/write/:type" element={<WritePostPage />} />
           <Route path="/post/:id" element={<CommunityBoardDetail />} />
           <Route path="/dashboard" element={<MainDashBoard />} />
@@ -70,11 +65,18 @@ function App() {
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
           <Route path="/privateAskPage" element={<PrivateAskPage />} />
           <Route path="/find-id/result-id" element={<ResultId />} />
-          <Route
-            path="/findPassword/resetpassword"
-            element={<ResetPassword />}
-          />
-          <Route path="/changepassword" element={<ChangePassword />} />
+
+          {/* 로그인 유저 전용 */}
+          <Route path="/mypage" element={<UserRoute><MyPage /></UserRoute>} />
+          <Route path="/myposts" element={<UserRoute><Myposts /></UserRoute>} />
+          <Route path="/editprofile" element={<UserRoute><EditProfile /></UserRoute>} />
+          <Route path="/changepassword" element={<UserRoute><ChangePassword /></UserRoute>} />
+          <Route path="/withdrawal/form" element={<UserRoute><WithdrawalForm /></UserRoute>} />
+          <Route path="/withdrawal/ok" element={<UserRoute><OkWithdrawal /></UserRoute>} />
+          <Route path="/withdrawal/check" element={<UserRoute><CheckWithdrawal /></UserRoute>} />
+          <Route path="/findPassword/resetpassword" element={<ResetPassword />}/> {/* findpassword,changepassword 추가 예정 */}
+          <Route path="/changepassword" element={<ChangePassword />} /> 
+
         </Route>
 
         <Route path="/login" element={<Login />} />

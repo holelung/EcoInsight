@@ -1,8 +1,16 @@
+import { useContext, useEffect } from 'react';
+import { AuthContext } from '../../Context/AuthContext';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function OkWithdrawal() {
   const navigate = useNavigate();
+  const { auth } = useContext(AuthContext);
+   useEffect(() => {
+     if (!auth.isAuthenticated) {
+      navigate('/login', { replace: true });
+     }
+   }, [auth.isAuthenticated, navigate]);
 
   const handleGoHome = () => {
     // Home 페이지(메인)으로 이동
