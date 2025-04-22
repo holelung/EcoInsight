@@ -1,21 +1,22 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
   --color-main: #b9ff66;
   --color-sub: #191a23;
   --color-button1: #f3f3f3;
 }
-
-/* ✅ Toast UI 커스텀 툴바 아이콘 스타일 */
-.toastui-editor-toolbar-icons.color {
-  font-size: 0 !important;
-  position: relative;
+.ProseMirror:focus {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
-.toastui-editor-toolbar-icons.color::after {
-  content: "🎨"; /* 원하는 아이콘 */
-  font-size: 16px;
-  position: absolute;
-  top: 0;
-  left: 0;
+/* index.css or 글로벌 스타일 */
+.ProseMirror table {
+  @apply w-full border-collapse;
 }
+.ProseMirror th,
+.ProseMirror td {
+  @apply border border-gray-300 p-2 text-left;
+}
+
