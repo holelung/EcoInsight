@@ -39,12 +39,12 @@ import CommunityListPage from "./components/Board/Community/CommunityListPage.js
 import CommunityBoardDetail from "./components/Board/Community/CommunityBoardDetail.jsx";
 import AuthBoardDetail from "./components/Board/AuthBoard/AuthBoardDetail.jsx";
 import ChangePassword from "./components/MyPage/ChangePassword.jsx";
+import UserRoute from "./components/RouteGuard/UserRoute.jsx";
 import NoticeBoard from "./components/Board/Notice/NoticeBoard.jsx";
 import NoticeBoardDetail from "./components/Board/Notice/NoticeBoardDetail.jsx";
 import NoticeBoardWrite from "./components/Board/Notice/NoticeBoardWrite.jsx";
-import NoticeBoardDetail from "./components/Board/Notice/NoticeBoardDetail.jsx";
-import UserRoute from "./components/RouteGuard/UserRoute.jsx";
 import NoticeWrite from "./pages/Admin/NoticeBoardManagementPage/NoticeWrite.jsx";
+
 
 function App() {
   return (
@@ -60,6 +60,22 @@ function App() {
           <Route path="/write/:type" element={<WritePostPage />} />
           <Route path="/post/:id" element={<CommunityBoardDetail />} />
           <Route path="/dashboard" element={<MainDashBoard />} />
+
+          <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
+          <Route path="/privateAskPage" element={<PrivateAskPage />} />
+          <Route path="/find-id/result-id" element={<ResultId />} />
+
+           {/* 로그인 유저 전용 */}
+           <Route element={<UserRoute />}>
+            <Route path="/mypage"          element={<MyPage />} />
+            <Route path="/myposts"         element={<Myposts />} />
+            <Route path="/editprofile"     element={<EditProfile />} />
+            <Route path="/changepassword"  element={<ChangePassword />} />
+            <Route path="/withdrawal/check" element={<CheckWithdrawal />} />
+            <Route path="/withdrawal/form"  element={<WithdrawalForm />} />
+            <Route path="/withdrawal/ok"    element={<OkWithdrawal />} />
+          </Route>
+
           <Route path="/notice" element={<Notice />} />
           <Route path="/board/notice/:id" element={<NoticeBoardDetail />} />
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
@@ -128,12 +144,14 @@ function App() {
           />{" "}
           {/* findpassword,changepassword 추가 예정 */}
           <Route path="/changepassword" element={<ChangePassword />} />
+
         </Route>
 
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/findid" element={<FindId />} />
         <Route path="/findpassword" element={<FindPasswordPage />} />
+        <Route path="/findPassword/resetpassword" element={<ResetPassword />}/> 
         {/* 관리자 전용 */}
         <Route path="/admin/login" element={<AdminLogin />} />
 
@@ -151,6 +169,8 @@ function App() {
           <Route path="authboard-manage" element={<AuthBoardManagementPage />} />
           <Route path="communityboard-manage" element={<CommunityBoardManagementPage />} />
           <Route path="noticeboard-manage" element={<NoticeBoardManagementPage />} />
+
+          {/*<Route path="notice-write" element={<NoticeWrite />} />*/}
           <Route path="notice-write" element={<NoticeBoardWrite />} />
           <Route
             path="authboard-manage"
@@ -165,6 +185,7 @@ function App() {
             element={<NoticeBoardManagementPage />}
           />
           <Route path="notice-write" element={<NoticeWrite />} />
+
         </Route>
       </Routes>
     </AuthProvider>

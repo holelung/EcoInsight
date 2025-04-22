@@ -47,7 +47,7 @@ export default function PopularPosts() {
           <ul className="space-y-1">
             {cat.posts.map((post, idx) => (
               <li key={post.id}>
-                <Link to={`/post/${post.id}`} className="text-gray-800 hover:text-blue-600">
+                <Link to={`/post/${post.no}`} className="text-gray-800 hover:text-blue-600">
                   {idx + 1}위: {post.title}
                 </Link>
               </li>
