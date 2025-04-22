@@ -39,9 +39,9 @@ import CommunityListPage from "./components/Board/Community/CommunityListPage.js
 import CommunityBoardDetail from "./components/Board/Community/CommunityBoardDetail.jsx";
 import AuthBoardDetail from "./components/Board/AuthBoard/AuthBoardDetail.jsx";
 import ChangePassword from "./components/MyPage/ChangePassword.jsx";
-
-
-
+import NoticeBoardDetail from "./components/Board/Notice/NoticeBoardDetail.jsx";
+import UserRoute from "./components/RouteGuard/UserRoute.jsx";
+import NoticeWrite from "./pages/Admin/NoticeBoardManagementPage/NoticeWrite.jsx";
 
 function App() {
   return (
@@ -57,23 +57,74 @@ function App() {
           <Route path="/write/:type" element={<WritePostPage />} />
           <Route path="/post/:id" element={<CommunityBoardDetail />} />
           <Route path="/dashboard" element={<MainDashBoard />} />
-          <Route path="/notice" element={<NoticeBoard />} />
+          <Route path="/notice" element={<Notice />} />
           <Route path="/board/notice/:id" element={<NoticeBoardDetail />} />
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
           <Route path="/privateAskPage" element={<PrivateAskPage />} />
           <Route path="/find-id/result-id" element={<ResultId />} />
-
           {/* 로그인 유저 전용 */}
-          <Route path="/mypage" element={<UserRoute><MyPage /></UserRoute>} />
-          <Route path="/myposts" element={<UserRoute><Myposts /></UserRoute>} />
-          <Route path="/editprofile" element={<UserRoute><EditProfile /></UserRoute>} />
-          <Route path="/changepassword" element={<UserRoute><ChangePassword /></UserRoute>} />
-          <Route path="/withdrawal/form" element={<UserRoute><WithdrawalForm /></UserRoute>} />
-          <Route path="/withdrawal/ok" element={<UserRoute><OkWithdrawal /></UserRoute>} />
-          <Route path="/withdrawal/check" element={<UserRoute><CheckWithdrawal /></UserRoute>} />
-          <Route path="/findPassword/resetpassword" element={<ResetPassword />}/> {/* findpassword,changepassword 추가 예정 */}
-          <Route path="/changepassword" element={<ChangePassword />} /> 
-
+          <Route
+            path="/mypage"
+            element={
+              <UserRoute>
+                <MyPage />
+              </UserRoute>
+            }
+          />
+          <Route
+            path="/myposts"
+            element={
+              <UserRoute>
+                <Myposts />
+              </UserRoute>
+            }
+          />
+          <Route
+            path="/editprofile"
+            element={
+              <UserRoute>
+                <EditProfile />
+              </UserRoute>
+            }
+          />
+          <Route
+            path="/changepassword"
+            element={
+              <UserRoute>
+                <ChangePassword />
+              </UserRoute>
+            }
+          />
+          <Route
+            path="/withdrawal/form"
+            element={
+              <UserRoute>
+                <WithdrawalForm />
+              </UserRoute>
+            }
+          />
+          <Route
+            path="/withdrawal/ok"
+            element={
+              <UserRoute>
+                <OkWithdrawal />
+              </UserRoute>
+            }
+          />
+          <Route
+            path="/withdrawal/check"
+            element={
+              <UserRoute>
+                <CheckWithdrawal />
+              </UserRoute>
+            }
+          />
+          <Route
+            path="/findPassword/resetpassword"
+            element={<ResetPassword />}
+          />{" "}
+          {/* findpassword,changepassword 추가 예정 */}
+          <Route path="/changepassword" element={<ChangePassword />} />
         </Route>
 
         <Route path="/login" element={<Login />} />
@@ -94,9 +145,18 @@ function App() {
           <Route path="dashboard" element={<AdminDashBoard />} />
           <Route path="point-manage" element={<PointManagementPage />} />
           <Route path="account-manage" element={<AccountManagementPage />} />
-          <Route path="authboard-manage" element={<AuthBoardManagementPage />} />
-          <Route path="communityboard-manage" element={<CommunityBoardManagementPage />} />
-          <Route path="noticeboard-manage" element={<NoticeBoardManagementPage />} />
+          <Route
+            path="authboard-manage"
+            element={<AuthBoardManagementPage />}
+          />
+          <Route
+            path="communityboard-manage"
+            element={<CommunityBoardManagementPage />}
+          />
+          <Route
+            path="noticeboard-manage"
+            element={<NoticeBoardManagementPage />}
+          />
           <Route path="notice-write" element={<NoticeWrite />} />
         </Route>
       </Routes>
