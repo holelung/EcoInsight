@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Tiptap from "./TipTap/Tiptap";
 
 const PostWritePage = () => {
   const { type } = useParams();
@@ -67,51 +68,8 @@ const PostWritePage = () => {
         placeholder="제목을 입력하세요"
       />
 
-      {/* 툴바 (디자인만, 기능 없음) */}
-      <div className="flex gap-2 mt-6 mb-2 text-sm">
-        <button className="px-2 py-1 hover:bg-gray-200 rounded">B</button>
-        <button className="px-2 py-1 hover:bg-gray-200 rounded italic">
-          I
-        </button>
-        <button className="px-2 py-1 hover:bg-gray-200 rounded underline">
-          U
-        </button>
-        <button className="px-2 py-1 hover:bg-gray-200 rounded">🔗 링크</button>
-        <button className="px-2 py-1 hover:bg-gray-200 rounded">
-          🖼️ 이미지
-        </button>
-      </div>
-
-      {/* 본문 내용 입력 */}
-      <textarea
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        className="w-full h-60 p-4 border border-gray-300 rounded-md bg-gray-50 text-base focus:outline-none focus:ring-2 focus:ring-green-200"
-        placeholder="내용을 입력해주세요. 사진, 링크, 코드 등 자유롭게 작성할 수 있어요!"
-      />
-
-      {/* 파일 업로드 */}
-      <input
-        type="file"
-        multiple
-        onChange={handleFileChange}
-        className="mt-4"
-      />
-
-      {/* 이미지 미리보기 */}
-      {previews.length > 0 && (
-        <div className="mt-6 grid grid-cols-3 gap-4">
-          {previews.map((url, idx) => (
-            <img
-              key={idx}
-              src={url}
-              alt={`preview-${idx}`}
-              className="h-32 object-cover rounded border"
-            />
-          ))}
-        </div>
-      )}
-
+      <Tiptap />
+      
       {/* 업로드 버튼 */}
       <div className="flex justify-end mt-6">
         <button

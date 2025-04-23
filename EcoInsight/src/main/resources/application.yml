@@ -26,7 +26,8 @@ mybatis:
   type-aliases-package: 
     com.semi.ecoinsight.member.model.vo,
     com.semi.ecoinsight.member.model.dto,
-    com.semi.ecoinsight.token.model.vo
+    com.semi.ecoinsight.token.model.vo,
+    com.semi.ecoinsight.community.model.vo,
 logging:
   level:
     org.apache.ibatis: DEBUG

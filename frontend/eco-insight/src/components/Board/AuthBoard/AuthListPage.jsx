@@ -97,9 +97,6 @@ const dummyData = [
 ];
 
 const PAGE_SIZE = 6;
-const handleClick = (post) => {
-    navigate(`/board/cert/${board.no}`, { state: { post } });
-};
 
 
 const AuthListPage = () => {
