@@ -1,5 +1,6 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import Tiptap from "../TipTap/Tiptap";
 
 export default function AuthBoardWritePage() {
     const { type } = useParams();
@@ -8,6 +9,7 @@ export default function AuthBoardWritePage() {
     const [title, setTitle] = useState("");
     const [previewImage, setPreviewImage] = useState(null); // 🖼️ 이미지 미리보기용 상태
     const [option, setOption] = useState("");
+    const [content, setContent] = useState("");
 
     const handleOnChange = (e) => {
     setOption(e.target.value);
@@ -15,8 +17,6 @@ export default function AuthBoardWritePage() {
 
     const handleUpload = () => {
     try {
-        const content = editorRef.current.getInstance().getMarkdown();
-
         if (!title.trim() || !content.trim()) {
             alert("제목과 내용을 모두 입력해주세요!");
             return;
@@ -63,10 +63,7 @@ export default function AuthBoardWritePage() {
         />
 
         {/* 텍스트 에디터 */}
-        <textarea
-            className="w-full h-60 p-4 border border-gray-300 rounded-md bg-gray-50 text-base focus:outline-none focus:ring-2 focus:ring-green-200"
-            placeholder="내용을 입력해주세요. 사진, 링크, 코드 등 자유롭게 작성할 수 있어요!"
-        />
+        <Tiptap setContent={setContent} />
 
         {/* 업로드 버튼 */}
         <div className="mt-4 flex justify-end">
