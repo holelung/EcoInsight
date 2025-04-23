@@ -2,29 +2,37 @@ import { useEffect, useState } from "react";
 import CommentItem from "./CommentItem";
 import axios from "axios";
 
+// 댓글 더미 데이터
+const allDummyReplies = [
+    { id: 1, postId: 1, writer: "minji23", content: "멋져요!" },
+    { id: 2, postId: 1, writer: "sunny", content: "화이팅!" },
+    { id: 3, postId: 2, writer: "gunam90", content: "진짜 존경합니다!" },
+    { id: 4, postId: 13, writer: "happadfjadfjadyday", content: "첫 댓글!" },
+    { id: 5, postId: 13, writer: "dahsafd", content: "화이팅!" },
+];
+
 function AuthBoardComment({ postId, user }) {
     const [replies, setReplies] = useState([]);
     const [newReply, setNewReply] = useState("");
 
     useEffect(() => {
         if (!postId) return;
-        axios.get(`/api/comments?postId=${postId}`)
-            .then(res => setReplies(res.data))  // 받아온 댓글 데이터를 replies에 배열로 저장
-            .catch(err => console.error("댓글 불러오기 오류", err));
+        const filtered = allDummyReplies.filter(reply => reply.postId === postId);
+        setReplies(filtered);
     }, [postId]);
 
     const handleReplySubmit = () => {
         if (!newReply.trim()) return;
-        axios.post("/api/comments", {
+
+        const newComment = {
+            id: Date.now(),
             postId,
             writer: user?.name || "익명",
             content: newReply,
-        })
-            .then((res) => {
-                setReplies([...replies, res.data]);  // 새 댓글을 replies 배열에 추가
-                setNewReply("");
-            })
-            .catch((err) => console.error("댓글 등록 오류", err));
+        };
+
+        setReplies(prev => [...prev, newComment]);
+        setNewReply("");
     };
 
     return (
@@ -34,7 +42,7 @@ function AuthBoardComment({ postId, user }) {
                 {replies.length > 0 ? (
                     replies.map(reply => (
                         <div key={reply.id} className="p-3 border rounded">
-                            <div className="text-sm text-gray-700">{reply.writer}</div>
+                            <div className="text-gray-700 font-bold">작성자 : {reply.writer}</div>
                             <div>{reply.content}</div>
                         </div>
                     ))

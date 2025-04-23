@@ -73,7 +73,7 @@ function AuthBoardDetail() {
                 )}
             </div>
 
-            <AuthBoardComment postId={post.id} user={user} />
+            <AuthBoardComment postId={post.no} user={user} />
 
             <button onClick={() => navi(-1)} className="w-full mt-6 py-2 border rounded hover:bg-gray-100">
                 게시글 목록으로 돌아가기
