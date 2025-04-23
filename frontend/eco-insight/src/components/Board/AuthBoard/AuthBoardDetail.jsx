@@ -5,7 +5,7 @@ import { AuthContext } from "../../Context/AuthContext";
 import axios from "axios";
 
 function AuthBoardDetail() {
-    const navigate = useNavigate();
+    const navi = useNavigate();
     const location = useLocation();
     const post = location.state?.post;
 
@@ -14,7 +14,7 @@ function AuthBoardDetail() {
             <div className="text-center mt-20 text-gray-500">
                 유효하지 않은 접근입니다. <br />
                 <button
-                    onClick={() => navigate(-1)}
+                    onClick={() => navi(-1)}
                     className="mt-4 px-4 py-2 border rounded hover:bg-gray-100"
                 >
                     뒤로가기
@@ -98,7 +98,7 @@ function AuthBoardDetail() {
 
             {/* 돌아가기 */}
             <button
-                onClick={() => navigate(-1)}
+                onClick={() => navi(-1)}
                 className="w-full mt-6 py-2 border border-gray-300 rounded hover:bg-gray-100"
             >
                 게시글 목록으로 돌아가기
