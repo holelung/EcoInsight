@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import ReportPage from "../ReportPage";
 import { AuthContext } from "../../Context/AuthContext";
@@ -8,6 +8,7 @@ function AuthBoardDetail() {
   const navigate = useNavigate();
   const location = useLocation();
   const post = location.state?.post;
+
   const [isEditing, setIsEditing] = useState(false);
   const [likes, setLikes] = useState(5);
   const [title, setTitle] = useState(post.title);
