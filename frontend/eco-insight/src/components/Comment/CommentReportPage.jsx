@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 const CommentReportPage = ({ isOpen, onClose, author, postTitle }) => {
   const [selectedReason, setSelectedReason] = useState("");
