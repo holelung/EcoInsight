@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
-const ReportPage = ({ isOpen, onClose, author, postTitle }) => {
-  // navigate는 그대로 둡니다 (사용 안 해도 됨)
+const CommentReportPage = ({ isOpen, onClose, author, postTitle }) => {
   const [selectedReason, setSelectedReason] = useState("");
   const [detail, setDetail] = useState("");
 
@@ -10,17 +8,25 @@ const ReportPage = ({ isOpen, onClose, author, postTitle }) => {
     "스팸홍보/도배글입니다.",
     "불법정보를 포함하고 있습니다.",
     "청소년에게 유해한 내용입니다.",
-    "욕설/혐오 발언 포함한 내용입니다.",
-    "개인정보 노출 게시물입니다.",
+    "욕설/혐오/차별적 발언 포함한 내용입니다.",
     "불쾌한 표현이 있습니다.",
     "기타",
   ];
 
   const handleSubmit = () => {
-    if (selectedReason) {
-      alert("신고가 완료되었습니다.");
-      onClose();
+    if (!selectedReason) {
+      alert("신고 사유를 선택해주세요.");
+      return;
     }
+
+    alert("신고가 완료되었습니다!");
+    console.log("🚨 신고 내용:", {
+      author,
+      postTitle,
+      selectedReason,
+      detail,
+    });
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -28,7 +34,6 @@ const ReportPage = ({ isOpen, onClose, author, postTitle }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="relative bg-white w-[400px] rounded-lg shadow-lg overflow-hidden">
-        {/* 닫기 버튼 (오른쪽 상단 X) */}
         <button
           onClick={onClose}
           className="absolute top-2 right-2 text-gray-500 hover:text-black text-xl"
@@ -72,7 +77,7 @@ const ReportPage = ({ isOpen, onClose, author, postTitle }) => {
 
           {selectedReason && (
             <textarea
-              placeholder="상세 내용 입력 칸"
+              placeholder="상세 내용 입력 (선택)"
               className="w-full mt-4 p-2 border border-gray-300 rounded"
               rows={4}
               value={detail}
@@ -93,4 +98,5 @@ const ReportPage = ({ isOpen, onClose, author, postTitle }) => {
     </div>
   );
 };
-export default ReportPage;
+
+export default CommentReportPage;

@@ -6,6 +6,7 @@ import Tiptap from "../TipTap/Tiptap";
 const CommunityWritePage = () => {
   const { type } = useParams();
   const navigate = useNavigate();
+  const [isReportOpen, setIsReportOpen] = useState(false);
 
   const boardNames = {
     free: "자유게시판",
