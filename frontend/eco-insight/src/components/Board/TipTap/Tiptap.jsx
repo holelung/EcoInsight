@@ -30,6 +30,7 @@ import {
 import { RiH1, RiH2, RiH3 } from "react-icons/ri";
 import { FaQuoteLeft, FaTable } from "react-icons/fa";
 import Separate from "../../Seperate/Seperate";
+import axios from "axios";
 
 
 const MenuBar = ({ editor }) => {
@@ -44,20 +45,35 @@ const MenuBar = ({ editor }) => {
     const input = document.createElement("input");
     input.type = "file";
     input.accept = "image/*";
+    input.click();
 
     input.onchange = () => {
       const file = input.files?.[0];
       if (!file) return;
 
-      const reader = new FileReader();
-      reader.onload = () => {
-        const base64 = reader.result;
-        editor.chain().focus().setImage({ src: base64 }).run();
-      };
-      reader.readAsDataURL(file);
-    };
+      const formData = new FormData;
+      formData.append("file", file);
 
-    input.click();
+      axios.post("/upload", formData, {
+        headers: {
+          authorization: `bearer `
+        }
+      })
+      .then(response => {
+        console.log(response.data);
+        const imageUrl = response.data.url;
+        editor.chain().focus().setImage({ src: imageUrl }).run();
+      }).catch(error => {
+        console.log("이미지 업로드 실패", error);
+      });
+      // base64
+      // const reader = new FileReader();
+      // reader.onload = () => {
+      //   const base64 = reader.result;
+      //   editor.chain().focus().setImage({ src: base64 }).run();
+      // };
+      // reader.readAsDataURL(file);
+    };
   };
 
 
@@ -266,20 +282,15 @@ const extensions = [
   }),
 ];
 
-const content = `
-<h2>안녕하세요</h2>
-<p><strong>Tiptap</strong> 에디터입니다. 다양한 마크업이 가능합니다.</p>
-<ul>
-  <li>리스트 지원</li>
-  <li>볼드, 이탤릭, 코드 등</li>
-</ul>
-<blockquote>이건 인용문입니다.</blockquote>
-`;
+const content = ``;
 
-const Tiptap = () => {
+const Tiptap = ({setContent}) => {
   const editor = useEditor({
     extensions,
     content,
+    onUpdate({ editor }) {
+      setContent(editor.getHTML());
+    }
   })
 
   return (
@@ -287,7 +298,7 @@ const Tiptap = () => {
       <MenuBar editor={editor} />
       <EditorContent
         editor={editor}
-        className="prose max-w-none min-h-[400px] border-2 border-gray-400"
+        className="prose max-w-none min-h-[400px] border-2 rounded-lg border-gray-400"
       />
     </div>
   );
