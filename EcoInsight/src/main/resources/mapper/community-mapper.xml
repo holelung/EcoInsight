@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.semi.ecoinsight.community.model.dao.CommunityMapper">
+<mapper namespace="com.semi.ecoinsight.community.model.vo.CommunityMapper">
 
 	<sql id="communityBoardColumn">
 		SELECT 
@@ -11,7 +11,7 @@
 	</sql>
 
 
-	<insert id="insertCommunityBoard" parameterType="CommunityBoard">
+	<insert id="insertCommunityBoard" parameterType="Community">
 		INSERT 
 		  INTO
 		       TB_COMMUNITY_BOARD
@@ -35,7 +35,7 @@
 			   , 'N'
 			  )  
 	</insert>
-	<select id="findAllCommunity" resultType="com.semi.ecoinsight.community.model.dto.CommunityMapper">
+	<select id="findAllCommunity" resultType="com.semi.ecoinsight.community.model.dto.CommunityDTO">
 		<include refid="communityBoardColumn"/>
 			FROM 
 				  TB_COMMUNITY_BOARD
