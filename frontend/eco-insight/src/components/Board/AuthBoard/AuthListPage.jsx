@@ -220,14 +220,14 @@ const AuthListPage = () => {
                     onChange={(e) => setKeyword(e.target.value)}
                 />
                 <button
-                    className="bg-gray-300 px-4 py-2 rounded cursor-pointer"
+                    className="bg-gray-300 px-4 py-2 rounded cursor-pointer hover:border-2 hover:border-lime-400"
                     onClick={handleSearch}
                 >
                     검색
                 </button>
                 <button
-                    className="bg-gray-300 px-4 py-2 rounded cursor-pointer"
-                    onClick={() => navi("/board/cert:type")}
+                    className="bg-gray-300 px-4 py-2 rounded cursor-pointer hover:border-2 hover:border-lime-400"
+                    onClick={() => navi("/board/cert/write")}
                 >
                     글쓰기
                 </button>
@@ -270,6 +270,5 @@ const AuthListPage = () => {
         </div>
     );
 };
-
 
 export default AuthListPage;

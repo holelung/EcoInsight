@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import ReportPage from "../ReportPage";
 import AuthBoardComment from "../../Comment/AuthBoardComment/AuthBoardComment";
 import { AuthContext } from "../../Context/AuthContext";
@@ -10,6 +10,20 @@ function AuthBoardDetail() {
     const location = useLocation();
     const post = location.state?.post;
     const { user } = useContext(AuthContext);
+    const { no } = useParams(); // 'no' 파라미터 값 가져오기
+console.log("Post ID (no):", no);
+    
+    
+    const fetchPostDetails = async () => {
+        try {
+            const response = await axios.get(`/api/posts/${no}`);  // 실제 API 엔드포인트로 수정 필요
+            setPost(response.data);
+        } catch (err) {
+            setError("게시물을 불러오는 데 실패했습니다.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     if (!post) {
         return (
@@ -56,26 +70,26 @@ function AuthBoardDetail() {
             </div>
 
             <div className="flex justify-between items-center">
-                <button onClick={handleLike} className="px-4 py-1 border rounded hover:bg-black hover:text-white transition">
+                <button onClick={handleLike} className="px-4 py-1 border rounded hover:bg-black hover:text-white transition cursor-pointer">
                     👍 좋아요 {likes}
                 </button>
             </div>
 
             <div className="flex justify-end gap-2">
                 {isEditing ? (
-                    <button onClick={() => setIsEditing(false)} className="px-4 py-2 bg-black text-white rounded">저장</button>
+                    <button onClick={() => setIsEditing(false)} className="px-4 py-2 bg-black text-white rounded cursor-pointer">저장</button>
                 ) : (
                     <>
-                        <button onClick={() => setIsEditing(true)} className="px-4 py-2 border rounded">수정하기</button>
-                        <button className="px-4 py-2 border rounded">신고</button>
-                        <button className="px-4 py-2 border border-red-500 text-red-600 rounded">삭제하기</button>
+                        <button onClick={() => setIsEditing(true)} className="px-4 py-2 border rounded cursor-pointer">수정하기</button>
+                        <button className="px-4 py-2 border rounded cursor-pointer">신고</button>
+                        <button className="px-4 py-2 border border-red-500 text-red-600 rounded cursor-pointer">삭제하기</button>
                     </>
                 )}
             </div>
 
             <AuthBoardComment postId={post.no} user={user} />
 
-            <button onClick={() => navi(-1)} className="w-full mt-6 py-2 border rounded hover:bg-gray-100">
+            <button onClick={() => navi(-1)} className="w-full mt-6 py-2 border rounded hover:bg-gray-100 cursor-pointer">
                 게시글 목록으로 돌아가기
             </button>
         </div>

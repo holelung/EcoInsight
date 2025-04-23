@@ -12,7 +12,7 @@ export default function AuthBoardWritePage() {
     const [content, setContent] = useState("");
 
     const handleOnChange = (e) => {
-    setOption(e.target.value);
+        setOption(e.target.value);
     };
 
     const handleUpload = () => {

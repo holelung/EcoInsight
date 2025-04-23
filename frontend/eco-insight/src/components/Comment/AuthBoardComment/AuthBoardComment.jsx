@@ -4,16 +4,17 @@ import axios from "axios";
 
 // 댓글 더미 데이터
 const allDummyReplies = [
-    { id: 1, postId: 1, writer: "minji23", content: "멋져요!" },
-    { id: 2, postId: 1, writer: "sunny", content: "화이팅!" },
-    { id: 3, postId: 2, writer: "gunam90", content: "진짜 존경합니다!" },
-    { id: 4, postId: 13, writer: "happadfjadfjadyday", content: "첫 댓글!" },
-    { id: 5, postId: 13, writer: "dahsafd", content: "화이팅!" },
+    { id: 1, postId: 1, author: "minji23", text: "멋져요!", createdAt: "2024-04-22T09:00:00Z", parentId: null },
+    { id: 2, postId: 1, author: "sunny", text: "화이팅!", createdAt: "2024-04-22T10:00:00Z", parentId: null },
+    { id: 3, postId: 2, author: "gunam90", text: "진짜 존경합니다!", createdAt: "2024-04-22T11:00:00Z", parentId: null },
+    { id: 4, postId: 13, author: "happadfjadfjadyday", text: "첫 댓글!", createdAt: "2024-04-22T12:00:00Z", parentId: null },
+    { id: 5, postId: 13, author: "dahsafd", text: "화이팅!", createdAt: "2024-04-22T13:00:00Z", parentId: null },
 ];
 
 function AuthBoardComment({ postId, user }) {
     const [replies, setReplies] = useState([]);
     const [newReply, setNewReply] = useState("");
+    const [reportedReplies, setReportedReplies] = useState([]);  // 신고된 댓글 리스트
 
     useEffect(() => {
         if (!postId) return;
@@ -27,8 +28,10 @@ function AuthBoardComment({ postId, user }) {
         const newComment = {
             id: Date.now(),
             postId,
-            writer: user?.name || "익명",
-            content: newReply,
+            author: user?.name || "익명",
+            text: newReply,
+            createdAt: new Date().toISOString(),
+            parentId: null,  // 최상위 댓글인 경우 parentId는 null
         };
 
         setReplies(prev => [...prev, newComment]);
@@ -41,10 +44,16 @@ function AuthBoardComment({ postId, user }) {
             <div className="space-y-2">
                 {replies.length > 0 ? (
                     replies.map(reply => (
-                        <div key={reply.id} className="p-3 border rounded">
-                            <div className="text-gray-700 font-bold">작성자 : {reply.writer}</div>
-                            <div>{reply.content}</div>
-                        </div>
+                        <CommentItem
+                            key={reply.id}
+                            reply={reply}
+                            replies={replies}
+                            setReplies={setReplies}
+                            user={user}
+                            postId={postId}
+                            reportedReplies={reportedReplies}  // 신고된 댓글 목록 전달
+                            setReportedReplies={setReportedReplies}  // 신고된 댓글 목록 업데이트
+                        />
                     ))
                 ) : (
                     <p className="text-gray-500">아직 댓글이 없습니다.</p>
@@ -59,7 +68,7 @@ function AuthBoardComment({ postId, user }) {
                 />
                 <button
                     onClick={handleReplySubmit}
-                    className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
+                    className="px-4 py-2 bg-black text-white rounded hover:bg-gray-800 cursor-pointer"
                 >
                     등록
                 </button>
