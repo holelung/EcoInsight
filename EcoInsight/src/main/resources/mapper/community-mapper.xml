@@ -11,7 +11,7 @@
 	</sql>
 
 
-	<insert id="insertCommunityBoard" parameterType="CommunityBoard">
+	<insert id="insertCommunityBoard" parameterType="com.semi.ecoinsight.community.model.vo.Community">
 		INSERT 
 		  INTO
 		       TB_COMMUNITY_BOARD
@@ -35,7 +35,7 @@
 			   , 'N'
 			  )  
 	</insert>
-	<select id="findAllCommunity" resultType="com.semi.ecoinsight.community.model.dto.CommunityMapper">
+	<select id="findAllCommunity" resultType="com.semi.ecoinsight.community.model.dto.CommunityDTO">
 		<include refid="communityBoardColumn"/>
 			FROM 
 				  TB_COMMUNITY_BOARD
