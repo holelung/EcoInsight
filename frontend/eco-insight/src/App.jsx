@@ -11,9 +11,6 @@ import OkWithdrawal from "./components/MyPage/Withdrawal/OkWithdrawal";
 import CheckWithdrawal from "./components/MyPage/Withdrawal/CheckWithdrawal";
 import EditProfile from "./components/MyPage/EditProfile";
 import Footer from "./components/Common/Footer/Footer";
-
-import WritePostPage from "./components/Board/WritePostPage";
-
 import UserLayout from "./components/Layout/UserLayout";
 import AdminRoute from "./components/RouteGuard/AdminRoute";
 import AdminLogin from "./pages/Admin/AdminLogin/AdminLogin.jsx";
@@ -44,6 +41,8 @@ import NoticeBoard from "./components/Board/Notice/NoticeBoard.jsx";
 import NoticeBoardDetail from "./components/Board/Notice/NoticeBoardDetail.jsx";
 import NoticeBoardWrite from "./components/Board/Notice/NoticeBoardWrite.jsx";
 import NoticeWrite from "./pages/Admin/NoticeBoardManagementPage/NoticeWrite.jsx";
+import Notice from "./components/Board/Notice/NoticeBoard.jsx";
+import CommunityWritePage from "./components/Board/Community/CommunityWritePage.jsx";
 
 
 function App() {
@@ -57,7 +56,7 @@ function App() {
           <Route path="/board/cert" element={<AuthListPage />} />
           <Route path="/board/cert/:no" element={<AuthBoardDetail />} />
           <Route path="/board/cert:type" element={<AuthBoardWritePage />} />
-          <Route path="/write/:type" element={<WritePostPage />} />
+          <Route path="/write/:type" element={<CommunityWritePage />} />
           <Route path="/post/:id" element={<CommunityBoardDetail />} />
           <Route path="/dashboard" element={<MainDashBoard />} />
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
