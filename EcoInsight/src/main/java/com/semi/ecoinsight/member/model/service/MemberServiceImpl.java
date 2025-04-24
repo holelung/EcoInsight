@@ -39,7 +39,6 @@ public class MemberServiceImpl implements MemberService {
                                    .memberId(member.getMemberId())
                                    .email(member.getEmail())
                                    .memberPh(member.getMemberPh())
-                                   .memberSsn(member.getMemberSsn())
                                    .memberRole("ROLE_COMMON")
                                    .build();
         log.info("----------------------------------------------- {}",member);

@@ -12,8 +12,7 @@
             MEMBER_PW memberPw,
             MEMBER_NAME memberName,
             EMAIL email,
-            MEMBER_PH memberPh,
-            MEMBER_SSN memberSsn,
+            MEMBER_PH memberPh, 
             MEMBER_ENROLL_DATE memberEnrollDate,
             MEMBER_ROLE memberRole,
             GRADE_NO gradeNo,
@@ -32,8 +31,7 @@
             MEMBER_PW,
             MEMBER_ID,
             EMAIL,
-            MEMBER_PH,
-            MEMBER_SSN,
+            MEMBER_PH, 
             MEMBER_ROLE
         )
         VALUES(
@@ -42,7 +40,6 @@
             #{memberId},
             #{email},
             #{memberPh},
-            #{memberSsn},
             #{memberRole}
         )
     </insert>

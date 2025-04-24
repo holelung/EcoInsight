@@ -20,7 +20,6 @@ public class MemberDTO {
     private String memberName;
     private String email;
     private String memberPh;
-    private String memberSsn;
     private Date memberEnrollDate;
     private String memberRole;
     private String gradeNo;

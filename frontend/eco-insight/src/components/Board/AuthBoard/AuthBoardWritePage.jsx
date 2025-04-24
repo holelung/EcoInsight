@@ -52,7 +52,6 @@ export default function AuthBoardWritePage() {
                 <option value="item4">인증4</option>
             </select>
         </div>
-
         {/* 제목 입력 */}
         <input
             type="text"

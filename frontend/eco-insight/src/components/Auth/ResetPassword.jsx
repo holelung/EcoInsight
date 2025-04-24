@@ -1,5 +1,3 @@
-// src/pages/FindPasswordPage/ResetPassword.jsx
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const ResetPassword = () => {
