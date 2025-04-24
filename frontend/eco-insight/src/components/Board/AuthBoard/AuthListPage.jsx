@@ -31,7 +31,7 @@ const dummyData = [
         createdDate: "2025.04.16",
         content: "인증 30일차!!",
         replies: [
-            { id: 1, writer: "minji23", content: "멋져요!" },
+            { id: 1, writer: "minji23", content: "굳!" },
         ],
     },
     {

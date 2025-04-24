@@ -55,7 +55,9 @@ function AuthBoardDetail() {
             </div>
 
             <div className="text-sm text-gray-600 flex justify-between">
-                <span>작성자: {post.writer}</span>
+                <span>
+                    작성자 : <span className="text-black-600 font-bold">{post.writer}</span>
+                </span>
                 <span>{post.createdDate}</span>
             </div>
 
@@ -78,9 +80,9 @@ function AuthBoardDetail() {
                     <button onClick={() => setIsEditing(false)} className="px-4 py-2 bg-black text-white rounded cursor-pointer">저장</button>
                 ) : (
                     <>
-                        <button onClick={() => setIsEditing(true)} className="px-4 py-2 border rounded cursor-pointer">수정하기</button>
-                        <button className="px-4 py-2 border rounded cursor-pointer">신고</button>
-                        <button className="px-4 py-2 border border-red-500 text-red-600 rounded cursor-pointer">삭제하기</button>
+                        <button onClick={() => setIsEditing(true)} className="px-4 py-2 border rounded hover:bg-green-100 cursor-pointer">수정하기</button>
+                        <button className="px-4 py-2 border border-red-500 text-red-600 rounded hover:bg-red-100 cursor-pointer">신고</button>
+                        <button className="px-4 py-2 border border-red-500 text-red-600 rounded hover:bg-red-100 cursor-pointer">삭제하기</button>
                     </>
                 )}
             </div>
