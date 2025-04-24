@@ -26,6 +26,7 @@ public class ReportServiceImpl implements ReportService {
 	public void insertCommunityBoardReport(CommunityBoardReportDTO cbr) {
 		
 		CommunityBoardReport requestData = CommunityBoardReport.builder()
+				.communityBoardNo(cbr.getCommunityBoardNo())
 				.reporter(cbr.getReporter())
 				.reportCategoryNo(cbr.getReportCategoryNo())
 				.reportContent(cbr.getReportContent())

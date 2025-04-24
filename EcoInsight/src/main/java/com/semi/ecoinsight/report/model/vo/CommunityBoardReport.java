@@ -7,7 +7,7 @@ import lombok.Value;
 @Builder
 public class CommunityBoardReport {
 
-	private String cBoardNo;
+	private Long communityBoardNo;
 	private Long reporter;
 	private String reportCategoryNo;
 	private String reportCategoryName;

@@ -4,69 +4,67 @@
 
   <sql id="reportCommonColumns">
     REPORTER,
-    REPORT_CATEGORY_NO,
-    REPORT_DATE
+    REPORT_CATEGORY_NO
   </sql>
 
   <sql id="reportCommonValues">
     #{reporter},
-    #{report_category_no},
-    SYSDATE
+    #{reportCategoryNo}
   </sql>
 
   <insert id="insertCommunityBoardReport"
-          parameterType="com.example.project.report.model.dto.CommunityBoardReportDTO">
+          parameterType="com.semi.ecoinsight.report.model.vo.CommunityBoardReport">
     INSERT INTO TB_COMMUNITY_REPORT (
       REPORT_NO,
       C_BOARD_NO,
       <include refid="reportCommonColumns"/>,
       REPORT_CONTENT
     ) VALUES (
-      SEQ_REPORT.NEXTVAL,
-      #{c_board_no},
+      SEQ_REPORT_BOARD.NEXTVAL,
+      #{communityBoardNo},
       <include refid="reportCommonValues"/>,
-      #{report_content}
+      #{reportContent}
     )
   </insert>
 
   <insert id="insertAuthBoardReport"
-          parameterType="com.example.project.report.model.dto.AuthBoardReportDTO">
+          parameterType="com.semi.ecoinsight.report.model.vo.AuthBoardReport">
     INSERT INTO TB_AUTH_BOARD_REPORT (
       REPORT_NO,
       AUTH_BOARD_NO,
       <include refid="reportCommonColumns"/>,
       REPORT_CONTENT
     ) VALUES (
-      SEQ_REPORT.NEXTVAL,
-      #{auth_board_no},
+      SEQ_REPORT_BOARD.NEXTVAL,
+      #{authBoardNo},
       <include refid="reportCommonValues"/>,
-      #{report_content}
+      #{reportContent}
     )
   </insert>
 
   <insert id="insertCommunityCommentReport"
-          parameterType="com.example.project.report.model.dto.CommunityCommentReportDTO">
+          parameterType="com.semi.ecoinsight.report.model.vo.CommunityCommentReport">
     INSERT INTO TB_COMMUNITY_CMT_REPORT (
       CMT_REPORT_NO,
       <include refid="reportCommonColumns"/>,
       CMT_REPORT_CONTENT
     ) VALUES (
-      SEQ_REPORT.NEXTVAL,
+      SEQ_REPORT_CMT.NEXTVAL,
       <include refid="reportCommonValues"/>,
-      #{cmt_report_content}
+      #{cmtReportContent}
     )
   </insert>
 
   <insert id="insertAuthCommentReport"
-          parameterType="com.example.project.report.model.dto.AuthCommentReportDTO">
+          parameterType="com.semi.ecoinsight.report.model.vo.AuthCommentReport">
     INSERT INTO TB_AUTH_BOARD_CMT_REPORT (
       CMT_REPORT_NO,
       <include refid="reportCommonColumns"/>,
       CMT_REPORT_CONTENT
     ) VALUES (
-      SEQ_REPORT.NEXTVAL,
+      SEQ_REPORT_CMT.NEXTVAL,
       <include refid="reportCommonValues"/>,
-      #{cmt_report_content}
+      #{cmtReportContent}
     )
   </insert>
 

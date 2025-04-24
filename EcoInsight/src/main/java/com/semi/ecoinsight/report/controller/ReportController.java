@@ -28,7 +28,7 @@ public class ReportController {
 	
 	@PostMapping("/community-board")
 	public ResponseEntity<?> insertCommunityBoardReport(@RequestBody CommunityBoardReportDTO cbr){
-		
+		log.info("{}",cbr);
 		reportService.insertCommunityBoardReport(cbr);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}

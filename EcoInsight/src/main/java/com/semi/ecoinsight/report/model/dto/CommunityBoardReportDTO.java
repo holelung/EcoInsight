@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 public class CommunityBoardReportDTO {
 	
-	private String cBoardNo;
+	private Long communityBoardNo;
 	private Long reporter;
 	private String reportCategoryNo;
 	private String reportCategoryName;

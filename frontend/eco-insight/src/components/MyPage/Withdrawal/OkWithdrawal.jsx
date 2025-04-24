@@ -1,6 +1,5 @@
 import { useContext, useEffect } from 'react';
 import { AuthContext } from '../../Context/AuthContext';
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function OkWithdrawal() {
