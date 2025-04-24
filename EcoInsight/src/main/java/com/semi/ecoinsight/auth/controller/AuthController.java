@@ -32,6 +32,7 @@ public class AuthController {
         return ResponseEntity.ok(loginResponse);
     }
 
+    
     @PostMapping("/send-code")
     public ResponseEntity<Map<String, String>> sendCodeEmail(@RequestBody Map<String, String> email){
         Map<String, String> verifyCodeResult = authService.sendCodeEmail(email);

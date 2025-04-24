@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import CommentReportPage from "../CommentReportPage";
 
 const CommunityComment = () => {
   const [comments, setComments] = useState([
@@ -6,8 +7,12 @@ const CommunityComment = () => {
     { text: "두 번째 댓글이에요!", replies: [] },
   ]);
   const [newComment, setNewComment] = useState("");
-  const [replyingTo, setReplyingTo] = useState(null);
+  const [replyingWrite, setReplyingWrite] = useState(null);
   const [newReply, setNewReply] = useState("");
+
+  // 신고 관련 상태
+  const [isReportOpen, setIsReportOpen] = useState(false);
+  const [reportTarget, setReportTarget] = useState({ author: "", content: "" });
 
   const handleAddComment = () => {
     if (newComment.trim()) {
@@ -22,13 +27,14 @@ const CommunityComment = () => {
       updated[index].replies.push(newReply.trim());
       setComments(updated);
       setNewReply("");
-      setReplyingTo(null);
+      setReplyingWrite(null);
     }
   };
 
   return (
-    <div>
-      {/* 댓글 목록 */}
+    <div className="mt-6">
+      <h2 className="text-xl font-semibold mb-4">댓글({comments.length})</h2>
+
       <div className="space-y-4">
         {comments.map((cmt, index) => (
           <div
@@ -37,15 +43,27 @@ const CommunityComment = () => {
           >
             <div className="flex justify-between items-center">
               <span>{cmt.text}</span>
-              <button
-                onClick={() =>
-                  setReplyingTo(replyingTo === index ? null : index)
-                }
-                className="text-sm text-black hover:underline"
-              >
-                답글 쓰기
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() =>
+                    setReplyingWrite(replyingWrite === index ? null : index)
+                  }
+                  className="text-sm text-black hover:underline"
+                >
+                  답글 쓰기
+                </button>
+                <button
+                  onClick={() => {
+                    setReportTarget({ author: "사용자123", content: cmt.text });
+                    setIsReportOpen(true);
+                  }}
+                  className="text-sm text-red-500 hover:underline"
+                >
+                  신고
+                </button>
+              </div>
             </div>
+
             {cmt.replies.map((reply, rindex) => (
               <div
                 key={rindex}
@@ -54,7 +72,8 @@ const CommunityComment = () => {
                 ↪ {reply}
               </div>
             ))}
-            {replyingTo === index && (
+
+            {replyingWrite === index && (
               <div className="flex gap-2 mt-2 ml-4">
                 <input
                   value={newReply}
@@ -74,8 +93,7 @@ const CommunityComment = () => {
         ))}
       </div>
 
-      {/* 댓글 작성 */}
-      <div className="flex gap-2 mt-4">
+      <div className="flex gap-2 mt-6">
         <input
           value={newComment}
           onChange={(e) => setNewComment(e.target.value)}
@@ -89,6 +107,16 @@ const CommunityComment = () => {
           등록
         </button>
       </div>
+
+      {/* 신고 모달 */}
+      {isReportOpen && (
+        <CommentReportPage
+          isOpen={isReportOpen}
+          onClose={() => setIsReportOpen(false)}
+          author={reportTarget.author}
+          postTitle={reportTarget.content}
+        />
+      )}
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function ReportPage({ isOpen, onClose, author, postTitle }) {
+const ReportPage = ({ isOpen, onClose, author, postTitle }) => {
   // navigate는 그대로 둡니다 (사용 안 해도 됨)
   const [selectedReason, setSelectedReason] = useState("");
   const [detail, setDetail] = useState("");
@@ -19,7 +19,7 @@ export default function ReportPage({ isOpen, onClose, author, postTitle }) {
   const handleSubmit = () => {
     if (selectedReason) {
       alert("신고가 완료되었습니다.");
-      onClose(); // navigate(-1) 제거 → 게시글 화면 유지
+      onClose();
     }
   };
 
@@ -92,4 +92,5 @@ export default function ReportPage({ isOpen, onClose, author, postTitle }) {
       </div>
     </div>
   );
-}
+};
+export default ReportPage;

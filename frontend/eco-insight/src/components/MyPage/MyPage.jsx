@@ -1,8 +1,15 @@
-import React from 'react';
+import { useContext, useEffect } from 'react';
+import { AuthContext } from '../Context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 function MyPage() {
   const navigate = useNavigate();
+  const { auth } = useContext(AuthContext);
+     useEffect(() => {
+       if (!auth.isAuthenticated) {
+         navigate('/login', { replace: true });
+       }
+     }, [auth.isAuthenticated, navigate]);
 
   // 로그인된 유저 정보 (예시)
   const userInfo = {
@@ -15,18 +22,18 @@ function MyPage() {
   };
 
   const handleViewEditInfo = () => {
-    navigate('/editprofile');
+    navigate('/mypage/editprofile');
   };
 
   const handleBoardList = () => {
-    navigate('/myposts');
+    navigate('/mypage/myposts');
   };
   const handleChangePassword = () => {
-    navigate('/changepassword');
+    navigate('/mypage/changepassword');
   };
 
   const handleWithdrawal = () => {
-    navigate('/withdrawal/check');
+    navigate('/mypage/withdrawal/check');
   };
 
   return (
@@ -118,6 +125,7 @@ function MyPage() {
                     <p className="text-gray-500 text-sm">OOO인증</p>
                     <p className="text-base text-gray-700">{userInfo.auth}</p>
                   </div>
+                  
                   <div>
                     <p className="text-gray-500 text-sm">OOO인증</p>
                     <p className="text-base text-gray-700">{userInfo.auth}</p>

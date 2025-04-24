@@ -1,5 +1,4 @@
-// src/pages/FindIdPage/FindIdPage.jsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthHeader from "../Common/AuthHeader/AuthHeader"
 
@@ -13,13 +12,13 @@ const FindIdPage = () => {
   const [isCodeVerified, setIsCodeVerified] = useState(false);
 
   const handleSendCode = () => {
-    // TODO: 이메일로 인증번호 요청 API 호출
+    //  이메일로 인증번호 요청 API 호출
     setIsCodeSent(true);
     alert('인증번호가 발송되었습니다.');
   };
 
   const handleVerifyCode = () => {
-    // TODO: 인증번호 확인 API 호출
+    // 인증번호 확인 API 호출
     setIsCodeVerified(true);
     alert('인증이 완료되었습니다.');
   };

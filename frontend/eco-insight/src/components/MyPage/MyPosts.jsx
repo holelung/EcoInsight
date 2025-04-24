@@ -1,10 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
+import { AuthContext } from '../Context/AuthContext';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function Myposts() {
-  // 페이지당 보여줄 게시글 수
-  const PAGE_SIZE = 5;
-
+  const navigate = useNavigate();  
+  const { auth } = useContext(AuthContext);
+   useEffect(() => {
+     if (!auth.isAuthenticated) {
+       navigate('/login', { replace: true });
+     }
+   }, [auth.isAuthenticated, navigate]);
+  const PAGE_SIZE = 8;
+  
   // 예시 데이터 
   const [posts, setPosts] = useState([
     { id: 1,  title: '오늘 ~~~ 한 날이었어요',           category: '자유',  date: '2025-04-15', views: 999 },
@@ -21,34 +30,74 @@ function Myposts() {
   ]);
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState('전체');
+  const [searchKeyword, setSearchKeyword] = useState('');
 
+  // (실제 API 연동 시) // try-catch 말고 then 사용 
   useEffect(() => {
-    // 실제 API 연동 시 사용
     // axios.get('/api/user/myposts')
-    //   .then(response => setPosts(response.data))
-    //   .catch(error => console.error('게시물 로딩 실패:', error));
+    //   .then(res => setPosts(res.data))
+    //   .catch(err => console.error(err));
   }, []);
 
-  // 총 페이지 수 계산
-  const totalPages = Math.ceil(posts.length / PAGE_SIZE);
+  // 카테고리 목록 추출
+  const categories = ['전체', ...Array.from(new Set(posts.map(p => p.category)))];
 
-  // 현재 페이지에 보여줄 게시글 목록
+  // 카테고리드롭다운 메뉴 & 검색어 기준으로 필터링
+  const filtered = posts.filter(post => {
+    const matchCategory = selectedCategory === '전체' || post.category === selectedCategory;
+    const matchSearch = post.title.includes(searchKeyword);
+    return matchCategory && matchSearch;
+  });
+
+  // 페이지 계산식
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const startIdx = (currentPage - 1) * PAGE_SIZE;
-  const displayedPosts = posts.slice(startIdx, startIdx + PAGE_SIZE);
+  const displayedPosts = filtered.slice(startIdx, startIdx + PAGE_SIZE);
 
-  const handleRowClick = (postId) => {
-    // TODO: 게시글 상세 페이지로 이동
-    // navigate(`/posts/${postId}`);
-    console.log(`게시글 ${postId} 클릭`);
-  };
+  // 게시글 클릭시 
+  const handleRowClick = id => console.log(`게시글 ${id} 클릭`);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 text-gray-900">
       <div className="w-11/12 max-w-5xl bg-white shadow-md rounded-md p-8">
-        <h2 className="text-2xl font-semibold mb-6">내 게시글</h2>
+        <h2 className="text-2xl font-semibold mb-4">내 게시글</h2>
+
+        {/* 필터바 */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+          {/* 카테고리 드롭다운 */}
+          <select
+            value={selectedCategory}
+            onChange={e => {
+              setSelectedCategory(e.target.value);
+              setCurrentPage(1);  // 카테고리 다시 선택시 1페이지로 이동
+            }}
+            className="px-3 py-2 border rounded"
+          >
+            {categories.map(cat => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+
+          {/* 제목 검색 넣는 인풋태그 */}
+          <input
+            type="text"
+            placeholder="검색할 제목을 입력하세요"
+            value={searchKeyword}
+            onChange={e => {
+              setSearchKeyword(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="px-3 py-2 border rounded w-full sm:w-1/3"
+          />
+        </div>
+
+        {/* 테이블 */}
         <table className="w-full border-collapse text-sm md:text-base">
           <thead>
-            <tr className="bg-gray-200 text-gray-700">
+            <tr className="text-gray-700">
               <th className="py-3 px-4 border-b">No</th>
               <th className="py-3 px-4 border-b">게시물명</th>
               <th className="py-3 px-4 border-b">카테고리</th>
@@ -57,23 +106,32 @@ function Myposts() {
             </tr>
           </thead>
           <tbody>
-            {displayedPosts.map((post, index) => (
+            {displayedPosts.map((post, idx) => (
               <tr
                 key={post.id}
                 onClick={() => handleRowClick(post.id)}
                 className="cursor-pointer hover:bg-gray-100 transition-colors"
               >
-                <td className="py-2 px-4 border-b text-center">{startIdx + index + 1}</td>
-                <td className="py-2 px-4 border-b text-left">{post.title}</td>
+                <td className="py-2 px-4 border-b text-center">
+                  {startIdx + idx + 1}
+                </td>
+                <td className="py-2 px-4 border-b">{post.title}</td>
                 <td className="py-2 px-4 border-b text-center">{post.category}</td>
                 <td className="py-2 px-4 border-b text-center">{post.date}</td>
                 <td className="py-2 px-4 border-b text-center">{post.views}</td>
               </tr>
             ))}
+            {displayedPosts.length === 0 && (
+              <tr>
+                <td colSpan="5" className="py-4 text-center text-gray-500">
+                  조건에 맞는 게시글이 없습니다.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
 
-        {/* 페이징 버튼 */}
+        {/* 페이징 */}
         <div className="flex justify-center mt-6 space-x-2">
           {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
             <button

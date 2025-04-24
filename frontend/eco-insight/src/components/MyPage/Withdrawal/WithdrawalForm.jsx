@@ -1,17 +1,25 @@
-import React, { useState } from 'react';
+import { useContext, useEffect } from 'react';
+import { AuthContext } from '../../Context/AuthContext';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function WithdrawalForm() {
   const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const { auth } = useContext(AuthContext);
+   useEffect(() => {
+     if (!auth.isAuthenticated) {
+       navigate('/login', { replace: true });
+     }
+   }, [auth.isAuthenticated, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log('아이디:', userId);
     console.log('비밀번호:', password);
     // 실제 회원 탈퇴 API 호출 후 OkWithdrawal 페이지로 이동
-    navigate('/withdrawal/ok');
+    navigate('/mypage/withdrawal/ok');
   };
 
   return (

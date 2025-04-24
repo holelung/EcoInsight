@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 const datas = [
@@ -28,11 +28,14 @@ const datas = [
   },
 ];
 
-const Notice = () => {
+const NoticeBoard = () => {
   const { type } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [filterType, setFilterType] = useState("all");
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
   const postsPerPage = 10;
 
   const handleSearchClick = () => {
@@ -54,10 +57,6 @@ const Notice = () => {
   const filteredPosts = filtered.filter((post) =>
     post.title.includes(searchQuery)
   );
-
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -109,7 +108,7 @@ const Notice = () => {
           </div>
           <div className="col-span-2 text-left">
             <Link
-              to={`/post/${post.id}`}
+              to={`/board/notice/${post.id}`}
               state={{ postType: post.type }}
               onClick={() => handlePostClick(post.id)}
               className="hover:underline"
@@ -144,4 +143,4 @@ const Notice = () => {
   );
 };
 
-export default Notice;
+export default NoticeBoard;

@@ -14,6 +14,7 @@ public class Community {
 	private Long memberNo;
 	private String categoryId;
 	private String cBoardTitle;
+	private String cBoardWriter;
 	private String cBoardContent;
 	private Date createDate;
 	private Date modifiedDate;

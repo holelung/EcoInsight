@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useContext, useEffect } from 'react';
+import { AuthContext } from '../Context/AuthContext';
 import axios from 'axios'; // axios 임포트
 
 const ChangePassword = () => {
   const navigate = useNavigate();
   const [newPw, setNewPw] = useState('');
   const [confirmPw, setConfirmPw] = useState('');
+  const { auth } = useContext(AuthContext);
+   useEffect(() => {
+     if (!auth.isAuthenticated) {
+       navigate('/login', { replace: true });
+     }
+   }, [auth.isAuthenticated, navigate]);
 
   const handleSubmit = async () => {
     if (!newPw || !confirmPw) {
