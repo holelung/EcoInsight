@@ -247,9 +247,11 @@ const AuthListPage = () => {
                                 {board.title}
                             </div>
                             <div className="px-4 py-3 text-sm">
-                                <div className="text-gray-500 flex justify-between mt-1">
-                                    <span>작성자: {board.writer}</span>
-                                    <span>작성일: {board.createdDate}</span>
+                                <div className="flex justify-between mt-1">
+                                    <span>
+                                        작성자 : <span className="text-black-500 font-bold">{board.writer}</span>
+                                    </span>
+                                    <span>작성일 : {board.createdDate}</span>
                                 </div>
                             </div>
                         </div>

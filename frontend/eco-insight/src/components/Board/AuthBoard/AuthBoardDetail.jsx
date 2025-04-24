@@ -54,9 +54,9 @@ function AuthBoardDetail() {
                 )}
             </div>
 
-            <div className="text-sm text-gray-600 flex justify-between">
+            <div className="text-sm flex justify-between">
                 <span>
-                    작성자 : <span className="text-black-600 font-bold">{post.writer}</span>
+                    작성자 : <span className="text-black-800 font-bold">{post.writer}</span>
                 </span>
                 <span>{post.createdDate}</span>
             </div>
