@@ -36,11 +36,70 @@
 			  )  
 	</insert>
 	<select id="findAllCommunity" resultType="com.semi.ecoinsight.community.model.dto.CommunityDTO">
-		<include refid="communityBoardColumn"/>
+		<include refid="communityBoardColumn"/>		
 			FROM 
 				  TB_COMMUNITY_BOARD
 			JOIN
-			   	  TB_
+			   	  TB_MEMBER USING(MEMBER_NO)
+			WHERE
+			      IS_DELETED = 'N'
+			  AND
+			  	  CATEGORY_ID = #{categoryId}	    
+			ORDER
+			  BY
+			  	  C_BOARD_NO DESC      
 	</select>
-
+	
+	<update id="updateComuunity" parameterType="com.semi.ecoinsight.community.model.vo.Community">
+		UPDATE 
+			    TB_COMMUNITY_BOARD
+		   SET 
+		          C_BOARD_TITLE = #{cBoardTitle}
+		        , C_BOARD_CONTENT = #{cBoardContent}
+		 WHERE 
+		          C_BOARD_NO = #{cBoardNo}
+	</update>
+	
+	<delete id="deleteCommunity" parameterType="Long">
+		DELETE 
+	      FROM
+	            TB_COMMUINTY_BOARD
+	     WHERE
+	     		C_BOARD_NO = #{cBoardNo}       
+	</delete>
+	
+	<update id="insertCommunityCountView" parameterType="Long">
+		UPDATE
+		        TB_COMMUNITY_BOARD
+		   SET
+		   	    VIEW_COUNT = VIEW_COUNT + 1
+		 WHERE
+		 	    C_BOARD_NO = #{CBoardNo}
+	</update>
+	
+	<insert id="insertLikeCount" parameterType="map">
+		INSERT
+		  INTO
+		       COMMUNITY_RECOMMEND
+		       (
+				, C_BOARD_NO cBoardNo
+				, MEMBER_NO memberNo
+			   )
+	    VALUES
+	          (
+				 #{cBoardNo}
+			   , #{memberNo}
+			  ) 	   
+	</insert>
+	
+	<delete id="deleteLikeCount" parameterType="map">
+	   DELETE 
+	     FROM 
+	          COMMUNITY_RECOMMEND
+  		WHERE 
+  		      C_BOARD_NO = #{cBoardNo}
+    	  AND 
+    	      MEMBER_NO = #{memberNo}
+	</delete> 
+		
 </mapper>

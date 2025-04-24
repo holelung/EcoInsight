@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 const datas = [
@@ -33,6 +33,9 @@ const NoticeBoard = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [filterType, setFilterType] = useState("all");
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
   const postsPerPage = 10;
 
   const handleSearchClick = () => {
@@ -54,10 +57,6 @@ const NoticeBoard = () => {
   const filteredPosts = filtered.filter((post) =>
     post.title.includes(searchQuery)
   );
-
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
 
   return (
     <div className="max-w-4xl mx-auto p-4">
