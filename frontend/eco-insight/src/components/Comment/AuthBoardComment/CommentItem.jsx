@@ -1,11 +1,13 @@
 import { useState } from "react";
 import dayjs from "dayjs"; // 날짜 표시를 위한 dayjs
 
+
 function CommentItem({ reply, replies, setReplies, user, postId, reportedReplies, setReportedReplies }) {
     const [isEditing, setIsEditing] = useState(false);
     const [editedText, setEditedText] = useState(reply.text);
     const [showReplyInput, setShowReplyInput] = useState(false);
     const [childReply, setChildReply] = useState("");
+    console.log("렌더링 중:", reply.id);
 
     // 대댓글은 parentId가 같은 댓글들을 찾아서 렌더링
     const children = replies.filter(r => r.parentId === reply.id);
@@ -29,30 +31,40 @@ function CommentItem({ reply, replies, setReplies, user, postId, reportedReplies
     };
 
     const handleReply = () => {
-        // 대댓글 내용이 비어있지 않은지 확인
         if (!childReply.trim()) return;
     
+        // 새로운 대댓글 객체 생성
         const replyToAdd = {
-            id: Date.now(), // ID는 유니크하도록 생성
+            id: `${reply.id}-${Date.now()}`,  // 고유한 id를 생성
             author: user?.name || "익명",
             text: childReply,
-            parentId: reply.id,
+            parentId: reply.id,  // 부모 댓글의 id를 설정
             likes: 0,
-            createdAt: new Date().toISOString(), // 대댓글에도 createdAt 추가
+            createdAt: new Date().toISOString(),
         };
     
-        // 상태가 이전 상태를 기반으로 업데이트되도록 수정
-        setReplies(prevReplies => {
-            // 이미 동일한 대댓글이 존재하는지 체크
-            if (prevReplies.some(reply => reply.id === replyToAdd.id)) {
-                return prevReplies; // 중복 댓글은 추가하지 않음
+        setReplies(prev => {
+            const exists = prev.some(r => 
+                r.text === replyToAdd.text &&
+                r.parentId === replyToAdd.parentId &&
+                r.author === replyToAdd.author &&
+                Math.abs(new Date(r.createdAt) - new Date(replyToAdd.createdAt)) < 1000  // 중복 체크 (1초 이내 등록 방지)
+            );
+        
+            if (exists) {
+                console.warn("중복 대댓글 방지됨:", replyToAdd);
+                return prev;  // 중복되면 댓글 목록을 그대로 반환
             }
-            return [...prevReplies, replyToAdd];
+        
+            return [...prev, replyToAdd];  // 중복되지 않으면 새로운 대댓글을 추가
         });
+        
     
-        setChildReply("");  // 대댓글 입력창 비우기
-        setShowReplyInput(false);  // 대댓글 입력창 숨기기
+        // 입력 필드 초기화 및 대댓글 입력창 숨기기
+        setChildReply("");
+        setShowReplyInput(false);
     };
+    
 
     // 댓글 신고 처리
     const handleReport = () => {

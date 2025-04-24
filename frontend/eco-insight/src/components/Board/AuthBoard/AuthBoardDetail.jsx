@@ -10,9 +10,7 @@ function AuthBoardDetail() {
     const location = useLocation();
     const post = location.state?.post;
     const { user } = useContext(AuthContext);
-    const { no } = useParams(); // 'no' 파라미터 값 가져오기
-console.log("Post ID (no):", no);
-    
+    const { no } = useParams(); // 'no' 파라미터 값 가져오기    
     
     const fetchPostDetails = async () => {
         try {
