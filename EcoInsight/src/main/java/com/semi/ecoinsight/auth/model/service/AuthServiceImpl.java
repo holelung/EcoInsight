@@ -60,12 +60,13 @@ public class AuthServiceImpl implements AuthService{
         return loginResponse;
     }
     @Override
-    public Map<String, String> sendCodeEmail(String email) {
+    public Map<String, String> sendCodeEmail(Map<String, String> email) {
+        String emailString = email.get("email").trim();
         int verifyCode = verifyCodeCreate();
         MimeMessage message = sender.createMimeMessage();
         try{
             MimeMessageHelper helper = new MimeMessageHelper(message,false, "UTF-8");
-            helper.setTo(email);
+            helper.setTo(emailString);
             helper.setSubject("Eco-Insight 이메일 인증 번호입니다.");
             helper.setText(
                 """
@@ -89,12 +90,12 @@ public class AuthServiceImpl implements AuthService{
               </div>
             </div>
                 """,true);
-
+            sender.send(message);
         } catch(MessagingException e){
             e.printStackTrace();
         }
         Map<String, String> result = new HashMap<>();
-        result.put("email",email);
+        result.put("email",emailString);
         result.put("verifyCode", String.valueOf(verifyCode));
 
         return result;

@@ -6,6 +6,6 @@ import com.semi.ecoinsight.member.model.dto.MemberDTO;
 
 public interface AuthService {
     Map<String, Object> login(MemberDTO member);
-    Map<String, String> sendCodeEmail(String email);
+    Map<String, String> sendCodeEmail(Map<String, String> email);
     String verifyCodeEmail(Map<String, String> verifyInfo);
 }

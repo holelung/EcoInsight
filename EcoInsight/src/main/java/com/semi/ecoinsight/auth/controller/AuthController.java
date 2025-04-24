@@ -33,7 +33,7 @@ public class AuthController {
     }
 
     @PostMapping("/send-code")
-    public ResponseEntity<Map<String, String>> sendCodeEmail(@RequestBody String email){
+    public ResponseEntity<Map<String, String>> sendCodeEmail(@RequestBody Map<String, String> email){
         Map<String, String> verifyCodeResult = authService.sendCodeEmail(email);
         return ResponseEntity.status(HttpStatus.CREATED).body(verifyCodeResult);
     }
