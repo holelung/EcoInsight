@@ -1,10 +1,12 @@
 package com.semi.ecoinsight.exception;
 
+
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,11 +26,16 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(MemberIdDuplicateException.class)
-    public ResponseEntity<?> handleMemberIdDuplicateException(MemberIdDuplicateException e){
+    public ResponseEntity<Map<String, String>> handleMemberIdDuplicateException(MemberIdDuplicateException e){
         return makeResponseEntity(e, HttpStatus.BAD_REQUEST);
     }
 	@ExceptionHandler(CustomAuthenticationException.class)
-    public ResponseEntity<?> handleCustomAuthenticationException(CustomAuthenticationException e){
-        return makeResponseEntity(e, HttpStatus.BAD_REQUEST);
-    }
+	public ResponseEntity<Map<String, String>> handleCustomAuthenticationException(CustomAuthenticationException e) {
+		return makeResponseEntity(e, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<Map<String, String>> handleAccessDeniedException(AccessDeniedException e) {
+		return makeResponseEntity(e, HttpStatus.BAD_REQUEST);
+	}
 }

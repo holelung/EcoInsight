@@ -29,9 +29,8 @@ public class BoardController {
         @RequestParam(name="files", required=true) MultipartFile files, @RequestParam(name="boardType", required=true) String boardType) {
         
         log.info("file:{}", files);
-        // List<String> uploadPath = boardService.imageUrlChange();
-        return null;
-        // return ResponseEntity.ok(uploadPath);
+        List<String> uploadPath = boardService.imageUrlChange(files, boardType);
+        return ResponseEntity.ok(uploadPath);
     }
     
 }

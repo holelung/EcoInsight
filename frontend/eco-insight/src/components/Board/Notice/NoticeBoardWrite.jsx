@@ -42,6 +42,7 @@ const NoticeBoardWrite = () => {
       axios.post("http://localhost/admin/notice-write", {
         title: title,
         content: newContent,
+        
       }).then(response => {
         console.log(response.status);
         alert("게시글 업로드 완료");

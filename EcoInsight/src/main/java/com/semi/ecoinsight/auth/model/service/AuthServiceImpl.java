@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.semi.ecoinsight.auth.model.vo.CustomUserDetails;
@@ -106,8 +107,19 @@ public class AuthServiceImpl implements AuthService{
     }
     @Override
     public String verifyCodeEmail(Map<String, String> verifyInfo) {
-        // TODO Auto-generated method stub
+        
         throw new UnsupportedOperationException("Unimplemented method 'verifyCodeEmail'");
+    }
+    @Override
+    public CustomUserDetails getUserDetails() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
+        return user;
+    }
+    
+    @Override
+    public boolean isAdmin() {
+        return getUserDetails().getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 
 }
