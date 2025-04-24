@@ -11,7 +11,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class AuthCommentDTO {
+public class AuthCommentReportDTO {
 	
 	private String reportCategoryNo;
 	private String reportCategoryName;

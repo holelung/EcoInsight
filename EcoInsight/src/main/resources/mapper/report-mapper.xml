@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.semi.ecoinsight.report.model.dao.ReportMapper">
+
+  <sql id="reportCommonColumns">
+    REPORTER,
+    REPORT_CATEGORY_NO,
+    REPORT_DATE
+  </sql>
+
+  <sql id="reportCommonValues">
+    #{reporter},
+    #{report_category_no},
+    SYSDATE
+  </sql>
+
+  <insert id="insertCommunityBoardReport"
+          parameterType="com.example.project.report.model.dto.CommunityBoardReportDTO">
+    INSERT INTO TB_COMMUNITY_REPORT (
+      REPORT_NO,
+      C_BOARD_NO,
+      <include refid="reportCommonColumns"/>,
+      REPORT_CONTENT
+    ) VALUES (
+      SEQ_REPORT.NEXTVAL,
+      #{c_board_no},
+      <include refid="reportCommonValues"/>,
+      #{report_content}
+    )
+  </insert>
+
+  <insert id="insertAuthBoardReport"
+          parameterType="com.example.project.report.model.dto.AuthBoardReportDTO">
+    INSERT INTO TB_AUTH_BOARD_REPORT (
+      REPORT_NO,
+      AUTH_BOARD_NO,
+      <include refid="reportCommonColumns"/>,
+      REPORT_CONTENT
+    ) VALUES (
+      SEQ_REPORT.NEXTVAL,
+      #{auth_board_no},
+      <include refid="reportCommonValues"/>,
+      #{report_content}
+    )
+  </insert>
+
+  <insert id="insertCommunityCommentReport"
+          parameterType="com.example.project.report.model.dto.CommunityCommentReportDTO">
+    INSERT INTO TB_COMMUNITY_CMT_REPORT (
+      CMT_REPORT_NO,
+      <include refid="reportCommonColumns"/>,
+      CMT_REPORT_CONTENT
+    ) VALUES (
+      SEQ_REPORT.NEXTVAL,
+      <include refid="reportCommonValues"/>,
+      #{cmt_report_content}
+    )
+  </insert>
+
+  <insert id="insertAuthCommentReport"
+          parameterType="com.example.project.report.model.dto.AuthCommentReportDTO">
+    INSERT INTO TB_AUTH_BOARD_CMT_REPORT (
+      CMT_REPORT_NO,
+      <include refid="reportCommonColumns"/>,
+      CMT_REPORT_CONTENT
+    ) VALUES (
+      SEQ_REPORT.NEXTVAL,
+      <include refid="reportCommonValues"/>,
+      #{cmt_report_content}
+    )
+  </insert>
+
+</mapper>
