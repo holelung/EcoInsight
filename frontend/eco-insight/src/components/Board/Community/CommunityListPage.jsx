@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Pagination from "../../Pagination/Pagination";
+import axios from "axios";
 
 const datas = [
   {
