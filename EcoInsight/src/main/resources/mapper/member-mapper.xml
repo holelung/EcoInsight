@@ -39,7 +39,7 @@
             #{memberPw},
             #{memberId},
             #{email},
-            #{memberPh}, 
+            #{memberPh},
             #{memberRole}
         )
     </insert>
