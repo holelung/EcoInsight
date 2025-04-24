@@ -19,7 +19,7 @@ function WithdrawalForm() {
     console.log('아이디:', userId);
     console.log('비밀번호:', password);
     // 실제 회원 탈퇴 API 호출 후 OkWithdrawal 페이지로 이동
-    navigate('/withdrawal/ok');
+    navigate('/mypage/withdrawal/ok');
   };
 
   return (

@@ -2,7 +2,6 @@ import "./App.css";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./components/Context/AuthContext";
 import HomePage from "./pages/User/HomePage/HomePage";
-import Header from "./components/Common/Header/Header";
 import AuthListPage from "./components/Board/AuthBoard/AuthListPage";
 import MyPage from "./components/MyPage/MyPage";
 import Myposts from "./components/MyPage/MyPosts";
@@ -10,7 +9,6 @@ import WithdrawalForm from "./components/MyPage/Withdrawal/WithdrawalForm";
 import OkWithdrawal from "./components/MyPage/Withdrawal/OkWithdrawal";
 import CheckWithdrawal from "./components/MyPage/Withdrawal/CheckWithdrawal";
 import EditProfile from "./components/MyPage/EditProfile";
-import Footer from "./components/Common/Footer/Footer";
 import UserLayout from "./components/Layout/UserLayout";
 import AdminRoute from "./components/RouteGuard/AdminRoute";
 import AdminLogin from "./pages/Admin/AdminLogin/AdminLogin.jsx";
@@ -41,7 +39,6 @@ import NoticeBoard from "./components/Board/Notice/NoticeBoard.jsx";
 import NoticeBoardDetail from "./components/Board/Notice/NoticeBoardDetail.jsx";
 import NoticeBoardWrite from "./components/Board/Notice/NoticeBoardWrite.jsx";
 import NoticeWrite from "./pages/Admin/NoticeBoardManagementPage/NoticeWrite.jsx";
-import Notice from "./components/Board/Notice/NoticeBoard.jsx";
 import CommunityWritePage from "./components/Board/Community/CommunityWritePage.jsx";
 
 
@@ -73,12 +70,12 @@ function App() {
           {/* 로그인 유저 전용 */}
           <Route element={<UserRoute> <UserLayout /> </UserRoute>}>
             <Route path="/mypage" element={<MyPage />} />
-            <Route path="/myposts" element={<Myposts />} />
-            <Route path="/editprofile" element={<EditProfile />} />
-            <Route path="/changepassword" element={<ChangePassword />} />
-            <Route path="/withdrawal/check" element={<CheckWithdrawal />} />
-            <Route path="/withdrawal/form" element={<WithdrawalForm />} />
-            <Route path="/withdrawal/ok" element={<OkWithdrawal />} />
+            <Route path="/mypage/myposts" element={<Myposts />} />
+            <Route path="/mypage/editprofile" element={<EditProfile />} />
+            <Route path="/mypage/changepassword" element={<ChangePassword />} />
+            <Route path="/mypage/withdrawal/check" element={<CheckWithdrawal />} />
+            <Route path="/mypage/withdrawal/form" element={<WithdrawalForm />} />
+            <Route path="/mypage/withdrawal/ok" element={<OkWithdrawal />} />
           </Route>
 
 

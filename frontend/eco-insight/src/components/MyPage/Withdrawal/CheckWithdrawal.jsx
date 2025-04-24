@@ -13,7 +13,7 @@ function CheckWithdrawal() {
 
   const handleNext = () => {
     // "다음" 버튼 클릭 시 회원탈퇴 절차의 다음 단계로 이동
-    navigate('/withdrawal/form');
+    navigate('/mypage/withdrawal/form');
   };
 
   const handleCancel = () => {

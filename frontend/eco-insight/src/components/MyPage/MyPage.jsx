@@ -22,18 +22,18 @@ function MyPage() {
   };
 
   const handleViewEditInfo = () => {
-    navigate('/editprofile');
+    navigate('/mypage/editprofile');
   };
 
   const handleBoardList = () => {
-    navigate('/myposts');
+    navigate('/mypage/myposts');
   };
   const handleChangePassword = () => {
-    navigate('/changepassword');
+    navigate('/mypage/changepassword');
   };
 
   const handleWithdrawal = () => {
-    navigate('/withdrawal/check');
+    navigate('/mypage/withdrawal/check');
   };
 
   return (
