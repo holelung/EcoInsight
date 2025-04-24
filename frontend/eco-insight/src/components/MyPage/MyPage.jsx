@@ -1,6 +1,5 @@
 import { useContext, useEffect } from 'react';
 import { AuthContext } from '../Context/AuthContext';
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function MyPage() {
@@ -23,18 +22,18 @@ function MyPage() {
   };
 
   const handleViewEditInfo = () => {
-    navigate('/editprofile');
+    navigate('/mypage/editprofile');
   };
 
   const handleBoardList = () => {
-    navigate('/myposts');
+    navigate('/mypage/myposts');
   };
   const handleChangePassword = () => {
-    navigate('/changepassword');
+    navigate('/mypage/changepassword');
   };
 
   const handleWithdrawal = () => {
-    navigate('/withdrawal/check');
+    navigate('/mypage/withdrawal/check');
   };
 
   return (
