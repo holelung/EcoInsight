@@ -14,5 +14,6 @@ import lombok.ToString;
 public class UploadImageDTO {
     private Long noticeAttachmentNo;
     private String noticeAttachmentItem;
-    private Long noticeNo;
+    private Long boardNo;
+    private String boardType;
 }

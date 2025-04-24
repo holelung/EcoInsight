@@ -33,14 +33,13 @@ import Separate from "../../Seperate/Seperate";
 import axios from "axios";
 
 
-const MenuBar = ({ editor }) => {
+const MenuBar = ({ editor, imageFilesRef }) => {
   const [textColor, setTextColor] = useState("");
   const handleColorChange = (e) => {
     setTextColor(e.target.value);
   };
 
-
-// useRef
+  // useRef
   const insertImageFromFile = () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -51,32 +50,17 @@ const MenuBar = ({ editor }) => {
       const file = input.files?.[0];
       if (!file) return;
 
-      const formData = new FormData;
-      formData.append("file", file);
+      imageFilesRef.current.push(file);
 
-      axios.post("/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          authorization: `bearer `
-        }
-      })
-      .then(response => {
-        console.log(response.data);
-        const imageUrl = response.data.url;
-        editor.chain().focus().setImage({ src: imageUrl }).run();
-      }).catch(error => {
-        console.log("이미지 업로드 실패", error);
-      });
-      // base64
-      // const reader = new FileReader();
-      // reader.onload = () => {
-      //   const base64 = reader.result;
-      //   editor.chain().focus().setImage({ src: base64 }).run();
-      // };
-      // reader.readAsDataURL(file);
+      // const prev = JSON.parse(sessionStorage.getItem("uploadImgs") || "[]");
+      // prev.push({fileName: file.name});
+      // sessionStorage.setItem("uploadImgs", JSON.stringify(prev));
+
+      // blob형식 URL 생성
+      const previewUrl = URL.createObjectURL(file);
+      editor.chain().focus().setImage({ src: previewUrl }).run();
     };
   };
-
 
   if (!editor) return null;
 
@@ -84,7 +68,7 @@ const MenuBar = ({ editor }) => {
     <div className="flex flex-wrap gap-2 mb-4 text-lg items-center border-b pb-3">
       {/* Image */}
       <button
-        onClick={insertImageFromFile}
+        onClick={() => insertImageFromFile()}
         className="px-2 py-1 rounded border bg-white text-black"
       >
         <MdImage />
@@ -285,18 +269,22 @@ const extensions = [
 
 const content = ``;
 
-const Tiptap = ({setContent}) => {
+const Tiptap = ({ setContent, boardType, imageFilesRef }) => {
   const editor = useEditor({
     extensions,
     content,
     onUpdate({ editor }) {
       setContent(editor.getHTML());
-    }
-  })
+    },
+  });
 
   return (
     <div className="p-4 bg-white rounded-lg shadow-md">
-      <MenuBar editor={editor} />
+      <MenuBar
+        editor={editor}
+        boardType={boardType}
+        imageFilesRef={imageFilesRef}
+      />
       <EditorContent
         editor={editor}
         className="prose max-w-none min-h-[400px] border-2 rounded-lg border-gray-400"
