@@ -1,4 +1,3 @@
-// src/components/Member/SignUp/SignUp.jsx
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";

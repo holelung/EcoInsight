@@ -62,8 +62,16 @@ function App() {
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
           <Route path="/privateAskPage" element={<PrivateAskPage />} />
           <Route path="/find-id/result-id" element={<ResultId />} />
+          <Route path="/notice" element={<NoticeBoard />} />
+          <Route path="/board/notice/:id" element={<NoticeBoardDetail />} />
+          <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
+          <Route path="/privateAskPage" element={<PrivateAskPage />} />
+          <Route path="/find-id/result-id" element={<ResultId />} />
+        </Route>
+
+
           {/* 로그인 유저 전용 */}
-          <Route element={<UserRoute />}>
+          <Route element={<UserRoute> <UserLayout /> </UserRoute>}>
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/myposts" element={<Myposts />} />
             <Route path="/editprofile" element={<EditProfile />} />
@@ -73,19 +81,13 @@ function App() {
             <Route path="/withdrawal/ok" element={<OkWithdrawal />} />
           </Route>
 
-          <Route path="/notice" element={<Notice />} />
-          <Route path="/board/notice/:id" element={<NoticeBoardDetail />} />
-          <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
-          <Route path="/privateAskPage" element={<PrivateAskPage />} />
-          <Route path="/find-id/result-id" element={<ResultId />} />
-
-        </Route>
 
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/findid" element={<FindId />} />
         <Route path="/findpassword" element={<FindPasswordPage />} />
         <Route path="/findPassword/resetpassword" element={<ResetPassword />} />
+
         {/* 관리자 전용 */}
         <Route path="/admin/login" element={<AdminLogin />} />
 
