@@ -1,6 +1,6 @@
 package com.semi.ecoinsight.admin.model.dto;
 
-import java.sql.Date;
+import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -14,18 +14,16 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class NoticeDTO {
+public class WriteFormDTO {
     
-    private Long noticeNo;
-    private String noticeTypeNo;
-    @NotBlank
     private Long memberNo;
     @NotBlank
-    private String noticeTitle;
+    private String noticeTypeNo;
     @NotBlank
-    private String noticeContent;
-    private Date createdDate;
-    private Date modifiedDate;
-    private String status;
-    private Long viewCount;
+    private String title;
+    @NotBlank
+    private String content;
+    @NotBlank
+    private String boardType;
+    private List<String> imageUrls;
 }

@@ -28,6 +28,8 @@ const NoticeBoardWrite = () => {
       formData.append("files", file);
     })
 
+    
+
     axios.post("http://localhost/boards/upload", formData, {
       headers: {
         Authorization: `Bearer ${auth.tokens.accessToken}`,
@@ -35,22 +37,40 @@ const NoticeBoardWrite = () => {
     }).then(response => {
       const uploadPaths = response.data;
       let index = 0;
+      // src 변경
       newContent = newContent.replace(imgRegex, (_, oldSrc) => {
         const newSrc = `/uploads/${uploadPaths[index++]}`;
         return `<img src="${newSrc}"`;
       });
-      axios.post("http://localhost/admin/notice-write", {
-        title: title,
-        content: newContent,
-        
-      }).then(response => {
-        console.log(response.status);
-        alert("게시글 업로드 완료");
-        navi(`/admin/noticeboard-manage`);
-      }).catch(error => {
-        console.log("게시글 업로드 실패", error);
-        alert("게시글 업로드실패 😢");
-      })
+
+
+      axios
+        .post(
+          "http://localhost/admin/notice-write",
+          {
+            memberNo: auth.loginInfo.memberNo,
+            noticeTypeNo: "C0001",
+            title: title,
+            content: newContent,
+            boardType: boardType,
+            imageUrls: uploadPaths,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${auth.tokens.accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response.status);
+          alert("게시글 업로드 완료");
+          navi(`/admin/noticeboard-manage`);
+        })
+        .catch((error) => {
+          console.log("게시글 업로드 실패", error);
+          alert("게시글 업로드실패 😢");
+        });
     }).catch(error => {
       console.log("이미지 업로드 실패", error);
     })

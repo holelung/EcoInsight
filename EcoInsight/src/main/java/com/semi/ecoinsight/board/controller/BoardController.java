@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.semi.ecoinsight.board.model.service.BoardService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

@@ -2,9 +2,10 @@ package com.semi.ecoinsight.board.model.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.semi.ecoinsight.board.model.dto.UploadImageDTO;
+
+import com.semi.ecoinsight.board.model.vo.Attachment;
 
 @Mapper
 public interface BoardMapper {
-    void uploadNoticeImage(UploadImageDTO uploadImage);
+    void uploadImage(Attachment attachment);
 }
