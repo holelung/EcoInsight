@@ -41,7 +41,6 @@ import NoticeBoard from "./components/Board/Notice/NoticeBoard.jsx";
 import NoticeBoardDetail from "./components/Board/Notice/NoticeBoardDetail.jsx";
 import NoticeBoardWrite from "./components/Board/Notice/NoticeBoardWrite.jsx";
 import NoticeWrite from "./pages/Admin/NoticeBoardManagementPage/NoticeWrite.jsx";
-import Notice from "./components/Board/Notice/NoticeBoard.jsx";
 import CommunityWritePage from "./components/Board/Community/CommunityWritePage.jsx";
 
 
@@ -73,7 +72,7 @@ function App() {
             <Route path="/withdrawal/ok" element={<OkWithdrawal />} />
           </Route>
 
-          <Route path="/notice" element={<Notice />} />
+          <Route path="/notice" element={<NoticeBoard />} />
           <Route path="/board/notice/:id" element={<NoticeBoardDetail />} />
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
           <Route path="/privateAskPage" element={<PrivateAskPage />} />
