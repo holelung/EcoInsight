@@ -76,74 +76,12 @@ function App() {
             <Route path="/withdrawal/ok"    element={<OkWithdrawal />} />
           </Route>
 
-          <Route path="/notice" element={<Notice />} />
+          <Route path="/notice" element={<NoticeBoard />} />
           <Route path="/board/notice/:id" element={<NoticeBoardDetail />} />
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
           <Route path="/privateAskPage" element={<PrivateAskPage />} />
           <Route path="/find-id/result-id" element={<ResultId />} />
-          {/* 로그인 유저 전용 */}
-          <Route
-            path="/mypage"
-            element={
-              <UserRoute>
-                <MyPage />
-              </UserRoute>
-            }
-          />
-          <Route
-            path="/myposts"
-            element={
-              <UserRoute>
-                <Myposts />
-              </UserRoute>
-            }
-          />
-          <Route
-            path="/editprofile"
-            element={
-              <UserRoute>
-                <EditProfile />
-              </UserRoute>
-            }
-          />
-          <Route
-            path="/changepassword"
-            element={
-              <UserRoute>
-                <ChangePassword />
-              </UserRoute>
-            }
-          />
-          <Route
-            path="/withdrawal/form"
-            element={
-              <UserRoute>
-                <WithdrawalForm />
-              </UserRoute>
-            }
-          />
-          <Route
-            path="/withdrawal/ok"
-            element={
-              <UserRoute>
-                <OkWithdrawal />
-              </UserRoute>
-            }
-          />
-          <Route
-            path="/withdrawal/check"
-            element={
-              <UserRoute>
-                <CheckWithdrawal />
-              </UserRoute>
-            }
-          />
-          <Route
-            path="/findPassword/resetpassword"
-            element={<ResetPassword />}
-          />{" "}
-          {/* findpassword,changepassword 추가 예정 */}
-          <Route path="/changepassword" element={<ChangePassword />} />
+          
 
         </Route>
 
