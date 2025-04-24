@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface BoardService {
     
-    List<String> imageUrlChange(MultipartFile files, String boardType);
+    String imageUrlChange(MultipartFile file, String boardType);
 
     void uploadImage();
 }

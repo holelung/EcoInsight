@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.semi.ecoinsight.exception.util.CustomAuthenticationException;
+import com.semi.ecoinsight.exception.util.FileStreamException;
+import com.semi.ecoinsight.exception.util.FileTypeNotAllowedException;
 import com.semi.ecoinsight.exception.util.MemberIdDuplicateException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -37,5 +39,15 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(AccessDeniedException.class)
 	public ResponseEntity<Map<String, String>> handleAccessDeniedException(AccessDeniedException e) {
 		return makeResponseEntity(e, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(FileStreamException.class)
+	public ResponseEntity<Map<String, String>> handleFileStreamException(FileStreamException e) {
+		return makeResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	@ExceptionHandler(FileTypeNotAllowedException.class)
+	public ResponseEntity<Map<String, String>> handleFileTypeNotAllowedException(FileTypeNotAllowedException e) {
+		return makeResponseEntity(e, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
 	}
 }

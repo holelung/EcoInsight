@@ -8,6 +8,7 @@ import com.semi.ecoinsight.board.model.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -26,10 +27,13 @@ public class BoardController {
     
     @PostMapping("upload")
     public ResponseEntity<?> uploadImage(
-        @RequestParam(name="files", required=true) MultipartFile files, @RequestParam(name="boardType", required=true) String boardType) {
+        @RequestParam(name="files", required=true) List<MultipartFile> files, @RequestParam(name="boardType", required=true) String boardType) {
         
-        log.info("file:{}", files);
-        List<String> uploadPath = boardService.imageUrlChange(files, boardType);
+        log.info("file개수:{}", files.size());
+        List<String> uploadPath = new ArrayList<>();
+        for (MultipartFile file : files) {
+            uploadPath.add(boardService.imageUrlChange(file, boardType));
+        }
         return ResponseEntity.ok(uploadPath);
     }
     
