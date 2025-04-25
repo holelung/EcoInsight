@@ -2,69 +2,55 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.semi.ecoinsight.report.model.dao.ReportMapper">
 
-  <sql id="reportCommonColumns">
+  <sql id="reportBoard">
+    BOARD_NO,
     REPORTER,
-    REPORT_CATEGORY_NO
+    REPORT_CATEGORY_ID,
+    REPORT_CONTENT
+  ) VALUES (
+    #{boardNo},
+    #{reporter},
+    #{reportCategoryId},
+    #{reportContent}
   </sql>
 
-  <sql id="reportCommonValues">
+  <sql id="reportComment">
+    REPORTER,
+    REPORT_CATEGORY_ID,
+    COMMENT_NO,
+    COMMENT_REPORT_CONTENT
+  ) VALUES (
     #{reporter},
-    #{reportCategoryNo}
+    #{reportCategoryId},
+    #{commentNo},
+    #{commentReportContent}
   </sql>
 
   <insert id="insertCommunityBoardReport"
-          parameterType="com.semi.ecoinsight.report.model.vo.CommunityBoardReport">
+          parameterType="com.semi.ecoinsight.report.model.vo.BoardReport">
     INSERT INTO TB_COMMUNITY_REPORT (
-      REPORT_NO,
-      C_BOARD_NO,
-      <include refid="reportCommonColumns"/>,
-      REPORT_CONTENT
-    ) VALUES (
-      SEQ_REPORT_BOARD.NEXTVAL,
-      #{communityBoardNo},
-      <include refid="reportCommonValues"/>,
-      #{reportContent}
+      <include refid="reportBoard"/>
     )
   </insert>
 
   <insert id="insertAuthBoardReport"
-          parameterType="com.semi.ecoinsight.report.model.vo.AuthBoardReport">
+          parameterType="com.semi.ecoinsight.report.model.vo.BoardReport">
     INSERT INTO TB_AUTH_BOARD_REPORT (
-      REPORT_NO,
-      AUTH_BOARD_NO,
-      <include refid="reportCommonColumns"/>,
-      REPORT_CONTENT
-    ) VALUES (
-      SEQ_REPORT_BOARD.NEXTVAL,
-      #{authBoardNo},
-      <include refid="reportCommonValues"/>,
-      #{reportContent}
+      <include refid="reportBoard"/>
     )
   </insert>
 
   <insert id="insertCommunityCommentReport"
-          parameterType="com.semi.ecoinsight.report.model.vo.CommunityCommentReport">
+          parameterType="com.semi.ecoinsight.report.model.vo.CommentReport">
     INSERT INTO TB_COMMUNITY_CMT_REPORT (
-      CMT_REPORT_NO,
-      <include refid="reportCommonColumns"/>,
-      CMT_REPORT_CONTENT
-    ) VALUES (
-      SEQ_REPORT_CMT.NEXTVAL,
-      <include refid="reportCommonValues"/>,
-      #{cmtReportContent}
+      <include refid="reportComment"/>
     )
   </insert>
 
   <insert id="insertAuthCommentReport"
-          parameterType="com.semi.ecoinsight.report.model.vo.AuthCommentReport">
+          parameterType="com.semi.ecoinsight.report.model.vo.CommentReport">
     INSERT INTO TB_AUTH_BOARD_CMT_REPORT (
-      CMT_REPORT_NO,
-      <include refid="reportCommonColumns"/>,
-      CMT_REPORT_CONTENT
-    ) VALUES (
-      SEQ_REPORT_CMT.NEXTVAL,
-      <include refid="reportCommonValues"/>,
-      #{cmtReportContent}
+      <include refid="reportComment"/>
     )
   </insert>
 

@@ -3,14 +3,10 @@ package com.semi.ecoinsight.report.model.service;
 import org.springframework.stereotype.Service;
 
 import com.semi.ecoinsight.report.model.dao.ReportMapper;
-import com.semi.ecoinsight.report.model.dto.AuthBoardReportDTO;
-import com.semi.ecoinsight.report.model.dto.AuthCommentReportDTO;
-import com.semi.ecoinsight.report.model.dto.CommunityBoardReportDTO;
-import com.semi.ecoinsight.report.model.dto.CommunityCommentReportDTO;
-import com.semi.ecoinsight.report.model.vo.AuthBoardReport;
-import com.semi.ecoinsight.report.model.vo.AuthCommentReport;
-import com.semi.ecoinsight.report.model.vo.CommunityBoardReport;
-import com.semi.ecoinsight.report.model.vo.CommunityCommentReport;
+import com.semi.ecoinsight.report.model.dto.BoardReportDTO;
+import com.semi.ecoinsight.report.model.dto.CommentReportDTO;
+import com.semi.ecoinsight.report.model.vo.BoardReport;
+import com.semi.ecoinsight.report.model.vo.CommentReport;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,13 +19,13 @@ public class ReportServiceImpl implements ReportService {
 	private final ReportMapper reportMapper;
 	
 	@Override
-	public void insertCommunityBoardReport(CommunityBoardReportDTO cbr) {
+	public void insertCommunityBoardReport(BoardReportDTO boardReport) {
 		
-		CommunityBoardReport requestData = CommunityBoardReport.builder()
-				.communityBoardNo(cbr.getCommunityBoardNo())
-				.reporter(cbr.getReporter())
-				.reportCategoryNo(cbr.getReportCategoryNo())
-				.reportContent(cbr.getReportContent())
+		BoardReport requestData = BoardReport.builder()
+				.boardNo(boardReport.getBoardNo())
+				.reporter(boardReport.getReporter())
+				.reportCategoryId(boardReport.getReportCategoryId())
+				.reportContent(boardReport.getReportContent())
 				.build();
 		
 		reportMapper.insertCommunityBoardReport(requestData);
@@ -37,13 +33,13 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public void insertAuthBoardReport(AuthBoardReportDTO abr) {
+	public void insertAuthBoardReport(BoardReportDTO boardReport) {
 		
-		AuthBoardReport requestData = AuthBoardReport.builder()
-				.reporter(abr.getReporter())
-				.authBoardNo(abr.getAuthBoardNo())
-				.reportCategoryNo(abr.getReportCategoryNo())
-				.reportContent(abr.getReportContent())
+		BoardReport requestData = BoardReport.builder()
+				.reporter(boardReport.getReporter())
+				.boardNo(boardReport.getBoardNo())
+				.reportCategoryId(boardReport.getReportCategoryId())
+				.reportContent(boardReport.getReportContent())
 				.build();
 		
 		reportMapper.insertAuthBoardReport(requestData);
@@ -51,24 +47,26 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public void insertCommunityCommentReport(CommunityCommentReportDTO ccr) {
+	public void insertCommunityCommentReport(CommentReportDTO commentReport) {
 		
-		CommunityCommentReport requestData = CommunityCommentReport.builder()
-				.reporter(ccr.getReporter())
-				.reportCategoryNo(ccr.getReportCategoryNo())
-				.cmtReportContent(ccr.getCmtReportContent())
+		CommentReport requestData = CommentReport.builder()
+				.reporter(commentReport.getReporter())
+				.reportCategoryId(commentReport.getReportCategoryId())
+				.commentNo(commentReport.getCommentNo())
+				.commentReportContent(commentReport.getCommentReportContent())
 				.build();
 		
 		reportMapper.insertCommunityCommentReport(requestData);
 	}
 
 	@Override
-	public void insertAuthCommentReport(AuthCommentReportDTO acr) {
+	public void insertAuthCommentReport(CommentReportDTO commentReport) {
 		
-		AuthCommentReport requestData = AuthCommentReport.builder()
-				.reporter(acr.getReporter())
-				.reportCategoryNo(acr.getReportCategoryNo())
-				.cmtReportContent(acr.getCmtReportContent())
+		CommentReport requestData = CommentReport.builder()
+				.reporter(commentReport.getReporter())
+				.reportCategoryId(commentReport.getReportCategoryId())
+				.commentNo(commentReport.getCommentNo())
+				.commentReportContent(commentReport.getCommentReportContent())
 				.build();
 		
 		reportMapper.insertAuthCommentReport(requestData);

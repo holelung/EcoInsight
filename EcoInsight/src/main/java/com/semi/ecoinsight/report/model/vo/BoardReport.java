@@ -5,11 +5,11 @@ import lombok.Value;
 
 @Value
 @Builder
-public class AuthBoardReport {
+public class BoardReport {
 
+	private Long boardNo;
 	private Long reporter;
-	private Long authBoardNo;
-	private Long reportCategoryNo;
+	private String reportCategoryId;
 	private String reportCategoryName;
 	private String reportContent;
 }

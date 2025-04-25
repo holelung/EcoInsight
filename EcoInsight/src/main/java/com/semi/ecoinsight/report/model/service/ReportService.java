@@ -1,14 +1,12 @@
 package com.semi.ecoinsight.report.model.service;
 
-import com.semi.ecoinsight.report.model.dto.AuthBoardReportDTO;
-import com.semi.ecoinsight.report.model.dto.AuthCommentReportDTO;
-import com.semi.ecoinsight.report.model.dto.CommunityBoardReportDTO;
-import com.semi.ecoinsight.report.model.dto.CommunityCommentReportDTO;
+import com.semi.ecoinsight.report.model.dto.BoardReportDTO;
+import com.semi.ecoinsight.report.model.dto.CommentReportDTO;
 
 public interface ReportService {
 
-    void insertCommunityBoardReport(CommunityBoardReportDTO cbr);
-    void insertAuthBoardReport(AuthBoardReportDTO abr);
-    void insertCommunityCommentReport(CommunityCommentReportDTO ccr);
-    void insertAuthCommentReport(AuthCommentReportDTO acr);
+    void insertCommunityBoardReport(BoardReportDTO boardReport);
+    void insertAuthBoardReport(BoardReportDTO boardReport);
+    void insertCommunityCommentReport(CommentReportDTO commentReport);
+    void insertAuthCommentReport(CommentReportDTO commentReport);
 }

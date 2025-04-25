@@ -5,10 +5,11 @@ import lombok.Value;
 
 @Value
 @Builder
-public class AuthCommentReport {
-	
-	private String reportCategoryNo;
+public class CommentReport {
+
+	private String reportCategoryId;
 	private String reportCategoryName;
 	private Long reporter;
-	private String cmtReportContent;
+	private Long commentNo;
+	private String commentReportContent;
 }

@@ -11,10 +11,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class AuthCommentReportDTO {
+public class BoardReportDTO {
 	
-	private String reportCategoryNo;
-	private String reportCategoryName;
+	private Long boardNo;
 	private Long reporter;
-	private String cmtReportContent;
+	private String reportCategoryId;
+	private String reportCategoryName;
+	private String reportContent;
+
 }

@@ -8,10 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.semi.ecoinsight.report.model.dto.AuthBoardReportDTO;
-import com.semi.ecoinsight.report.model.dto.AuthCommentReportDTO;
-import com.semi.ecoinsight.report.model.dto.CommunityBoardReportDTO;
-import com.semi.ecoinsight.report.model.dto.CommunityCommentReportDTO;
+import com.semi.ecoinsight.report.model.dto.BoardReportDTO;
+import com.semi.ecoinsight.report.model.dto.CommentReportDTO;
 import com.semi.ecoinsight.report.model.service.ReportService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,30 +25,30 @@ public class ReportController {
 	private final ReportService reportService;
 	
 	@PostMapping("/community-board")
-	public ResponseEntity<?> insertCommunityBoardReport(@RequestBody CommunityBoardReportDTO cbr){
-		log.info("{}",cbr);
-		reportService.insertCommunityBoardReport(cbr);
+	public ResponseEntity<?> insertCommunityBoardReport(@RequestBody BoardReportDTO dto){
+		
+		reportService.insertCommunityBoardReport(dto);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
 	@PostMapping("/auth-board")
-	public ResponseEntity<?> insertAuthBoardReport(@RequestBody AuthBoardReportDTO abr){
+	public ResponseEntity<?> insertAuthBoardReport(@RequestBody BoardReportDTO dto){
 		
-		reportService.insertAuthBoardReport(abr);
+		reportService.insertAuthBoardReport(dto);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
 	@PostMapping("/community-comment")
-	public ResponseEntity<?> insertCommunityCommentReport(@RequestBody CommunityCommentReportDTO ccr) {
+	public ResponseEntity<?> insertCommunityCommentReport(@RequestBody CommentReportDTO dto) {
 		
-		reportService.insertCommunityCommentReport(ccr);
+		reportService.insertCommunityCommentReport(dto);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
 	@PostMapping("auth-comment")
-	public ResponseEntity<?> insertAuthCommentReport(@RequestBody AuthCommentReportDTO acr) {
+	public ResponseEntity<?> insertAuthCommentReport(@RequestBody CommentReportDTO dto) {
 		
-		reportService.insertAuthCommentReport(acr);
+		reportService.insertAuthCommentReport(dto);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
