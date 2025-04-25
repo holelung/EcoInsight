@@ -39,9 +39,20 @@ function AuthBoardDetail() {
     }
     const [isEditing, setIsEditing] = useState(false);
     const [likes, setLikes] = useState(5);
+    const [hasLiked, setHasLiked] = useState(false); // 토글 상태 저장
+    const [likedUsers, setLikedUsers] = useState([]);
     const [title, setTitle] = useState(post.title);
     const [content, setContent] = useState(post.content);
-    const handleLike = () => setLikes((prev) => prev + 1);
+
+    const handleLike = () => {
+        if (hasLiked) {
+            setLikes(prev => prev - 1); // 취소하면 -1
+        } else {
+            setLikes(prev => prev + 1); // 처음 누르면 +1
+        }
+        setHasLiked(!hasLiked); // 상태 반전
+    };
+    
     return (
         <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md space-y-6">
             <div className="text-2xl font-bold">
@@ -65,8 +76,10 @@ function AuthBoardDetail() {
                 )}
             </div>
             <div className="flex justify-between items-center">
-                <button onClick={handleLike} className="px-4 py-1 border rounded hover:bg-black hover:text-white transition cursor-pointer">
-                    👍 좋아요 {likes}
+                <button
+                    onClick={handleLike} className={`px-4 py-1 border-none rounded transition cursor-pointer
+                    ${hasLiked ? "font-bold text-blue-600" : ""}`}>
+                    👍 {likes}
                 </button>
             </div>  
             <div className="flex justify-end gap-2">

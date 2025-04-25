@@ -52,7 +52,19 @@ function AuthBoardComment({ postId, user }) {
     }, [postId, user]);
 
     const handleLike = useCallback((id) => {
-        setCommentList((prev) => prev.map((r) => r.id === id ? { ...r, likes: (r.likes || 0) + 1 } : r));
+        setCommentList((prev) =>
+            prev.map((r) => {
+                if (r.id === id) {
+                    const hasLiked = r.hasLiked || false;
+                    return {
+                        ...r,
+                        likes: hasLiked ? (r.likes || 0) - 1 : (r.likes || 0) + 1,
+                        hasLiked: !hasLiked
+                    };
+                }
+                return r;
+            })
+        );
     }, []);
 
     const handleDelete = useCallback((id) => {

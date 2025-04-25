@@ -38,7 +38,7 @@ const CommentItem = memo(function CommentItem({
             </div>
         
             {reportedReplies?.includes(reply.id) ? (
-                <div className="text-sm text-red-500">🚫 신고된 댓글입니다</div>
+                <div className="font-bold text-sm text-red-500">🚫 신고된 댓글입니다</div>
             ) : isEditing ? (
                 <>
                     <textarea
@@ -58,7 +58,7 @@ const CommentItem = memo(function CommentItem({
         
             <div className="flex gap-3 mt-1 text-xs text-gray-500">
             <button onClick={() => onLike(reply.id)}>
-                <span className="font-bold cursor-pointer">👍 {reply.likes || 0}</span>
+                <span className={`cursor-pointer ${reply.hasLiked ? "font-bold text-blue-600" : ""}`}>👍 {reply.likes || 0}</span>
             </button>
         
             {user?.name === reply.author && (
