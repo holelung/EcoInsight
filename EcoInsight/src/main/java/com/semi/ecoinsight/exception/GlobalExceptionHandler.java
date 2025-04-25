@@ -6,11 +6,11 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.semi.ecoinsight.exception.util.CustomAuthenticationException;
 import com.semi.ecoinsight.exception.util.CustomMessagingException;
+import com.semi.ecoinsight.exception.util.InvalidUserNameAndEmailException;
 import com.semi.ecoinsight.exception.util.MemberIdDuplicateException;
 import com.semi.ecoinsight.exception.util.VerifyCodeExpiredException;
 import com.semi.ecoinsight.exception.util.VerifyCodeIsIncorrectException;
@@ -45,6 +45,10 @@ public class GlobalExceptionHandler {
     }
 	@ExceptionHandler(VerifyCodeExpiredException.class)
     public ResponseEntity<?> handleVerifyCodeExpiredException(VerifyCodeExpiredException e){
+        return makeResponseEntity(e, HttpStatus.BAD_REQUEST);
+    }
+	@ExceptionHandler(InvalidUserNameAndEmailException.class)
+    public ResponseEntity<?> handleInvalidUserNameAndEmailException(InvalidUserNameAndEmailException e){
         return makeResponseEntity(e, HttpStatus.BAD_REQUEST);
     }
 }

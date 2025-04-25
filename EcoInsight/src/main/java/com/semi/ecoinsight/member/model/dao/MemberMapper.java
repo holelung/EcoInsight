@@ -14,4 +14,5 @@ public interface MemberMapper {
     int signUp(Member member);
 
     void updatePassword(Map<String, Object> passwordEntity);
+
 }

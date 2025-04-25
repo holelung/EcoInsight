@@ -35,13 +35,31 @@ public class AuthController {
 
 
     @PostMapping("/send-code")
-    public ResponseEntity<String> sendCodeEmail(@RequestBody VerifyCodeEmail email){
-        authService.sendCodeEmail(email);
+    public ResponseEntity<String> sighUpEmailCode(@RequestBody Map<String, String> email){
+        authService.sighUpEmailCode(email);
+        return ResponseEntity.status(HttpStatus.CREATED).body("인증 코드 이메일 발송 성공");
+    }
+
+    @PostMapping("/find-id")
+    public ResponseEntity<String> findIdEmailCode(@RequestBody Map<String, String> email){
+        authService.findIdEmailCode(email);
+        return ResponseEntity.status(HttpStatus.CREATED).body("인증 코드 이메일 발송 성공");
+    }
+
+    @PostMapping("/find-password")
+    public ResponseEntity<String> findPasswordEmailCode(@RequestBody Map<String, String> email){
+        authService.findPasswordEmailCode(email);
+        return ResponseEntity.status(HttpStatus.CREATED).body("인증 코드 이메일 발송 성공");
+    }
+    @PostMapping("/change-email")
+    public ResponseEntity<String> changeEmailCode(@RequestBody Map<String, String> email){
+        authService.changeEmailCode(email);
         return ResponseEntity.status(HttpStatus.CREATED).body("인증 코드 이메일 발송 성공");
     }
 
     @PostMapping("/verify-code")
-    public ResponseEntity<String> checkVerifyCode(@RequestBody VerifyCodeEmail verifyInfo){
+    public ResponseEntity<String> checkVerifyCode(@RequestBody Map<String, String> verifyInfo){
+        log.info("-----------------------------------------------------------------------------------------{}",verifyInfo);
         String successMsg = authService.checkVerifyCode(verifyInfo);
         return ResponseEntity.ok(successMsg);
     }
