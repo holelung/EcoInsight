@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.semi.ecoinsight.auth.model.service.AuthService;
+import com.semi.ecoinsight.auth.model.vo.VerifyCodeEmail;
 import com.semi.ecoinsight.member.model.dto.MemberDTO;
 import com.semi.ecoinsight.token.model.service.TokenService;
 
@@ -32,16 +33,16 @@ public class AuthController {
         return ResponseEntity.ok(loginResponse);
     }
 
-    
+
     @PostMapping("/send-code")
-    public ResponseEntity<Map<String, String>> sendCodeEmail(@RequestBody Map<String, String> email){
-        Map<String, String> verifyCodeResult = authService.sendCodeEmail(email);
-        return ResponseEntity.status(HttpStatus.CREATED).body(verifyCodeResult);
+    public ResponseEntity<String> sendCodeEmail(@RequestBody VerifyCodeEmail email){
+        authService.sendCodeEmail(email);
+        return ResponseEntity.status(HttpStatus.CREATED).body("인증 코드 이메일 발송 성공");
     }
 
     @PostMapping("/verify-code")
-    public ResponseEntity<String> verifyCodeEmail(@RequestBody Map<String, String> verifyInfo){
-        String successMsg = authService.verifyCodeEmail(verifyInfo);
+    public ResponseEntity<String> checkVerifyCode(@RequestBody VerifyCodeEmail verifyInfo){
+        String successMsg = authService.checkVerifyCode(verifyInfo);
         return ResponseEntity.ok(successMsg);
     }
 }

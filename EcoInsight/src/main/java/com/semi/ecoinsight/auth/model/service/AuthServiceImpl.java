@@ -1,5 +1,6 @@
 package com.semi.ecoinsight.auth.model.service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,9 +12,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
+import com.semi.ecoinsight.auth.model.dao.AuthMapper;
 import com.semi.ecoinsight.auth.model.vo.CustomUserDetails;
 import com.semi.ecoinsight.auth.model.vo.LoginInfo;
+import com.semi.ecoinsight.auth.model.vo.VerifyCodeEmail;
 import com.semi.ecoinsight.exception.util.CustomAuthenticationException;
+import com.semi.ecoinsight.exception.util.CustomMessagingException;
+import com.semi.ecoinsight.exception.util.VerifyCodeExpiredException;
+import com.semi.ecoinsight.exception.util.VerifyCodeIsIncorrectException;
 import com.semi.ecoinsight.member.model.dto.MemberDTO;
 import com.semi.ecoinsight.token.model.service.TokenService;
 
@@ -30,6 +36,7 @@ public class AuthServiceImpl implements AuthService{
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
     private final JavaMailSender sender;
+    private final AuthMapper authMapper;
     @Override
     public Map<String, Object> login(MemberDTO member) {
         Authentication authentication = null;
@@ -56,12 +63,12 @@ public class AuthServiceImpl implements AuthService{
                                        .build();
 
         loginResponse.put("loginInfo",loginInfo);
-        log.info("loginResponse = {}", loginResponse);
         return loginResponse;
     }
+
     @Override
-    public Map<String, String> sendCodeEmail(Map<String, String> email) {
-        String emailString = email.get("email").trim();
+    public void sendCodeEmail(VerifyCodeEmail email) {
+        String emailString = email.getEmail();
         int verifyCode = verifyCodeCreate();
         MimeMessage message = sender.createMimeMessage();
         try{
@@ -93,22 +100,39 @@ public class AuthServiceImpl implements AuthService{
             sender.send(message);
         } catch(MessagingException e){
             e.printStackTrace();
+            throw new CustomMessagingException("메세지 전송 실패");
         }
-        Map<String, String> result = new HashMap<>();
-        result.put("email",emailString);
-        result.put("verifyCode", String.valueOf(verifyCode));
-
-        return result;
+        VerifyCodeEmail verifyEmail = VerifyCodeEmail.builder()
+                                                     .email(emailString)
+                                                     .verifyCode(String.valueOf(verifyCode))
+                                                     .build();
+        authMapper.sendCodeEmail(verifyEmail);
     }
 
     private int verifyCodeCreate(){
-        int verifyCode = (int)(Math.random() * (90000))+ 100000;
-        return verifyCode;
+      
+      int verifyCode = (int)(Math.random() * (90000))+ 100000;
+      return verifyCode;
     }
+
     @Override
-    public String verifyCodeEmail(Map<String, String> verifyInfo) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'verifyCodeEmail'");
+    public String checkVerifyCode(VerifyCodeEmail verifyInfo) {
+      // 인증을 요청을 받았을 때 데이터베이스에 검증 하는데 요청 보낸시간+3분 이내에 요청이 왔는지 검증
+      // select 검증해야할 번호, 생성시간 where 보낸이메일 order by desc limit 1; 
+      // 현재시간 > 생성시간 + 3분 true -> 예외처리
+      // False -> 인증번호 비교  
+
+      VerifyCodeEmail checkVerify = authMapper.checkVerifyCode(verifyInfo);
+      if (checkVerify == null){
+        throw new VerifyCodeIsIncorrectException("인증코드가 맞지 않습니다.");
+      }
+      Date createDate = checkVerify.getCreateDate();
+      long nowMillis = System.currentTimeMillis();
+      long expireMillis = createDate.getTime()+ 180000L;
+      if (nowMillis > expireMillis){
+        throw new VerifyCodeExpiredException("인증 시간이 만료되었습니다.");
+      }
+      return "이메일 인증에 성공하였습니다.";
     }
 
 }
