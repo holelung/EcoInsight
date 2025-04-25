@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.semi.ecoinsight.auth.model.service.AuthService;
-import com.semi.ecoinsight.auth.model.vo.VerifyCodeEmail;
 import com.semi.ecoinsight.member.model.dto.MemberDTO;
 import com.semi.ecoinsight.token.model.service.TokenService;
 

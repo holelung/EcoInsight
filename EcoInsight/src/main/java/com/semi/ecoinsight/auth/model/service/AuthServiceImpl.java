@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.semi.ecoinsight.auth.model.dao.AuthMapper;
@@ -112,6 +113,7 @@ public class AuthServiceImpl implements AuthService{
                                                     .build();
       authMapper.sendCodeEmail(verifyEmail);
     }
+
     private int verifyCodeCreate(){
       int verifyCode = (int)(Math.random() * (90000))+ 100000;
       return verifyCode;
@@ -231,6 +233,17 @@ public class AuthServiceImpl implements AuthService{
         throw new VerifyCodeExpiredException("인증 시간이 만료되었습니다.");
       }
       return "이메일 인증에 성공하였습니다.";
+    }
+    @Override
+    public CustomUserDetails getUserDetails() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
+        return user;
+    }
+    
+    @Override
+    public boolean isAdmin() {
+        return getUserDetails().getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 
 }

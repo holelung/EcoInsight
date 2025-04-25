@@ -1,16 +1,21 @@
 package com.semi.ecoinsight.exception;
 
+
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.semi.ecoinsight.exception.util.CustomAuthenticationException;
+
 import com.semi.ecoinsight.exception.util.CustomMessagingException;
 import com.semi.ecoinsight.exception.util.InvalidUserNameAndEmailException;
+import com.semi.ecoinsight.exception.util.FileStreamException;
+import com.semi.ecoinsight.exception.util.FileTypeNotAllowedException;
 import com.semi.ecoinsight.exception.util.MemberIdDuplicateException;
 import com.semi.ecoinsight.exception.util.VerifyCodeExpiredException;
 import com.semi.ecoinsight.exception.util.VerifyCodeIsIncorrectException;
@@ -28,10 +33,11 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(MemberIdDuplicateException.class)
-    public ResponseEntity<?> handleMemberIdDuplicateException(MemberIdDuplicateException e){
+    public ResponseEntity<Map<String, String>> handleMemberIdDuplicateException(MemberIdDuplicateException e){
         return makeResponseEntity(e, HttpStatus.BAD_REQUEST);
     }
 	@ExceptionHandler(CustomAuthenticationException.class)
+
     public ResponseEntity<?> handleCustomAuthenticationException(CustomAuthenticationException e){
         return makeResponseEntity(e, HttpStatus.BAD_REQUEST);
     }
@@ -51,4 +57,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleInvalidUserNameAndEmailException(InvalidUserNameAndEmailException e){
         return makeResponseEntity(e, HttpStatus.BAD_REQUEST);
     }
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<Map<String, String>> handleAccessDeniedException(AccessDeniedException e) {
+		return makeResponseEntity(e, HttpStatus.BAD_REQUEST);
+	}
+	@ExceptionHandler(FileStreamException.class)
+	public ResponseEntity<Map<String, String>> handleFileStreamException(FileStreamException e) {
+		return makeResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	@ExceptionHandler(FileTypeNotAllowedException.class)
+	public ResponseEntity<Map<String, String>> handleFileTypeNotAllowedException(FileTypeNotAllowedException e) {
+		return makeResponseEntity(e, HttpStatus.UNSUPPORTED_MEDIA_TYPE);
+	}
 }
