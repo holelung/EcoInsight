@@ -7,7 +7,6 @@ export default function AuthBoardWritePage() {
     const navi = useNavigate();
     const editorRef = useRef();
     const [title, setTitle] = useState("");
-    const [previewImage, setPreviewImage] = useState(null); // 🖼️ 이미지 미리보기용 상태
     const [option, setOption] = useState("");
     const [content, setContent] = useState("");
 
