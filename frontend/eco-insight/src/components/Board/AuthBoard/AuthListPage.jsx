@@ -159,6 +159,7 @@ const AuthListPage = () => {
         const start = page * PAGE_SIZE;
         const end = start + PAGE_SIZE;
         const nextSlice = filteredData.slice(start, end);
+    
         if (page === 0) {
             setBoards(nextSlice);
         } else {
@@ -171,20 +172,12 @@ const AuthListPage = () => {
     };
 
     const handleSearch = () => {
-        let result = [];
+        if (!keyword.trim()) return;
 
-        if (option === "reply") {
-            result = dummyData.filter((post) =>
-                post.replies?.some((reply) =>
-                    reply.content.toLowerCase().includes(keyword.toLowerCase())
-                )
-            );
-        } else {
-            result = dummyData.filter((post) => {
-                const value = post[option] || "";
-                return value.toLowerCase().includes(keyword.toLowerCase());
-            });
-        }
+        const result = dummyData.filter((post) => {
+            const value = post[option] || "";
+            return value.toLowerCase().includes(keyword.toLowerCase());
+        });
 
         setFilteredData(result);
         setPage(0);
@@ -206,11 +199,10 @@ const AuthListPage = () => {
                 <select
                     value={option}
                     onChange={handleOnChange}
-                    className="border px-4 py-2 rounded">
+                    className="border px-2 py-2 rounded text-center">
                     <option value="title">제목</option>
                     <option value="writer">작성자</option>
                     <option value="content">내용</option>
-                    <option value="reply">댓글</option>
                 </select>
                 <input
                     type="text"
