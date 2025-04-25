@@ -1,5 +1,7 @@
 package com.semi.ecoinsight.auth.model.service;
 
+import java.security.SecureRandom;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,11 +11,20 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.semi.ecoinsight.auth.model.dao.AuthMapper;
 import com.semi.ecoinsight.auth.model.vo.CustomUserDetails;
 import com.semi.ecoinsight.auth.model.vo.LoginInfo;
+import com.semi.ecoinsight.auth.model.vo.VerifyCodeEmail;
 import com.semi.ecoinsight.exception.util.CustomAuthenticationException;
+import com.semi.ecoinsight.exception.util.CustomMessagingException;
+import com.semi.ecoinsight.exception.util.InvalidUserNameAndEmailException;
+import com.semi.ecoinsight.exception.util.VerifyCodeExpiredException;
+import com.semi.ecoinsight.exception.util.VerifyCodeIsIncorrectException;
+import com.semi.ecoinsight.member.model.dao.MemberMapper;
 import com.semi.ecoinsight.member.model.dto.MemberDTO;
 import com.semi.ecoinsight.token.model.service.TokenService;
 
@@ -30,6 +41,10 @@ public class AuthServiceImpl implements AuthService{
     private final AuthenticationManager authenticationManager;
     private final TokenService tokenService;
     private final JavaMailSender sender;
+    private final AuthMapper authMapper;
+    private final MemberMapper memberMapper;
+    private final PasswordEncoder passwordEncoder;       // BCryptPasswordEncoder 등
+
     @Override
     public Map<String, Object> login(MemberDTO member) {
         Authentication authentication = null;
@@ -56,20 +71,18 @@ public class AuthServiceImpl implements AuthService{
                                        .build();
 
         loginResponse.put("loginInfo",loginInfo);
-        log.info("loginResponse = {}", loginResponse);
         return loginResponse;
     }
-    @Override
-    public Map<String, String> sendCodeEmail(String email) {
-        int verifyCode = verifyCodeCreate();
-        MimeMessage message = sender.createMimeMessage();
-        try{
-            MimeMessageHelper helper = new MimeMessageHelper(message,false, "UTF-8");
-            helper.setTo(email);
-            helper.setSubject("Eco-Insight 이메일 인증 번호입니다.");
-            helper.setText(
-                """
-            <div style="width:100%; background:#f4f4f4; padding:20px; font-family:Arial,sans-serif;">
+
+    private void sendCodeEmail(String email){
+      int verifyCode = verifyCodeCreate();
+      MimeMessage message = sender.createMimeMessage();
+      try{
+          MimeMessageHelper helper = new MimeMessageHelper(message,false, "UTF-8");
+          helper.setTo(email);
+          helper.setSubject("Eco-Insight 이메일 인증 번호입니다.");
+          helper.setText("""
+          <div style="width:100%; background:#f4f4f4; padding:20px; font-family:Arial,sans-serif;">
               <div style="max-width:600px; margin:0 auto; background:#fff; border-radius:8px; overflow:hidden;">
                 <div style="background:#4CAF50; color:#fff; padding:20px; text-align:center;">
                   <h1>Eco-Insight 이메일 인증</h1>
@@ -88,26 +101,149 @@ public class AuthServiceImpl implements AuthService{
                 </div>
               </div>
             </div>
-                """,true);
-
-        } catch(MessagingException e){
-            e.printStackTrace();
-        }
-        Map<String, String> result = new HashMap<>();
-        result.put("email",email);
-        result.put("verifyCode", String.valueOf(verifyCode));
-
-        return result;
+          """,true);
+          sender.send(message);
+      } catch(MessagingException e){
+          e.printStackTrace();
+          throw new CustomMessagingException("인증코드 전송 실패");
+      }
+      VerifyCodeEmail verifyEmail = VerifyCodeEmail.builder()
+                                                    .email(email)
+                                                    .verifyCode(String.valueOf(verifyCode))
+                                                    .build();
+      authMapper.sendCodeEmail(verifyEmail);
     }
 
     private int verifyCodeCreate(){
-        int verifyCode = (int)(Math.random() * (90000))+ 100000;
-        return verifyCode;
+      int verifyCode = (int)(Math.random() * (90000))+ 100000;
+      return verifyCode;
     }
     @Override
-    public String verifyCodeEmail(Map<String, String> verifyInfo) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'verifyCodeEmail'");
+    public void sighUpEmailCode(Map<String, String> email) {
+      if (authMapper.checkEmail(email.get("email")) != null){
+        throw new InvalidUserNameAndEmailException("유효하지 않은 사용자 이름과 이메일입니다.");
+      }
+      sendCodeEmail(email.get("email"));
+    }
+    @Override
+    public void findIdEmailCode(Map<String, String> email){
+      LoginInfo memberInfo = authMapper.checkEmail(email.get("email"));
+      if(memberInfo == null || memberInfo.getMemberName() != email.get("memberName")){
+        throw new InvalidUserNameAndEmailException("유효하지 않은 사용자 이름과 이메일입니다.");
+      }
+      sendCodeEmail(email.get("email"));
+    }
+    @Override
+    public void findPasswordEmailCode(Map<String, String> verifyInfo) {
+      String userId = verifyInfo.get("id");
+      String email  = verifyInfo.get("email");
+  
+      // 1. 사용자 존재 여부 확인
+      MemberDTO member = memberMapper.getMemberByMemberId(userId);
+      if (member == null) {
+        throw new InvalidUserNameAndEmailException("유효하지 않은 사용자 아이디입니다.");
+      }
+      // 2. 이메일 일치 여부 확인
+      if (!member.getEmail().equals(email)) {
+        throw new InvalidUserNameAndEmailException("유효하지 않은 이메일입니다.");
+      }
+  
+      // 3. 임시 비밀번호 생성
+      String tempPassword = generateTempPassword();  
+  
+      // 4. 암호화 후 DB 저장
+      String encrypted = passwordEncoder.encode(tempPassword);
+      Map<String, Object> passwordEntity = new HashMap();
+      passwordEntity.put("encodedPassword", encrypted);
+      passwordEntity.put("memberNo",member.getMemberNo());
+      memberMapper.updatePassword(passwordEntity);
+      // 5. 이메일 제목·본문 구성 (HTML)
+      String subject = "[EcoInsight] 임시 비밀번호 안내";
+      String template = """
+          <div style="width:100%%; background:#f4f4f4; padding:20px; font-family:Arial,sans-serif;">
+            <div style="max-width:600px; margin:0 auto; background:#fff; border-radius:8px; overflow:hidden;">
+              <div style="background:#4CAF50; color:#fff; padding:20px; text-align:center;">
+                <h1>Eco-Insight 임시 비밀번호 안내</h1>
+              </div>
+              <div style="padding:20px; color:#333;">
+                <p>안녕하세요, %s님</p>
+                <p>요청하신 임시 비밀번호는 아래와 같습니다.</p>
+                <div style="text-align:center; margin:20px 0;">
+                  <span style="display:inline-block; font-size:24px; font-weight:bold; color:#4CAF50;
+                                padding:10px 20px; border:2px dashed #4CAF50; border-radius:4px;">
+                    %s
+                  </span>
+                </div>
+                <p>로그인 후 반드시 비밀번호를 변경해 주세요.</p>
+                <p>감사합니다.</p>
+              </div>
+            </div>
+          </div>
+          """;
+      // 실제 치환
+      String htmlBody = String.format(template, member.getMemberName(), tempPassword);
+  
+      // 6. 메일 전송 (JavaMailSender 직접 사용)
+      try {
+          MimeMessage message = sender.createMimeMessage();
+          MimeMessageHelper helper = new MimeMessageHelper(message, false, "UTF-8");
+          helper.setTo(email);
+          helper.setSubject(subject);
+          helper.setText(htmlBody, true);   // true = HTML 모드
+          sender.send(message);
+      } catch (MessagingException e) {
+          throw new CustomMessagingException("임시 비밀번호 안내 메일 전송에 실패했습니다.");
+      }
+    }
+    private String generateTempPassword() {
+      SecureRandom rnd = new SecureRandom();
+      String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      StringBuilder sb = new StringBuilder(10);
+      for (int i = 0; i < 10; i++) {
+          sb.append(chars.charAt(rnd.nextInt(chars.length())));
+      }
+      return sb.toString();
+    }
+
+    @Override
+    public void changeEmailCode(Map<String, String> email){
+      if(authMapper.checkEmail(email.get("email")) != null){
+        throw new InvalidUserNameAndEmailException("유효하지 않은 사용자 이름과 이메일입니다.");
+      }
+      sendCodeEmail(email.get("email"));
+    }
+
+
+    @Override
+    public String checkVerifyCode(Map<String, String> verifyInfo) {
+      // 인증을 요청을 받았을 때 데이터베이스에 검증 하는데 요청 보낸시간+3분 이내에 요청이 왔는지 검증
+      // select 검증해야할 번호, 생성시간 where 보낸이메일 order by desc limit 1; 
+      // 현재시간 > 생성시간 + 3분 true -> 예외처리
+      // False -> 인증번호 비교  
+      VerifyCodeEmail verifyCodeEmail = VerifyCodeEmail.builder().email(verifyInfo.get("email")).verifyCode(verifyInfo.get("verifyCode")).build();
+      VerifyCodeEmail checkVerify = authMapper.checkVerifyCode(verifyCodeEmail);
+      log.info("{}",checkVerify);
+      if (checkVerify == null){
+        throw new VerifyCodeIsIncorrectException("인증코드가 맞지 않습니다.");
+      }
+      Date createDate = checkVerify.getCreateDate();
+      long nowMillis = System.currentTimeMillis();
+      long expireMillis = createDate.getTime()+ 180000L;
+      if (nowMillis > expireMillis){
+        throw new VerifyCodeExpiredException("인증 시간이 만료되었습니다.");
+      }
+      return "이메일 인증에 성공하였습니다.";
+    }
+    @Override
+    public CustomUserDetails getUserDetails() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails user = (CustomUserDetails) auth.getPrincipal();
+        return user;
+    }
+    
+    @Override
+    public boolean isAdmin() {
+        return getUserDetails().getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 
 }

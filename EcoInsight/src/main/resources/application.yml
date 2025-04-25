@@ -7,16 +7,16 @@ spring:
     static-path-pattern: /uploads/**
   web:
     resources:
-      static-locations: file:uploads/
+      static-locations: file:/uploads/
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
   
 
 server:
   port: 80
 
-servlet:
-  multipart:
-    max-file-size: 100MB
-    max-request-size: 100MB
 
 mybatis:
   configuration:
@@ -28,6 +28,8 @@ mybatis:
     com.semi.ecoinsight.member.model.dto,
     com.semi.ecoinsight.token.model.vo,
     com.semi.ecoinsight.community.model.vo,
+    com.semi.ecoinsight.auth.model.vo
+
 logging:
   level:
     org.apache.ibatis: DEBUG
