@@ -13,7 +13,8 @@ import TableHeader from "@tiptap/extension-table-header";
 import Paragraph from "@tiptap/extension-paragraph";
 import { EditorContent, EditorProvider, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import React, { useState } from "react";
+import { useState } from "react";
+import DOMpurify from "dompurify";
 import {
   MdFormatBold,
   MdFormatItalic,
@@ -274,7 +275,11 @@ const Tiptap = ({ setContent, boardType, imageFilesRef }) => {
     extensions,
     content,
     onUpdate({ editor }) {
-      setContent(editor.getHTML());
+      const dirtyHtml = editor.getHTML();
+      const cleanHtml = DOMpurify.sanitize(dirtyHtml, {
+        USE_PROFILES: {html:true}
+      });
+      setContent(cleanHtml);
     },
   });
 
