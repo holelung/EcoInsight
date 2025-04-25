@@ -14,7 +14,16 @@ const FindIdPage = () => {
   const handleSendCode = () => {
     //  이메일로 인증번호 요청 API 호출
     setIsCodeSent(true);
-    alert('인증번호가 발송되었습니다.');
+    axios.post("http://localhost/auth/send-code", {name, email})
+         .then(response => {
+            if(response.status === 201){
+              alert('인증번호가 발송되었습니다.');
+            }
+         })
+         .catch(error => {
+            console.log(error);
+            setMsg("인증번호 발송에 실패하였습니다.");
+         })
   };
 
   const handleVerifyCode = () => {

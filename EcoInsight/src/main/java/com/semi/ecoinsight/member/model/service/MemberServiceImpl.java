@@ -41,8 +41,6 @@ public class MemberServiceImpl implements MemberService {
                                    .memberPh(member.getMemberPh())
                                    .memberRole("ROLE_COMMON")
                                    .build();
-        log.info("----------------------------------------------- {}",member);
-        log.info("------------------------------------------------- {}",memberValue);
         mapper.signUp(memberValue);
     }
 
