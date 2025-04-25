@@ -12,7 +12,11 @@
             MEMBER_PW memberPw,
             MEMBER_NAME memberName,
             EMAIL email,
+<<<<<<< HEAD
             MEMBER_PH memberPh,
+=======
+            MEMBER_PH memberPh, 
+>>>>>>> e9c7d323a6c1eed1ed0d98a53a73d2aca918f5b6
             MEMBER_ENROLL_DATE memberEnrollDate,
             MEMBER_ROLE memberRole,
             GRADE_NO gradeNo,
@@ -31,7 +35,7 @@
             MEMBER_PW,
             MEMBER_ID,
             EMAIL,
-            MEMBER_PH,
+            MEMBER_PH, 
             MEMBER_ROLE
         )
         VALUES(

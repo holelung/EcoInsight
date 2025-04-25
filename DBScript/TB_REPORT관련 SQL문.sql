@@ -82,6 +82,15 @@ CREATE TABLE TB_AUTH_BOARD_CMT_REPORT (
 );
 
 
+-- 멤버테이블 주민등록번호 컬럼 삭제
+ALTER TABLE TB_MEMBER DROP COLUMN MEMBER_SSN;
+
+
+
 COMMIT;
+
+
+
+
 
 ------------------ 수정사항있으면 과감하게 DROP 해주세요 ---------------------------------
