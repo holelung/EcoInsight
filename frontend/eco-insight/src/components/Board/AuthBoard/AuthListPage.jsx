@@ -113,7 +113,7 @@ const dummyData = [
     {
         no: 11,
         title: "333",
-        writer: "happadfjadfjadyday",
+        writer: "happyday",
         createdDate: "2025.04.08",
         content: "내용",
         replies: [
