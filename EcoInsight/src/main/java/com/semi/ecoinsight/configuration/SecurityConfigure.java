@@ -40,9 +40,16 @@ public class SecurityConfigure {
 				.authorizeHttpRequests(requests -> {
 					requests.requestMatchers("/admin/**").hasRole("ADMIN");
 					requests.requestMatchers(HttpMethod.POST, 
-					"/auth/login", "/auth/id", "/auth/password","/members","/admin/login").permitAll();
+							"/auth/login", 
+							"/auth/id", 
+							"/auth/password",
+							"/members",
+							"/admin/login",
+							"/auth/send-code",
+							"/auth/verify-code",
+							"/find-password").permitAll();
 					requests.requestMatchers(HttpMethod.GET).permitAll();
-					requests.requestMatchers(HttpMethod.POST).authenticated();
+					requests.requestMatchers(HttpMethod.POST,"/change-email").authenticated();
 					requests.requestMatchers(HttpMethod.GET).authenticated();
 					requests.requestMatchers(HttpMethod.PUT, "/members/password").authenticated();
 					requests.requestMatchers(HttpMethod.DELETE).authenticated();
