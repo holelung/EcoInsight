@@ -9,11 +9,12 @@ const NoticeBoardWrite = () => {
   const navi = useNavigate();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [categoryId, setCategoryId] = useState("N0001");
   const imageFilesRef = useRef([]);
 
   const boardType = "notice";
 
-  const handleUpload = () => {
+  const handleUpload = async() => {
     if (!title || !content) {
       alert("제목과 내용을 모두 입력해주세요!");
       return;
@@ -42,18 +43,18 @@ const NoticeBoardWrite = () => {
         const newSrc = `/uploads/${uploadPaths[index++]}`;
         return `<img src="${newSrc}"`;
       });
-
-
+      
       axios
         .post(
           "http://localhost/admin/notice-write",
           {
             memberNo: auth.loginInfo.memberNo,
-            noticeTypeNo: "C0001",
+            categoryId: categoryId,
             title: title,
             content: newContent,
             boardType: boardType,
-            imageUrls: uploadPaths,
+            ...(uploadPaths &&
+              uploadPaths.length > 0 && { imageUrls: uploadPaths }),
           },
           {
             headers: {
@@ -87,6 +88,22 @@ const NoticeBoardWrite = () => {
           className="w-full p-4 mb-3 text-xl font-semibold border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300"
           placeholder="제목을 입력하세요"
         />
+        <div className="text-m mb-3 p-2 ">
+          <label htmlFor="noticeType">카테고리</label>
+          <select
+            name="noticeType"
+            id="noticeType"
+            selectValue={categoryId}
+            onChange={(e) => {
+              setCategoryId(e.target.value);
+            }}
+            className="p-3 mx-2 font-semibold border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300"
+          >
+            <option value="N0001">공지</option>
+            <option value="N0002">업데이트</option>
+            <option value="N0003">버그수정</option>
+          </select>
+        </div>
 
         <Tiptap
           setContent={setContent}

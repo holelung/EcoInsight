@@ -1,4 +1,4 @@
-package com.semi.ecoinsight.admin.model.dto;
+package com.semi.ecoinsight.board.model.dto;
 
 import java.sql.Date;
 
@@ -14,18 +14,18 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class NoticeDTO {
+public class BoardDTO {
     
-    private Long noticeNo;
-    private String noticeTypeNo;
+    private Long boardNo;
+    private String categoryId;
     @NotBlank
     private Long memberNo;
     @NotBlank
-    private String noticeTitle;
+    private String boardTitle;
     @NotBlank
-    private String noticeContent;
+    private String boardContent;
     private Date createdDate;
     private Date modifiedDate;
-    private String status;
     private Long viewCount;
+    private String isDeleted;
 }

@@ -18,7 +18,7 @@ public class WriteFormDTO {
     
     private Long memberNo;
     @NotBlank
-    private String noticeTypeNo;
+    private String categoryId;
     @NotBlank
     private String title;
     @NotBlank

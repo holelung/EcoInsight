@@ -3,12 +3,13 @@ package com.semi.ecoinsight.admin.model.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.semi.ecoinsight.admin.model.vo.Notice;
+
+import com.semi.ecoinsight.board.model.vo.Board;
 
 @Mapper
 public interface AdminMapper {
     
-    void insertNotice(Notice notice);
+    void insertNotice(Board board);
 
     Long getNoticeNo(Long memberNo);
 }

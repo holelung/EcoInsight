@@ -9,11 +9,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.semi.ecoinsight.admin.model.dao.AdminMapper;
-import com.semi.ecoinsight.admin.model.dto.NoticeDTO;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
-import com.semi.ecoinsight.admin.model.vo.Notice;
 import com.semi.ecoinsight.board.model.dao.BoardMapper;
 import com.semi.ecoinsight.board.model.vo.Attachment;
+import com.semi.ecoinsight.board.model.vo.Board;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,26 +28,27 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void insertNotice(WriteFormDTO form) {
         // 유효성 검증 NotBlank밖에 없음
-        Notice notice = Notice.builder()
+        Board board = Board.builder()
                 .memberNo(form.getMemberNo())
-                .noticeTypeNo(form.getNoticeTypeNo())
-                .noticeTitle(form.getTitle())
-                .noticeContent(form.getContent())            
+                .categoryId(form.getCategoryId())
+                .boardTitle(form.getTitle())
+                .boardContent(form.getContent())            
                 .build();
         
-        adminMapper.insertNotice(notice);
+        adminMapper.insertNotice(board);
 
         Long noticeNo = adminMapper.getNoticeNo(form.getMemberNo());
-        
-        List<Attachment> Attachments = form.getImageUrls().stream()
+        if (form.getImageUrls() != null) {
+            List<Attachment> Attachments = form.getImageUrls().stream()
             .map(url -> Attachment.builder()
                 .boardNo(noticeNo)
                 .AttachmentItem(url)
                 .boardType(form.getBoardType())
                 .build()
                 ).collect(Collectors.toList());
-        for (Attachment a : Attachments) {
-            boardMapper.uploadImage(a);
+            for (Attachment a : Attachments) {
+                boardMapper.uploadImage(a);
+            }
         }
     }
     

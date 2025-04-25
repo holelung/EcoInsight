@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,8 +29,11 @@ public class BoardController {
     
     @PostMapping("upload")
     public ResponseEntity<?> uploadImage(
-        @RequestParam(name="files", required=true) List<MultipartFile> files, @RequestParam(name="boardType", required=true) String boardType) {
-        
+        @RequestParam(name="files", required=false) List<MultipartFile> files, @RequestParam(name="boardType", required=false) String boardType) {
+        if (files == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+
         log.info("file개수:{}", files.size());
         List<String> uploadPath = new ArrayList<>();
         for (MultipartFile file : files) {
