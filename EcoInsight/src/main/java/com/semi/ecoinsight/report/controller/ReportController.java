@@ -1,0 +1,58 @@
+package com.semi.ecoinsight.report.controller;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.semi.ecoinsight.report.model.dto.BoardReportDTO;
+import com.semi.ecoinsight.report.model.dto.CommentReportDTO;
+import com.semi.ecoinsight.report.model.service.ReportService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@RestController
+@Validated
+@RequiredArgsConstructor
+@RequestMapping("/reports")
+@Slf4j
+public class ReportController {
+	
+	private final ReportService reportService;
+	
+	@PostMapping("/community-board")
+	public ResponseEntity<?> insertCommunityBoardReport(@RequestBody BoardReportDTO dto){
+		
+		reportService.insertCommunityBoardReport(dto);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
+	}
+	
+	@PostMapping("/auth-board")
+	public ResponseEntity<?> insertAuthBoardReport(@RequestBody BoardReportDTO dto){
+		
+		reportService.insertAuthBoardReport(dto);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
+	}
+	
+	@PostMapping("/community-comment")
+	public ResponseEntity<?> insertCommunityCommentReport(@RequestBody CommentReportDTO dto) {
+		
+		reportService.insertCommunityCommentReport(dto);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
+	}
+	
+	@PostMapping("auth-comment")
+	public ResponseEntity<?> insertAuthCommentReport(@RequestBody CommentReportDTO dto) {
+		
+		reportService.insertAuthCommentReport(dto);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
+	}
+	
+	
+	
+
+}
