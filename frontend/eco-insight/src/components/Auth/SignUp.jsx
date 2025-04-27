@@ -17,8 +17,7 @@ const SignUp = () => {
     memberName: "",
     email: "",
     memberPh: "",
-    memberSsnFront: "",
-    memberSsnBack: "",
+    verifyCode: "",
   });
   const [emailCode, setEmailCode] = useState("");
   const [codeSent, setCodeSent] = useState(false);
@@ -52,14 +51,6 @@ const SignUp = () => {
       setFormData(prev => ({ ...prev, memberPh: formatted }));
       return;
     }
-    if (name === "memberSsnFront") {
-      setFormData(prev => ({ ...prev, memberSsnFront: value.replace(/\D/g, "").slice(0,6) }));
-      return;
-    }
-    if (name === "memberSsnBack") {
-      setFormData(prev => ({ ...prev, memberSsnBack: value.replace(/\D/g, "").slice(0,7) }));
-      return;
-    }
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
@@ -74,19 +65,25 @@ const SignUp = () => {
         setTimer(180); // 3분
         setMsg("인증번호를 발송했습니다.");
       })
-      .catch(error => setMsg(error.response?.data?.message || "인증번호 발송 실패"));
+      .catch(error => {
+        console.log(error);
+        setMsg("인증번호 발송 실패")
+      });
   };
 
   const verifyCode = () => {
     axios.post("http://localhost/auth/verify-code", {
       email: formData.email,
-      code: emailCode
+      verifyCode: formData.verifyCode
     })
     .then(() => {
       setCodeVerified(true);
       setMsg("이메일 인증이 완료되었습니다!");
     })
-    .catch(error => setMsg(error.response?.data?.message || "인증번호가 일치하지 않습니다."));
+    .catch(error => {
+      console.log(error);
+      setMsg("인증번호가 일치하지 않습니다.")
+    });
   };
 
   const handleSignUp = (e) => {
@@ -98,8 +95,6 @@ const SignUp = () => {
       memberName,
       email,
       memberPh,
-      memberSsnFront,
-      memberSsnBack
     } = formData;
 
     if (!idRegex.test(memberId)) { setMsg("아이디 형식이 올바르지 않습니다."); return; }
@@ -108,7 +103,6 @@ const SignUp = () => {
     if (!nameRegex.test(memberName)) { setMsg("이름은 2~20자, 한글/영문만 가능합니다."); return; }
     if (!codeVerified) { setMsg("이메일 인증 후 회원가입 해주세요."); return; }
     if (!/^\d{3}-\d{3,4}-\d{4}$/.test(memberPh)) { setMsg("전화번호 형식이 올바르지 않습니다."); return; }
-    if (memberSsnFront.length < 6 || memberSsnBack.length < 7) { setMsg("주민등록번호를 정확히 입력해주세요."); return; }
 
     axios.post("http://localhost/members", {
       memberId,
@@ -116,7 +110,6 @@ const SignUp = () => {
       memberName,
       email,
       memberPh,
-      memberSsn: `${memberSsnFront}-${memberSsnBack}`
     })
     .then(response => {
       if (response.status === 200 || response.status === 201) {
@@ -219,8 +212,10 @@ const SignUp = () => {
             {codeSent && !codeVerified && (
               <div className="mb-4 flex items-center space-x-2">
                 <input
-                  value={emailCode}
-                  onChange={e => setEmailCode(e.target.value)}
+                  id="verifyCode"
+                  name="verifyCode"
+                  value={formData.verifyCode}
+                  onChange={handleChange}
                   placeholder="인증번호 입력"
                   className="flex-grow px-4 py-2 border rounded focus:ring-2 focus:ring-lime-400"
                 />
@@ -245,34 +240,6 @@ const SignUp = () => {
                 placeholder="010-1234-5678"
                 className="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-lime-400"
               />
-            </div>
-            {/* 주민등록번호 */}
-            <div className="mb-4 flex space-x-2">
-              <div className="w-2/5">
-                <label htmlFor="memberSsnFront" className="block mb-1 text-sm text-gray-700">주민등록번호 앞</label>
-                <input
-                  id="memberSsnFront"
-                  name="memberSsnFront"
-                  value={formData.memberSsnFront}
-                  onChange={handleChange}
-                  placeholder="123456"
-                  maxLength={6}
-                  className="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-lime-400"
-                />
-              </div>
-              <div className="w-3/5">
-                <label htmlFor="memberSsnBack" className="block mb-1 text-sm text-gray-700">주민등록번호 뒤</label>
-                <input
-                  type="password"
-                  id="memberSsnBack"
-                  name="memberSsnBack"
-                  value={formData.memberSsnBack}
-                  onChange={handleChange}
-                  placeholder="●●●●●●●"
-                  maxLength={7}
-                  className="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-lime-400"
-                />
-              </div>
             </div>
             {msg && <p className="text-red-500 text-sm mb-4">{msg}</p>}
             <div className="text-center">

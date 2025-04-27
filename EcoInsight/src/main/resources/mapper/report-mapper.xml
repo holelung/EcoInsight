@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.semi.ecoinsight.report.model.dao.ReportMapper">
+
+  <sql id="reportBoard">
+    BOARD_NO,
+    REPORTER,
+    REPORT_CATEGORY_ID,
+    REPORT_CONTENT
+  ) VALUES (
+    #{boardNo},
+    #{reporter},
+    #{reportCategoryId},
+    #{reportContent}
+  </sql>
+
+  <sql id="reportComment">
+    REPORTER,
+    REPORT_CATEGORY_ID,
+    COMMENT_NO,
+    COMMENT_REPORT_CONTENT
+  ) VALUES (
+    #{reporter},
+    #{reportCategoryId},
+    #{commentNo},
+    #{commentReportContent}
+  </sql>
+
+  <insert id="insertCommunityBoardReport"
+          parameterType="com.semi.ecoinsight.report.model.vo.BoardReport">
+    INSERT INTO TB_COMMUNITY_REPORT (
+      <include refid="reportBoard"/>
+    )
+  </insert>
+
+  <insert id="insertAuthBoardReport"
+          parameterType="com.semi.ecoinsight.report.model.vo.BoardReport">
+    INSERT INTO TB_AUTH_BOARD_REPORT (
+      <include refid="reportBoard"/>
+    )
+  </insert>
+
+  <insert id="insertCommunityCommentReport"
+          parameterType="com.semi.ecoinsight.report.model.vo.CommentReport">
+    INSERT INTO TB_COMMUNITY_CMT_REPORT (
+      <include refid="reportComment"/>
+    )
+  </insert>
+
+  <insert id="insertAuthCommentReport"
+          parameterType="com.semi.ecoinsight.report.model.vo.CommentReport">
+    INSERT INTO TB_AUTH_BOARD_CMT_REPORT (
+      <include refid="reportComment"/>
+    )
+  </insert>
+
+</mapper>
