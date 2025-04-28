@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 import com.semi.ecoinsight.admin.model.dao.AdminMapper;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.board.model.dao.BoardMapper;
+import com.semi.ecoinsight.board.model.dto.BoardDTO;
 import com.semi.ecoinsight.board.model.vo.Attachment;
 import com.semi.ecoinsight.board.model.vo.Board;
+import com.semi.ecoinsight.notice.model.dao.NoticeMapper;
 import com.semi.ecoinsight.util.sanitize.SanitizingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,7 @@ public class AdminServiceImpl implements AdminService {
     private final SanitizingService sanitizingService;
     private final AdminMapper adminMapper;
     private final BoardMapper boardMapper;
+    private final NoticeMapper noticeMapper;
     
 
     @Override
@@ -44,19 +47,38 @@ public class AdminServiceImpl implements AdminService {
         
         adminMapper.insertNotice(board);
 
-        Long noticeNo = adminMapper.getNoticeNo(form.getMemberNo());
+        Long noticeNo = noticeMapper.getNoticeNo(form.getMemberNo());
         if (form.getImageUrls() != null) {
-            List<Attachment> Attachments = form.getImageUrls().stream()
+            List<Attachment> attachments = form.getImageUrls().stream()
             .map(url -> Attachment.builder()
                 .boardNo(noticeNo)
                 .AttachmentItem(url)
                 .boardType(form.getBoardType())
                 .build()
                 ).collect(Collectors.toList());
-            for (Attachment a : Attachments) {
+            for (Attachment a : attachments) {
                 boardMapper.uploadImage(a);
             }
         }
+    }
+
+
+    @Override
+    public List<BoardDTO> selectNoticeList() {
+
+        return null;
+    }
+
+
+    @Override
+    public void updateNotice(Long boardNo) {
+        
+    }
+
+
+    @Override
+    public void deleteNotice(Long boardNo) {
+        
     }
     
 }

@@ -12,7 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Slf4j
@@ -28,6 +30,18 @@ public class AdminController {
         log.info("이얏호:{}", writeForm);
         adminService.insertNotice(writeForm);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping("/admin/notice")
+    public ResponseEntity<?> selectNoticeList() {
+        
+
+        return null;
+    }
+
+    @PutMapping("admin/notice")
+    public ResponseEntity<?> updateNotice(@RequestBody Long boardNo) {
+        return null;
     }
     
 }
