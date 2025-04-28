@@ -12,7 +12,7 @@ public interface AdminService {
     // 공지사항 작성
     void insertNotice(WriteFormDTO form);
     // 공지사항 목록 조회(관리자)
-    List<BoardDTO> selectNoticeList();
+    List<BoardDTO> selectNoticeList(int pageNo, int size, String search, String sortOrder);
     // 공지사항 수정 관리
     void updateNotice(Long boardNo);
     // 공지사항 삭제?

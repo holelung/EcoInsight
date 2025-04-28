@@ -12,6 +12,7 @@ import com.semi.ecoinsight.admin.model.dao.AdminMapper;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.board.model.dao.BoardMapper;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
+import com.semi.ecoinsight.board.model.service.BoardService;
 import com.semi.ecoinsight.board.model.vo.Attachment;
 import com.semi.ecoinsight.board.model.vo.Board;
 import com.semi.ecoinsight.notice.model.dao.NoticeMapper;
@@ -25,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminServiceImpl implements AdminService {
 
     private final SanitizingService sanitizingService;
+    private final BoardService boardService;
     private final AdminMapper adminMapper;
     private final BoardMapper boardMapper;
     private final NoticeMapper noticeMapper;
@@ -47,12 +49,12 @@ public class AdminServiceImpl implements AdminService {
         
         adminMapper.insertNotice(board);
 
-        Long noticeNo = noticeMapper.getNoticeNo(form.getMemberNo());
+        Long boardNo = noticeMapper.getNoticeNo(form.getMemberNo());
         if (form.getImageUrls() != null) {
             List<Attachment> attachments = form.getImageUrls().stream()
             .map(url -> Attachment.builder()
-                .boardNo(noticeNo)
-                .AttachmentItem(url)
+                .boardNo(boardNo)
+                .attachmentItem(url)
                 .boardType(form.getBoardType())
                 .build()
                 ).collect(Collectors.toList());
@@ -64,9 +66,12 @@ public class AdminServiceImpl implements AdminService {
 
 
     @Override
-    public List<BoardDTO> selectNoticeList() {
-
-        return null;
+    public List<BoardDTO> selectNoticeList(int pageNo, int size, String search, String sortOrder) {
+        
+        if (search == null) {
+            return noticeMapper.selectNoticeList(boardService.setRowBounds(pageNo, size));    
+        }
+        return noticeMapper.selectNoticeList(boardService.setRowBounds(pageNo, size));
     }
 
 

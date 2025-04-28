@@ -1,14 +1,18 @@
 package com.semi.ecoinsight.admin.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.admin.model.service.AdminService;
+import com.semi.ecoinsight.board.model.dto.BoardDTO;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,11 +36,13 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/admin/notice")
-    public ResponseEntity<?> selectNoticeList() {
-        
-
-        return null;
+    @GetMapping("/notice")
+    public ResponseEntity<?> selectNoticeList(@RequestParam (name="page", defaultValue="0") int page,
+            @RequestParam(name="size") int size,
+            @RequestParam(name="search", required = false) String search,
+            @RequestParam(name="sortOrder", defaultValue = "Newest") String sortOrder){
+        log.info("page:{}\nsize:{}\nsearch:{}\nsortOrder:{}",page, size, search, sortOrder);
+        return ResponseEntity.ok(adminService.selectNoticeList(page, size, search, sortOrder));
     }
 
     @PutMapping("admin/notice")

@@ -1,7 +1,11 @@
 package com.semi.ecoinsight.notice.model.dao;
 
-import org.apache.ibatis.annotations.Mapper;
+import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.session.RowBounds;
+
+import com.semi.ecoinsight.board.model.dto.BoardDTO;
 import com.semi.ecoinsight.board.model.vo.Board;
 
 @Mapper
@@ -9,7 +13,7 @@ public interface NoticeMapper {
 
     Long getNoticeNo(Long memberNo);
 
-    Board selectNoticeList();
+    List<BoardDTO> selectNoticeList(RowBounds rb);
 
     Board selectNoticeDetail();
 
