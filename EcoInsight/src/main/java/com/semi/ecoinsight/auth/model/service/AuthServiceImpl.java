@@ -135,8 +135,8 @@ public class AuthServiceImpl implements AuthService{
       sendCodeEmail(email.get("email"));
     }
     @Override
-    public void findPasswordEmailCode(Map<String, String> verifyInfo) {
-      String userId = verifyInfo.get("id");
+    public void findPasswordEmailVerifyCodeSend(Map<String, String> verifyInfo){
+      String userId = verifyInfo.get("memberId");
       String email  = verifyInfo.get("email");
   
       // 1. 사용자 존재 여부 확인
@@ -148,7 +148,25 @@ public class AuthServiceImpl implements AuthService{
       if (!member.getEmail().equals(email)) {
         throw new InvalidUserNameAndEmailException("유효하지 않은 이메일입니다.");
       }
-  
+      sendCodeEmail(email);
+    }
+
+    @Override
+    public String findPasswordEmailCode(Map<String, String> verifyInfo) {
+      String userId = verifyInfo.get("id");
+      String email  = verifyInfo.get("email");
+      
+      // 1. 사용자 존재 여부 확인
+      MemberDTO member = memberMapper.getMemberByMemberId(userId);
+      if (member == null) {
+        throw new InvalidUserNameAndEmailException("유효하지 않은 사용자 아이디입니다.");
+      }
+      // 2. 이메일 일치 여부 확인
+      if (!member.getEmail().equals(email)) {
+        throw new InvalidUserNameAndEmailException("유효하지 않은 이메일입니다.");
+      }
+      checkVerifyCode(verifyInfo);
+
       // 3. 임시 비밀번호 생성
       String tempPassword = generateTempPassword();  
   
@@ -195,6 +213,7 @@ public class AuthServiceImpl implements AuthService{
       } catch (MessagingException e) {
           throw new CustomMessagingException("임시 비밀번호 안내 메일 전송에 실패했습니다.");
       }
+      return "임시 비밀번호 안내 메일 전송 성공";
     }
     private String generateTempPassword() {
       SecureRandom rnd = new SecureRandom();
