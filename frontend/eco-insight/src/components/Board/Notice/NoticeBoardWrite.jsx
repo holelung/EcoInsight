@@ -14,7 +14,7 @@ const NoticeBoardWrite = () => {
 
   const boardType = "notice";
 
-  const handleUpload = async() => {
+  const handleUpload = () => {
     if (!title || !content) {
       alert("제목과 내용을 모두 입력해주세요!");
       return;
@@ -40,7 +40,7 @@ const NoticeBoardWrite = () => {
       let index = 0;
       // src 변경
       newContent = newContent.replace(imgRegex, (_, oldSrc) => {
-        const newSrc = `/uploads/${uploadPaths[index++]}`;
+        const newSrc = `${uploadPaths[index++]}`;
         return `<img src="${newSrc}"`;
       });
       

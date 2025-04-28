@@ -241,6 +241,7 @@ const SignUp = () => {
                 className="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-lime-400"
               />
             </div>
+
             {msg && <p className="text-red-500 text-sm mb-4">{msg}</p>}
             <div className="text-center">
               <button
