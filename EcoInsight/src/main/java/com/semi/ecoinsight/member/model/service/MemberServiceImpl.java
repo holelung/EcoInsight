@@ -15,6 +15,7 @@ import com.semi.ecoinsight.member.model.dto.MemberDTO;
 import com.semi.ecoinsight.member.model.dto.UpdatePasswordDTO;
 import com.semi.ecoinsight.member.model.vo.Member;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,23 +45,11 @@ public class MemberServiceImpl implements MemberService {
         mapper.signUp(memberValue);
     }
 
-    @Override
-    public void updatePassword(UpdatePasswordDTO passwordEntity) {
-        Long memberNo = passwordMatches(passwordEntity.getCurrentPassword());
-        String encodedPassword = passwordEncoder.encode(passwordEntity.getNewPassword());
-
-        Map<String, Object> changeRequest = new HashMap();
-        changeRequest.put("memberNo", memberNo);
-        changeRequest.put("encodedPassword", encodedPassword);
-
-        mapper.updatePassword(changeRequest);
-    }
-	private Long passwordMatches(String password){
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		CustomUserDetails user = (CustomUserDetails)auth.getPrincipal();
-		if(!passwordEncoder.matches(password, user.getPassword())){
-			throw new RuntimeException("비밀번호가 일치하지 않습니다.");
-		}
-		return user.getMemberNo();
+	@Override
+	public void updatePassword(@Valid UpdatePasswordDTO passwordEntity) {
+		// TODO Auto-generated method stub
+		
 	}
+
+   
 }

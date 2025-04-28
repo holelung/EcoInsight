@@ -16,9 +16,9 @@ function MyPage() {
     name: '홍길동',
     username: 'hong123',
     membership: 'VIP',
-    joinDate: '2025-01-01',
-    auth: '1회',         // 임의 값
-    memUsage: '사용중',  // 임의 값
+    joinDate: '2025-01-01', 
+    memUsage: '사용중',
+    point: '50000point'   // 임의 값
   };
 
   const handleViewEditInfo = () => {
@@ -92,7 +92,7 @@ function MyPage() {
             </div>
 
             {/* 중간 영역: 사용자명, 가입일, NMI, MEM 등 */}
-            <div className="flex flex-col space-y-3 mb-4">
+            <div className="flex flex-col space-y-15 mb-5">
               <div className="flex justify-between">
                 <div>
                   <p className="text-gray-500 text-sm">아이디</p>
@@ -104,39 +104,14 @@ function MyPage() {
                 </div>
               </div>
               <div className="flex justify-between">
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <p className="text-gray-500 text-sm">OOO인증</p>
-                    <p className="text-base text-gray-700">{userInfo.auth}</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-500 text-sm">OOO인증</p>
-                    <p className="text-base text-gray-700">{userInfo.auth}</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-500 text-sm">OOO인증</p>
-                    <p className="text-base text-gray-700">{userInfo.auth}</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-500 text-sm">OOO인증</p>
-                    <p className="text-base text-gray-700">{userInfo.auth}</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-500 text-sm">OOO인증</p>
-                    <p className="text-base text-gray-700">{userInfo.auth}</p>
-                  </div>
-                  
-                  <div>
-                    <p className="text-gray-500 text-sm">OOO인증</p>
-                    <p className="text-base text-gray-700">{userInfo.auth}</p>
-                  </div>
-                </div>
                 <div>
-                  <div>
                     <p className="text-gray-500 text-sm">등급</p>
                     <p className="text-base text-gray-700">{userInfo.membership}</p>
                   </div>
-                </div>
+                  <div>
+                    <p className="text-gray-500 text-sm">적립포인트</p>
+                    <p className="text-base text-gray-700">{userInfo.point}</p>
+                  </div>
               </div>
               
             </div>
@@ -145,10 +120,10 @@ function MyPage() {
 
           {/* === 2 ~ 9. 대시보드 카드들 === */}
           {/* 각 카드에 원형 차트/막대 차트/텍스트 등을 배치예정. */}
-          {Array.from({ length: 8 }).map((_, idx) => (
+          {Array.from({ length: 5 }).map((_, idx) => (
             <div
               key={idx}
-              className="bg-white rounded-2xl shadow p-6 flex flex-col items-center justify-center"
+              className="h-85 bg-white rounded-2xl shadow p-6 flex flex-col items-center justify-center"
             >
               {/* 예시: 차트(이미지) 자리 */}
               <div className="flex space-x-4 mb-4">

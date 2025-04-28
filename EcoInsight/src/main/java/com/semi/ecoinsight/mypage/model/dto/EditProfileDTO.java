@@ -1,9 +1,5 @@
 package com.semi.ecoinsight.mypage.model.dto;
 
-
-
-import java.util.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,17 +8,17 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @ToString
-public class MypageDTO {
-	
-	private String memberName;
+
+public class EditProfileDTO {
+	private Long memberNo;
+	private String memberPw;
 	private String memberId;
-	private String grade;
-	private Date enrollDate;
-	private Long point;
-	
+	private String memberName;
+	private String memberPh;
+	private String email;
 	
 	
 }

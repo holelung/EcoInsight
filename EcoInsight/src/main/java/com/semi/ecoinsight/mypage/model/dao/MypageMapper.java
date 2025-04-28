@@ -1,5 +1,7 @@
 package com.semi.ecoinsight.mypage.model.dao;
 
+import java.util.Map;
+
 import com.semi.ecoinsight.mypage.model.dto.MypageDTO;
 
 public interface MypageMapper {
@@ -10,10 +12,9 @@ public interface MypageMapper {
     // List<PostDTO> selectMyPosts(int memberNo);
 
     // 내 정보 수정
-    // int editMyProfile(MypageDTO dto);
+    // int editMyProfile(EditProfileDTO dto);
     
-    // 비밀번호 변경
-    // int changePassword(MypageDTO dto);
+    void updatePassword(Map<String, Object> passwordEntity);
 
     // 회원 탈퇴 (활성화 플래그 변경)
     // int withdrawalMember(int memberNo);
