@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.RowBounds;
 
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
-import com.semi.ecoinsight.board.model.vo.Board;
+
 
 @Mapper
 public interface NoticeMapper {
@@ -15,7 +15,7 @@ public interface NoticeMapper {
 
     List<BoardDTO> selectNoticeList(RowBounds rb);
 
-    Board selectNoticeDetail();
+    BoardDTO selectNoticeDetail(Long boardNo);
 
-    Board increaseNoticeViewCount(Long boardNo);
+    void increaseNoticeViewCount(Long boardNo);
 }

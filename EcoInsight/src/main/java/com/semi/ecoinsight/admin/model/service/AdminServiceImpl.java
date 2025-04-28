@@ -37,14 +37,13 @@ public class AdminServiceImpl implements AdminService {
         // 유효성 검증 NotBlank밖에 없음
         
         // XSS 방어
-        String sanitizingTitle = sanitizingService.sanitize(form.getTitle());
-        String sanitizingContent = sanitizingService.sanitize(form.getContent());
+        
 
         Board board = Board.builder()
                 .memberNo(form.getMemberNo())
                 .categoryId(form.getCategoryId())
-                .boardTitle(sanitizingTitle)
-                .boardContent(sanitizingContent)            
+                .boardTitle(form.getTitle())
+                .boardContent(form.getContent())            
                 .build();
         
         adminMapper.insertNotice(board);

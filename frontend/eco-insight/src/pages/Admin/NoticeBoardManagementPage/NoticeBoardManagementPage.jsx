@@ -14,7 +14,7 @@ import { AuthContext } from "../../../components/Context/AuthContext";
 const NoticeBoardManagementPage = () => {
   const { auth } = useContext(AuthContext);
   const navi = useNavigate();
-  const [list, setList] = useState(authBoardList);
+  const [list, setList] = useState([]);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -109,7 +109,7 @@ const NoticeBoardManagementPage = () => {
             selectValue={rowsPerPage}
             onChange={(e) => {
               setRowsPerPage(Number(e.target.value));
-              setCurrentPage(1);
+              setCurrentPage(0);
             }}
             labelName={"행 개수"}
           >
@@ -125,7 +125,7 @@ const NoticeBoardManagementPage = () => {
           </Select>
           <button
             className="px-3 py-2 bg-lime-400 rounded"
-            onClick={()=> navi('/admin/notice-write')}
+            onClick={() => navi("/admin/notice-write")}
           >
             글쓰기
           </button>
@@ -153,7 +153,9 @@ const NoticeBoardManagementPage = () => {
                 {/* <td>{item.boardCategory}</td> */}
                 <td>카테고리</td>
                 <td>{item.memberName}</td>
-                <td>{item.boardTitle}</td>
+                <td onClick={() => navi(`/board/notice/${item.boardNo}`)}>
+                  {item.boardTitle}
+                </td>
                 <td>{item.viewCount}</td>
                 <td>{item.createdDate}</td>
                 <td>
