@@ -47,6 +47,7 @@ public class SecurityConfigure {
 							"/admin/login",
 							"/auth/send-code",
 							"/auth/verify-code",
+							"/auth/find-id",
 							"/find-password").permitAll();
 					requests.requestMatchers(HttpMethod.GET).permitAll();
 					requests.requestMatchers(HttpMethod.POST,"/change-email").authenticated();
