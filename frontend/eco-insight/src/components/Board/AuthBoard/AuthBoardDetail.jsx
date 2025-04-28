@@ -6,12 +6,17 @@ import { AuthContext } from "../../Context/AuthContext";
 import axios from "axios";
 
 function AuthBoardDetail() {
-    const { auth } = useContext(AuthContext);
+    const { auth, user } = useContext(AuthContext);
     const navi = useNavigate();
     const location = useLocation();
     const post = location.state?.post;
-    const { user } = useContext(AuthContext);
     const { no } = useParams(); // 'no' 파라미터 값 가져오기
+    const [isEditing, setIsEditing] = useState(false);
+    const [likes, setLikes] = useState(5);
+    const [hasLiked, setHasLiked] = useState(false); // 토글 상태 저장
+    const [likedUsers, setLikedUsers] = useState([]);
+    const [title, setTitle] = useState(post.title);
+    const [content, setContent] = useState(post.content);
     const [isReportOpen, setIsReportOpen] = useState(false);
 
     const fetchPostDetails = async () => {
@@ -37,12 +42,6 @@ function AuthBoardDetail() {
             </div>
         );
     }
-    const [isEditing, setIsEditing] = useState(false);
-    const [likes, setLikes] = useState(5);
-    const [hasLiked, setHasLiked] = useState(false); // 토글 상태 저장
-    const [likedUsers, setLikedUsers] = useState([]);
-    const [title, setTitle] = useState(post.title);
-    const [content, setContent] = useState(post.content);
 
     const handleLike = () => {
         if (hasLiked) {
