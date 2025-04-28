@@ -130,7 +130,7 @@ const Login = () => {
                 <div 
                 onClick={() => navigate("/findPassword")}
                 className="text-sm text-gray-600">
-                   비밀번호 찾기
+                   임시 비밀번호 발급
                 </div>
             </div>
             <div className="flex">

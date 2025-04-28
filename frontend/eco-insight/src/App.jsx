@@ -27,7 +27,6 @@ import AuthBoardManagementPage from "./pages/Admin/AuthBoardManagementPage/AuthB
 import NoticeBoardManagementPage from "./pages/Admin/NoticeBoardManagementPage/NoticeBoardManagementPage.jsx";
 import SignUp from "./components/Auth/SignUp.jsx";
 import FindId from "./components/Auth/FindId.jsx";
-import ResultId from "./components/Auth/ResultId.jsx";
 import FindPasswordPage from "./components/Auth/FindPassword.jsx";
 import ResetPassword from "./components/Auth/ResetPassword.jsx";
 import CommunityListPage from "./components/Board/Community/CommunityListPage.jsx";
@@ -58,12 +57,10 @@ function App() {
           <Route path="/dashboard" element={<MainDashBoard />} />
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
           <Route path="/privateAskPage" element={<PrivateAskPage />} />
-          <Route path="/find-id/result-id" element={<ResultId />} />
           <Route path="/notice" element={<NoticeBoard />} />
           <Route path="/board/notice/:id" element={<NoticeBoardDetail />} />
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
           <Route path="/privateAskPage" element={<PrivateAskPage />} />
-          <Route path="/find-id/result-id" element={<ResultId />} />
         </Route>
 
 
