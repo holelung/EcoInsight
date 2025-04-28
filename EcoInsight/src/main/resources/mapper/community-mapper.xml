@@ -61,7 +61,7 @@
 	</select>
 	
 	<!--게시글 수정-->
-	<update id="updateComuunity" parameterType="com.semi.ecoinsight.board.model.vo.Board">
+	<update id="updateCommunity" parameterType="com.semi.ecoinsight.board.model.vo.Board">
 		UPDATE 
 			    TB_COMMUNITY_BOARD
 		   SET 
