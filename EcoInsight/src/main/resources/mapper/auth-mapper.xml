@@ -3,14 +3,15 @@
 <mapper namespace="com.semi.ecoinsight.auth.model.dao.AuthMapper">
     <select id="checkEmail">
         SELECT
-            MEMBER_ID username,
-            MEMBER_NAME memberName,
-            EMAIL email
+            MEMBER_NO AS memberNo,
+            MEMBER_ID AS username,
+            MEMBER_NAME AS memberName,
+            EMAIL AS email,
+            MEMBER_ROLE AS memberRole,
+            IS_ACTIVE AS isActive
         FROM
             TB_MEMBER
         WHERE
-            MEMBER_NAME = #{memberName}
-        AND
             EMAIL = #{email}
     </select>
     <insert id="sendCodeEmail">

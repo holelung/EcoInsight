@@ -75,6 +75,7 @@ public class AuthServiceImpl implements AuthService{
     }
 
     private void sendCodeEmail(String email){
+      log.info("!!!!!!!!!!!!!!!!!{}", email);
       int verifyCode = verifyCodeCreate();
       MimeMessage message = sender.createMimeMessage();
       try{
@@ -128,7 +129,7 @@ public class AuthServiceImpl implements AuthService{
     @Override
     public void findIdEmailCode(Map<String, String> email){
       LoginInfo memberInfo = authMapper.checkEmail(email.get("email"));
-      if(memberInfo == null || memberInfo.getMemberName() != email.get("memberName")){
+      if(memberInfo == null || !memberInfo.getMemberName().equals(email.get("memberName"))){
         throw new InvalidUserNameAndEmailException("유효하지 않은 사용자 이름과 이메일입니다.");
       }
       sendCodeEmail(email.get("email"));
@@ -231,6 +232,10 @@ public class AuthServiceImpl implements AuthService{
       long expireMillis = createDate.getTime()+ 180000L;
       if (nowMillis > expireMillis){
         throw new VerifyCodeExpiredException("인증 시간이 만료되었습니다.");
+      }
+      MemberDTO member = memberMapper.getMemberByEmail(verifyCodeEmail.getEmail());
+      if(member != null){
+        return member.getMemberId();
       }
       return "이메일 인증에 성공하였습니다.";
     }
