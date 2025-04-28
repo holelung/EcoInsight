@@ -1,18 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.semi.ecoinsight.mypage.dao.MypageMapper">
+<mapper namespace="com.semi.ecoinsight.mypage.dao.MyPageMapper">
+	
+	<select id="findMyPageMemberByMemberId" 
+			parameterType="long" 
+			resultType="com.semi.ecoinsight.mypage.model.dto.MyPageDTO">
+	
+	  SELECT
+    M.MEMBER_NAME memberName, 
+    M.MEMBER_ID memberId, 
+    g.GRADE_NAME grade, 
+    M.MEMBER_ENROLL_DATE enrollDate, 
+    NVL(
+      ( SELECT SUM(p.CHANGE_POINT) 
+        FROM TB_POINT p
+        WHERE p.MEMBER_NO = m.MEMBER_NO
+      ), 0
+    ) point 
+  FROM TB_MEMBER m
+  LEFT JOIN TB_GRADE g
+    ON m.GRADE_NO = g.GRADE_NO
+  WHERE m.MEMBER_ID = #{memberId};
+
+		
+	</select>
 	
 	<select id="getMemberByMemberNo" 
 			parameterType="long" 
-			resultType="memberDTO">
+			resultType="com.semi.ecoinsight.mypage.model.dto.EditProfileDTO">
 	
-	SELECT 
-		MEMBER_ID member_Id,
-		MEMBER_NAME memberName, 
-		MEMBER_ENROLL_DATE memberEnrollDate,
-		GRADE_NO gradeNo,
-		
+	SELECT
+    	MEMBER_NAME memberName, 
+    	MEMBER_ID memberId, 
+    	MEMBER_PW memberPw,  
+    	MEMBER_PH memberPh, 
+    	MEMBER_NO memberNo, 
+    	EMAIL email 
+  	FROM 
+  		TB_MEMBER
+  	WHERE 
+  		MEMBER_NO = #{memberNo}
 	</select>
+	
+	<update id="updateProfile"
+			parameterType="com.semi.ecoinsight.mypage.model.dto.EditProfileDTO">
+	
+	UPDATE 
+		TB_MEMBER
+	SET 
+		MEMBER_PH = #{memberPh}, 
+		EMAIL = #{email}
+	WHERE 
+		MEMBER_NO = #{memberNo}
+			
+	</update>
+	
+	
+	<update id="withdrawal" parameterType="long">
+	
+	
+	</update>
 	
 	
 </mapper>

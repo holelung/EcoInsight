@@ -15,7 +15,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class MypageDTO {
+public class MyPageDTO {
 	
 	private String memberName;
 	private String memberId;

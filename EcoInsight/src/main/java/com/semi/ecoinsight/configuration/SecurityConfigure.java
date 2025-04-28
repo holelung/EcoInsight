@@ -51,10 +51,10 @@ public class SecurityConfigure {
 							"/auth/find-password",
 							"/auth/verifycode-password").permitAll();
 					requests.requestMatchers(HttpMethod.GET).permitAll();
-					requests.requestMatchers(HttpMethod.POST,"/change-email").authenticated();
+					requests.requestMatchers(HttpMethod.POST,"/change-email","/mypages","/mypages/edifprofile").authenticated();
 					requests.requestMatchers(HttpMethod.GET).authenticated();
 					requests.requestMatchers(HttpMethod.PUT, "/members/password").authenticated();
-					requests.requestMatchers(HttpMethod.DELETE).authenticated();
+					requests.requestMatchers(HttpMethod.DELETE, "/mypages").authenticated();
 					requests.anyRequest().authenticated();
 				})
 				.sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
