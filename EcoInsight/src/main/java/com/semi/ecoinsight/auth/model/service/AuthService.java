@@ -11,8 +11,9 @@ public interface AuthService {
     Map<String, Object> login(MemberDTO member);
     void sighUpEmailCode(Map<String, String> email);
     void findIdEmailCode(Map<String, String> email);
-    void findPasswordEmailCode(Map<String, String> email);
+    String findPasswordEmailCode(Map<String, String> email);
     void changeEmailCode(Map<String, String> email);
+    void findPasswordEmailVerifyCodeSend(Map<String, String> verifyInfo);
     String checkVerifyCode(Map<String, String> verifyInfo);
     CustomUserDetails getUserDetails();
     boolean isAdmin();
