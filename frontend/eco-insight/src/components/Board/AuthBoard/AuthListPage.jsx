@@ -219,7 +219,7 @@ const AuthListPage = () => {
                 </button>
                 <button
                     className="bg-gray-300 px-4 py-2 rounded cursor-pointer hover:border-2 hover:border-lime-400"
-                    onClick={() => navi("/board/cert/write")}
+                    onClick={() => navi("/auth-board/cert/write")}
                 >
                     글쓰기
                 </button>
@@ -232,7 +232,7 @@ const AuthListPage = () => {
                         <div
                             key={board.no}
                             className="border rounded-xl overflow-hidden shadow hover:shadow-lg transition cursor-pointer hover:border-2 hover:border-lime-400"
-                            onClick={() => navi(`/board/cert/${board.no}`, { state: { post: board } })}
+                            onClick={() => navi(`/auth-board/cert/${board.no}`, { state: { post: board } })}
                         >
                             <div className="bg-blue-100 flex items-center justify-center h-40">이미지</div>
                             <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold">
