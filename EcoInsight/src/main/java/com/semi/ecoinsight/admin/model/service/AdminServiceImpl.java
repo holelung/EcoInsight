@@ -11,8 +11,11 @@ import org.springframework.stereotype.Service;
 import com.semi.ecoinsight.admin.model.dao.AdminMapper;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.board.model.dao.BoardMapper;
+import com.semi.ecoinsight.board.model.dto.BoardDTO;
+import com.semi.ecoinsight.board.model.service.BoardService;
 import com.semi.ecoinsight.board.model.vo.Attachment;
 import com.semi.ecoinsight.board.model.vo.Board;
+import com.semi.ecoinsight.notice.model.dao.NoticeMapper;
 import com.semi.ecoinsight.util.sanitize.SanitizingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,8 +26,10 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminServiceImpl implements AdminService {
 
     private final SanitizingService sanitizingService;
+    private final BoardService boardService;
     private final AdminMapper adminMapper;
     private final BoardMapper boardMapper;
+    private final NoticeMapper noticeMapper;
     
 
     @Override
@@ -32,31 +37,52 @@ public class AdminServiceImpl implements AdminService {
         // 유효성 검증 NotBlank밖에 없음
         
         // XSS 방어
-        String sanitizingTitle = sanitizingService.sanitize(form.getTitle());
-        String sanitizingContent = sanitizingService.sanitize(form.getContent());
+        
 
         Board board = Board.builder()
                 .memberNo(form.getMemberNo())
                 .categoryId(form.getCategoryId())
-                .boardTitle(sanitizingTitle)
-                .boardContent(sanitizingContent)            
+                .boardTitle(form.getTitle())
+                .boardContent(form.getContent())            
                 .build();
         
         adminMapper.insertNotice(board);
 
-        Long noticeNo = adminMapper.getNoticeNo(form.getMemberNo());
+        Long boardNo = noticeMapper.getNoticeNo(form.getMemberNo());
         if (form.getImageUrls() != null) {
-            List<Attachment> Attachments = form.getImageUrls().stream()
+            List<Attachment> attachments = form.getImageUrls().stream()
             .map(url -> Attachment.builder()
-                .boardNo(noticeNo)
-                .AttachmentItem(url)
+                .boardNo(boardNo)
+                .attachmentItem(url)
                 .boardType(form.getBoardType())
                 .build()
                 ).collect(Collectors.toList());
-            for (Attachment a : Attachments) {
+            for (Attachment a : attachments) {
                 boardMapper.uploadImage(a);
             }
         }
+    }
+
+
+    @Override
+    public List<BoardDTO> selectNoticeList(int pageNo, int size, String search, String sortOrder) {
+        
+        if (search == null) {
+            return noticeMapper.selectNoticeList(boardService.setRowBounds(pageNo, size));    
+        }
+        return noticeMapper.selectNoticeList(boardService.setRowBounds(pageNo, size));
+    }
+
+
+    @Override
+    public void updateNotice(Long boardNo) {
+        
+    }
+
+
+    @Override
+    public void deleteNotice(Long boardNo) {
+        
     }
     
 }
