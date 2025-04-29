@@ -136,7 +136,7 @@ public class AuthServiceImpl implements AuthService{
     }
     @Override
     public void findPasswordEmailVerifyCodeSend(Map<String, String> verifyInfo){
-      String userId = verifyInfo.get("memberId");
+      String userId = verifyInfo.get("id");
       String email  = verifyInfo.get("email");
   
       // 1. 사용자 존재 여부 확인
