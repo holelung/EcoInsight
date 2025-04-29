@@ -2,33 +2,45 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.semi.ecoinsight.admin.model.dao.AdminMapper">
 
-    <insert id="insertNotice" parameterType="com.semi.ecoinsight.board.model.vo.Board">
-        INSERT
-        INTO
-            TB_NOTICE(
-                CATEGORY_ID,
-                MEMBER_NO,
-                BOARD_TITLE,
-                BOARD_CONTENT
+    <!-- 공지사항 작성 -->
+    <insert id="insertNotice" parameterType="com.semi.ecoinsight.board.model.vo.Board"> 
+        INSERT INTO
+            TB_NOTICE( 
+                CATEGORY_ID, 
+                MEMBER_NO, 
+                BOARD_TITLE, 
+                BOARD_CONTENT 
             )
-        VALUES(
+        VALUES( 
             #{categoryId},
-            #{memberNo},
-            #{boardTitle},
+            #{memberNo}, 
+            #{boardTitle}, 
             #{boardContent}
-        )
+        ) 
     </insert>
 
-    <select id="getNoticeNo" parameterType="long" resultType="long">
-        SELECT
-            BOARD_NO AS boardNo
-        FROM
+    <!-- 공지사항 수정&삭제 -->
+    <update id="updateNotice">
+        UPDATE
             TB_NOTICE
+        SET
+            BOARD_TITLE = #{boardTitle},
+            BOARD_CONTENT = #{boardContent},
+            MODIFIED_DATE = SYSDATE
         WHERE
-            MEMBER_NO = #{memberNo}
-        ORDER BY
-            CREATED_DATE DESC
-        FETCH FIRST 1 ROWS ONLY
-    </select>
+            BOARD_NO = #{boardNo}
+    </update>
 
+    <update id="deleteNotice" parameterType="Long">
+        UPDATE
+            TB_NOTICE
+        SET
+            IS_DELETED = 'Y'
+        WHERE
+            BOARD_NO = #{boardNo}
+    </update>
+
+    
+
+    
 </mapper>

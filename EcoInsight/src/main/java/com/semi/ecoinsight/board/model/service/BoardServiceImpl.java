@@ -1,6 +1,7 @@
 package com.semi.ecoinsight.board.model.service;
 
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.security.access.AccessDeniedException;
 
 import org.springframework.stereotype.Service;
@@ -32,6 +33,11 @@ public class BoardServiceImpl implements BoardService {
         }
         
         return fileService.store(file);
+    }
+
+    @Override
+    public RowBounds setRowBounds(int pageNo, int size) {
+        return new RowBounds(pageNo * size, size);
     }
     
     
