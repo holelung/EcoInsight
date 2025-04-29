@@ -24,7 +24,7 @@ export default function AuthBoardWritePage() {
         console.log("내용:", content);
 
         alert("게시물 업로드 완료!");
-        navi(`/auth-board/cert`);
+        navi(`/auth-board`);
     } catch (error) {
         console.error("업로드 중 오류 발생:", error);
         alert("업로드에 실패했습니다.");

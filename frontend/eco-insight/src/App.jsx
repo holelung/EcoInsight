@@ -48,9 +48,9 @@ function App() {
         <Route element={<UserLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/community/:type" element={<CommunityListPage />} />
-          <Route path="/auth-board/cert" element={<AuthListPage />} />
-          <Route path="/auth-board/cert/:no" element={<AuthBoardDetail />} />
-          <Route path="/auth-board/cert:type" element={<AuthBoardWritePage />} />
+          <Route path="/auth-board" element={<AuthListPage />} />
+          <Route path="/auth-board/:no" element={<AuthBoardDetail />} />
+          <Route path="/auth-board/write" element={<AuthBoardWritePage />} />
           <Route path="/write/:type" element={<CommunityWritePage />} />
           <Route path="/post/:id" element={<CommunityBoardDetail />} />
           <Route path="/dashboard" element={<MainDashBoard />} />
