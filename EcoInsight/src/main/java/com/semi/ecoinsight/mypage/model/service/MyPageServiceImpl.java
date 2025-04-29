@@ -29,6 +29,7 @@ public class MyPageServiceImpl implements MyPageService {
 	
 	private final MyPageMapper myPageMapper; 
 	private final AuthService authService;
+	
 	@Override
 	public MyPageDTO selectMyPageInfo() {
 		 CustomUserDetails user = authService.getUserDetails();
@@ -38,7 +39,13 @@ public class MyPageServiceImpl implements MyPageService {
 
 	@Override
 	public void editProfile(EditProfileDTO member) {
-		// TODO Auto-generated method stub
+		CustomUserDetails user = authService.getUserDetails();
+		EditProfileDTO member = new EditProfileDTO();
+		member.setEmail(user.getEmail());
+		member.setMemberPh(memberPh);
+		user.getMemberNo();
+		
+		
 		
 	}
 
@@ -53,7 +60,7 @@ public class MyPageServiceImpl implements MyPageService {
 		 myPageMapper.withdrawalMember(user.getMemberNo());
 		 
 		 
-		
+		 
 	}
 
 }

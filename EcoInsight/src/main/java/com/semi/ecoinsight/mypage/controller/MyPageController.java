@@ -1,15 +1,15 @@
 package com.semi.ecoinsight.mypage.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.semi.ecoinsight.auth.controller.AuthController;
-import com.semi.ecoinsight.auth.model.service.AuthService;
+import com.semi.ecoinsight.mypage.model.dto.EditProfileDTO;
 import com.semi.ecoinsight.mypage.model.dto.MyPageDTO;
 import com.semi.ecoinsight.mypage.model.service.MyPageService;
-import com.semi.ecoinsight.token.model.service.TokenService;
+
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,9 +22,21 @@ public class MyPageController {
 	
 	private final MyPageService myPageService;
 	
-	@PostMapping
+	@GetMapping
 	public ResponseEntity<MyPageDTO> selectMyPageInfo(){
 		myPageService.selectMyPageInfo();
+		return null;
+	}
+	
+	@PostMapping
+	public ResponseEntity<EditProfileDTO>editProfile(){
+		myPageService.editProfile(EditProfileDTO member);
+		return null;
+	}
+	
+	@PostMapping
+	public ResponseEntity<EditProfileDTO>withdrawal(){
+		myPageService.withdrawal(String memberPw);
 		return null;
 	}
 	

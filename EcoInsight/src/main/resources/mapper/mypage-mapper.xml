@@ -57,8 +57,12 @@
 	
 	
 	<update id="withdrawal" parameterType="long">
-	
-	
+	UPDATE 
+		TB_MEMBER 
+	SET 
+		IS_ACTIVE = 'N' 
+	WHERE 
+		MEMBER_NO = ${memberNo}
 	</update>
 	
 	
