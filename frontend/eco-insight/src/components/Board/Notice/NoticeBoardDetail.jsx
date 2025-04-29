@@ -15,7 +15,7 @@ const NoticeBoardDetail = () => {
   const [editedContent, setEditedContent] = useState(content);
 
   useEffect(() => {
-    axios.get("http://localhost/notice", {
+    axios.get("http://localhost/notice/detail", {
       params: {
         boardNo:id,
       }
@@ -29,7 +29,7 @@ const NoticeBoardDetail = () => {
   const handleSaveEdit = () => {
     setTitle(editedTitle);
     setContent(editedContent);
-    setIsEditing(false);
+    setIsEditing(!isEditing);
   };
 
   const handleDelete = () => {
@@ -48,7 +48,9 @@ const NoticeBoardDetail = () => {
           <input
             className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
             value={notice.boardTitle}
-            onChange={(e) => setNotice(prev => ({...prev, boardTitle: e.target.value}))}
+            onChange={(e) =>
+              setNotice((prev) => ({ ...prev, boardTitle: e.target.value }))
+            }
           />
         ) : (
           <h1>{notice.boardTitle}</h1>
@@ -67,18 +69,20 @@ const NoticeBoardDetail = () => {
           <textarea
             className="w-full h-40 p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
             value={notice.boardContent}
-            onChange={(e) => setNotice(prev => ({...prev, boardContent:e.target.value}))}
+            onChange={(e) =>
+              setNotice((prev) => ({ ...prev, boardContent: e.target.value }))
+            }
           />
         ) : (
-          <p className="whitespace-pre-wrap">{notice.boardContent}</p>
+          <p
+            className="whitespace-pre-wrap"
+            dangerouslySetInnerHTML={{ __html: notice.boardContent }}
+          ></p>
         )}
-        <div className="border-t pt-2 text-sm text-gray-600">
-          📎 첨부파일: 예시파일.png
-        </div>
       </div>
 
       {/* 수정/삭제 버튼 */}
-      {auth.isAuthenticated.memberRole === "ROLE_ADMIN" && (
+      {auth.loginInfo.memberRole === "ROLE_ADMIN" && (
         <div className="flex justify-end gap-2">
           <>
             <>

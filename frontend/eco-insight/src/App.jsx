@@ -58,23 +58,31 @@ function App() {
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
           <Route path="/privateAskPage" element={<PrivateAskPage />} />
           <Route path="/notice" element={<NoticeBoard />} />
-          <Route path="/board/notice/:id" element={<NoticeBoardDetail />} />
+          <Route path="/notice/detail/:id" element={<NoticeBoardDetail />} />
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
           <Route path="/privateAskPage" element={<PrivateAskPage />} />
         </Route>
 
-
-          {/* 로그인 유저 전용 */}
-          <Route element={<UserRoute> <UserLayout /> </UserRoute>}>
-            <Route path="/mypage" element={<MyPage />} />
-            <Route path="/mypage/myposts" element={<Myposts />} />
-            <Route path="/mypage/editprofile" element={<EditProfile />} />
-            <Route path="/mypage/changepassword" element={<ChangePassword />} />
-            <Route path="/mypage/withdrawal/check" element={<CheckWithdrawal />} />
-            <Route path="/mypage/withdrawal/form" element={<WithdrawalForm />} />
-            <Route path="/mypage/withdrawal/ok" element={<OkWithdrawal />} />
-          </Route>
-
+        {/* 로그인 유저 전용 */}
+        <Route
+          element={
+            <UserRoute>
+              {" "}
+              <UserLayout />{" "}
+            </UserRoute>
+          }
+        >
+          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/mypage/myposts" element={<Myposts />} />
+          <Route path="/mypage/editprofile" element={<EditProfile />} />
+          <Route path="/mypage/changepassword" element={<ChangePassword />} />
+          <Route
+            path="/mypage/withdrawal/check"
+            element={<CheckWithdrawal />}
+          />
+          <Route path="/mypage/withdrawal/form" element={<WithdrawalForm />} />
+          <Route path="/mypage/withdrawal/ok" element={<OkWithdrawal />} />
+        </Route>
 
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />

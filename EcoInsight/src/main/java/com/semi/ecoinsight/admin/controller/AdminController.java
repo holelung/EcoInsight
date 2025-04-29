@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.admin.model.service.AdminService;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
+import com.semi.ecoinsight.notice.model.service.NoticeService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AdminController {
 
     private final AdminService adminService;
+    
 
     @PostMapping("/notice-write")
     public ResponseEntity<?> noticeWrite(@RequestBody @Valid WriteFormDTO writeForm) {
@@ -37,12 +39,12 @@ public class AdminController {
     }
 
     @GetMapping("/notice")
-    public ResponseEntity<?> selectNoticeList(@RequestParam (name="page", defaultValue="0") int page,
+    public ResponseEntity<?> selectNoticeListForAdmin(@RequestParam (name="page", defaultValue="0") int page,
             @RequestParam(name="size") int size,
             @RequestParam(name="search", required = false) String search,
             @RequestParam(name="sortOrder", defaultValue = "Newest") String sortOrder){
         log.info("page:{}\nsize:{}\nsearch:{}\nsortOrder:{}",page, size, search, sortOrder);
-        return ResponseEntity.ok(adminService.selectNoticeList(page, size, search, sortOrder));
+        return ResponseEntity.ok(adminService.selectNoticeListForAdmin(page, size, search, sortOrder));
     }
 
     @PutMapping("admin/notice")
