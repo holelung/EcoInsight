@@ -4,6 +4,7 @@ import axios from "axios";
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../Context/AuthContext";
 
+
 const NoticeBoardWrite = () => {
   const { auth } = useContext(AuthContext);
   const navi = useNavigate();
@@ -65,8 +66,10 @@ const NoticeBoardWrite = () => {
         )
         .then((response) => {
           console.log(response.status);
-          alert("게시글 업로드 완료");
-          navi(`/admin/noticeboard-manage`);
+          if(response.status == 201){
+            alert("게시글 업로드 완료");
+            navi(`/admin/noticeboard-manage`);
+          }
         })
         .catch((error) => {
           console.log("게시글 업로드 실패", error);

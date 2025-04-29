@@ -18,7 +18,7 @@
     (BOARD_NO, ATTACHMENT_ITEM)
     VALUES(
         #{boardNo},
-        #{boardType}
+        #{attachmentItem}
     )
 
     </insert>
