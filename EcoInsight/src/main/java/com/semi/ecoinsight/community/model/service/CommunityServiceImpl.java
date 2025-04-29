@@ -41,7 +41,7 @@ public class CommunityServiceImpl implements CommunityService{
             List<Attachment> Attachments = form.getImageUrls().stream()
             .map(url -> Attachment.builder()
                 .boardNo(communityNo)
-                .AttachmentItem(url)
+                .attachmentItem(url)
                 .boardType(form.getBoardType())
                 .build()
                 ).collect(Collectors.toList());

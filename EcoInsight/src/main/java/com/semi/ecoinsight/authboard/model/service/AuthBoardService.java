@@ -1,10 +1,8 @@
 package com.semi.ecoinsight.authboard.model.service;
 
-import java.util.List;
-
-import com.semi.ecoinsight.authboard.model.dto.AuthBoardDTO;
+import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 
 public interface AuthBoardService {
-	void insertAuthBoard(AuthBoardDTO authboard);
-	List<AuthBoardDTO> selectAuthBoardList(Long boardNo);
+	void insertAuthBoard(WriteFormDTO form);
+	void deleteAuthBoard(Long boardNo);
 }

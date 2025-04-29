@@ -1,34 +1,45 @@
 import { useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Tiptap from "../TipTap/Tiptap";
+import axios from "axios";
 
 export default function AuthBoardWritePage() {
     const { type } = useParams();
     const navi = useNavigate();
-    const editorRef = useRef();
+    const imageFilesRef = useRef([]);
     const [title, setTitle] = useState("");
+    const [category, setCategory] = useState("");
     const [option, setOption] = useState("");
     const [content, setContent] = useState("");
 
+    const boardType = "auth";
+
     const handleOnChange = (e) => { setOption(e.target.value); };
 
-    const handleUpload = () => {
-    try {
-        if (!title.trim() || !content.trim()) {
-            alert("제목과 내용을 모두 입력해주세요!");
+    const handleUpload = async () => {
+        if (!title.trim() || !content.trim() || !category) {
+            alert("제목, 카테고리, 내용을 모두 입력해주세요!");
             return;
         }
 
-      // TODO: 여기에 axios.post() 등 업로드 로직 작성
-        console.log("제목:", title);
-        console.log("내용:", content);
+        const postData = {
+            title,
+            category,
+            content
+        };
 
-        alert("게시물 업로드 완료!");
-        navi(`/auth-board`);
-    } catch (error) {
-        console.error("업로드 중 오류 발생:", error);
-        alert("업로드에 실패했습니다.");
-    }
+        try {
+            const response = await axios.post("http://localhost:5173/auth-board", postData, {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+            console.log(response.data); // 성공한 응답 데이터
+            alert("게시글 업로드 완료!");
+        } catch (error) {
+            console.error("업로드 중 오류 발생:", error);
+            alert("게시글 업로드에 실패했습니다.");
+        }
     };
 
     return (
@@ -38,9 +49,9 @@ export default function AuthBoardWritePage() {
         {/* 카테고리 */}
         <div>
             <select
-                value={option}
+                value={category}
                 defaultValue="category"
-                onChange={handleOnChange}
+                onChange={(e) => setCategory(e.target.value)}
                 className="mb-3 border px-11 py-2 rounded">
                 <option value="category">카테고리 선택</option>
                 <option value="item1">인증1</option>
@@ -53,13 +64,15 @@ export default function AuthBoardWritePage() {
         <input
             type="text"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="제목을 입력하세요"
+            onChange={(e) => setTitle(e.target.value)} placeholder="제목을 입력하세요"
             className="w-full p-4 text-xl font-semibold border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300"
         />
 
         {/* 텍스트 에디터 */}
-        <Tiptap setContent={setContent} />
+        <Tiptap 
+            setContent={setContent}
+            boardType={boardType}
+            imageFilesRef={imageFilesRef}/>
 
         {/* 업로드 버튼 */}
         <div className="mt-4 flex justify-end">
