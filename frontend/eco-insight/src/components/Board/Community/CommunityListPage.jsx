@@ -199,8 +199,6 @@ const CommunityListPage = () => {
     tips: "팁 게시판",
   };
 
-  if (type === "cert") return null;
-
   const boardName = boardNames[type] || "게시판";
 
   const handleButtonClick = (buttonType) => {

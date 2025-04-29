@@ -275,11 +275,11 @@ const Tiptap = ({ setContent, boardType, imageFilesRef }) => {
     extensions,
     content,
     onUpdate({ editor }) {
-      const dirtyHtml = editor.getHTML();
-      const cleanHtml = DOMpurify.sanitize(dirtyHtml, {
-        USE_PROFILES: {html:true}
-      });
-      setContent(cleanHtml);
+      // const dirtyHtml = editor.getHTML();
+      // const cleanHtml = DOMpurify.sanitize(dirtyHtml, {
+      //   USE_PROFILES: {html:true}
+      // });
+      setContent(editor.getHTML());
     },
   });
 

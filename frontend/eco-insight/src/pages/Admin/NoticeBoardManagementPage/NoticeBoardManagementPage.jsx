@@ -1,42 +1,52 @@
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useContext, useEffect, useMemo, useState } from "react";
 import SummaryCard from "../../../components/DashBoard/SummaryCard";
-import { authBoardList, memberList } from "../data";
+import { authBoardList } from "../data";
 
 import Pagination from "../../../components/Pagination/Pagination";
 import Select from "../../../components/Input/Select/Select";
 import SelectRowNumber from "../../../components/Input/Select/SelectRowNumber";
 import Search from "../../../components/Input/Search/Search";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { AuthContext } from "../../../components/Context/AuthContext";
+
 
 const NoticeBoardManagementPage = () => {
+  const { auth } = useContext(AuthContext);
   const navi = useNavigate();
-  const [list, setList] = useState(authBoardList);
+  const [list, setList] = useState([]);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortOrder, setSortOrder] = useState("Newest");
   const [selectedItemId, setSelectedItemId] = useState(null);
 
-  // 검색 DB로갈 경우 필요없음
-  const filteredMembers = useMemo(() => {
-    return list
-      .filter((u) =>
-        [u.memberName, u.memberId, u.memberPh].some((field) =>
-          field.toLowerCase().includes(search.toLowerCase())
-        )
-      )
-      .sort((a, b) => {
-        if (sortOrder === "Newest") return b.memberNo - a.memberNo;
-        if (sortOrder === "Oldest") return a.memberNo - b.memberNo;
-        return 0;
-      });
-  }, [list, search, sortOrder]);
+
+  useEffect(() => {
+    axios.get("http://localhost/admin/notice", {
+      params: {
+        page: currentPage,
+        size: rowsPerPage,
+        search: search,
+        sortOrder: sortOrder,
+      }, 
+        headers: {
+          Authorization: `Bearer ${auth.tokens.accessToken}`,
+      }
+    }).then((response) => {
+      console.log(response);
+      setList([...response.data]);
+      
+    }).catch(error => {
+      console.log(error);
+    })
+  },[currentPage, rowsPerPage, search, sortOrder])
 
   const currentList = useMemo(() => {
-    const startIndex = currentPage * rowsPerPage;
-    return filteredMembers.slice(startIndex, startIndex + rowsPerPage);
-  }, [filteredMembers, currentPage, rowsPerPage]);
-  const totalPages = Math.ceil(filteredMembers.length / rowsPerPage);
+     const startIndex = currentPage * rowsPerPage;
+    return list.slice(startIndex, startIndex + rowsPerPage);
+  }, [list, currentPage, rowsPerPage]);
+  const totalPages = Math.ceil(list.length / rowsPerPage);
 
   const handleData = (data, status) => {
     if (status === "Y") {
@@ -56,6 +66,8 @@ const NoticeBoardManagementPage = () => {
       setSelectedItemId(itemId);
     }
   };
+
+  
 
   return (
     <div className="p-6 space-y-6">
@@ -97,7 +109,7 @@ const NoticeBoardManagementPage = () => {
             selectValue={rowsPerPage}
             onChange={(e) => {
               setRowsPerPage(Number(e.target.value));
-              setCurrentPage(1);
+              setCurrentPage(0);
             }}
             labelName={"행 개수"}
           >
@@ -113,7 +125,7 @@ const NoticeBoardManagementPage = () => {
           </Select>
           <button
             className="px-3 py-2 bg-lime-400 rounded"
-            onClick={()=> navi('/admin/notice-write')}
+            onClick={() => navi("/admin/notice-write")}
           >
             글쓰기
           </button>
@@ -128,21 +140,23 @@ const NoticeBoardManagementPage = () => {
             <th>카테고리</th>
             <th>글쓴이</th>
             <th>제목</th>
-            <th>내용</th>
+            <th>조회수</th>
             <th>업로드일</th>
             <th>상태</th>
           </tr>
         </thead>
         <tbody>
-          {currentList.map((item) => (
+          {list.map((item, i) => (
             <Fragment key={item.boardNo}>
               <tr className="border-t hover:bg-gray-50">
-                <td className="px-4 py-3">{item.boardNo}</td>
+                <td className="px-4 py-3">{i++}</td>
                 {/* <td>{item.boardCategory}</td> */}
                 <td>카테고리</td>
                 <td>{item.memberName}</td>
-                <td>{item.title}</td>
-                <td>{item.content}</td>
+                <td onClick={() => navi(`/board/notice/${item.boardNo}`)}>
+                  {item.boardTitle}
+                </td>
+                <td>{item.viewCount}</td>
                 <td>{item.createdDate}</td>
                 <td>
                   <span
@@ -159,7 +173,7 @@ const NoticeBoardManagementPage = () => {
               </tr>
               {selectedItemId === item.boardNo && (
                 <tr className="bg-gray-50">
-                  <td colSpan={6} className="px-4 py-3">
+                  <td colSpan={7} className="px-4 py-3">
                     <div className="flex gap-2 items-center justify-end">
                       <span className="text-sm font-medium">
                         {item.boardNo} 상태 변경

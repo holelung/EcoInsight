@@ -28,7 +28,7 @@ public class BoardController {
     private final BoardService boardService;
     
     @PostMapping("upload")
-    public ResponseEntity<?> uploadImage(
+    public ResponseEntity<?> imageUrlChange(
         @RequestParam(name="files", required=false) List<MultipartFile> files, @RequestParam(name="boardType", required=false) String boardType) {
         if (files == null) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

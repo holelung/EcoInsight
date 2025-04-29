@@ -7,6 +7,6 @@ import lombok.Value;
 @Builder
 public class Attachment {
     private Long boardNo;
-    private String AttachmentItem;
+    private String attachmentItem;
     private String boardType;
 }
