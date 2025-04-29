@@ -67,4 +67,10 @@ public class AuthController {
         String successMsg = authService.checkVerifyCode(verifyInfo);
         return ResponseEntity.ok(successMsg);
     }
+
+    @PostMapping("/admin-login")
+    public ResponseEntity<Map<String, Object>> adminLogin(@Valid @RequestBody MemberDTO member){
+        Map<String, Object> loginResponse = authService.adminLogin(member);
+        return ResponseEntity.ok(loginResponse);
+    }
 }
