@@ -21,6 +21,12 @@ const CommunityWritePage = () => {
     qna: "질문 게시판",
     tips: "팁 게시판",
   };
+
+  const categoryPath = {
+    free: "C0001",
+    qna: "C0002",
+    tips: "C0003",
+  };
   const boardName = boardNames[type] || "게시판";
 
   const handleUpload = async () => {
@@ -28,6 +34,7 @@ const CommunityWritePage = () => {
       alert("제목과 내용을 모두 입력해주세요!");
       return;
     }
+
     const imgRegex = /<img [^>]*src="([^"]+)"[^>]*>/g;
     let newContent = content;
 
@@ -47,7 +54,7 @@ const CommunityWritePage = () => {
       .then((response) => {
         const uploadPaths = response.data;
         let index = 0;
-        // src 변경
+
         newContent = newContent.replace(imgRegex, (_, oldSrc) => {
           const newSrc = `${uploadPaths[index++]}`;
           return `<img src="${newSrc}"`;
@@ -75,7 +82,8 @@ const CommunityWritePage = () => {
           .then((response) => {
             console.log(response.status);
             alert("게시글 업로드 완료");
-            navi(`/board/${type}`);
+
+            navi(`/community/${type}`);
           })
           .catch((error) => {
             console.log("게시글 업로드 실패", error);
@@ -89,24 +97,22 @@ const CommunityWritePage = () => {
 
   return (
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md">
-      {/* 게시판 타입 텍스트 */}
       <div className="mb-4 text-sm text-gray-500">{boardName}</div>
-      {/* 제목 입력 */}
+
       <input
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         className="w-full p-4 text-xl font-semibold border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300"
         placeholder="제목을 입력하세요"
       />
-      <div className="text-m mb-3 p-2 ">
+
+      <div className="text-m mb-3 p-2">
         <label htmlFor="communityType">카테고리</label>
         <select
           name="communityType"
           id="communityType"
-          selectValue={categoryId}
-          onChange={(e) => {
-            setCategoryId(e.target.value);
-          }}
+          value={categoryId}
+          onChange={(e) => setCategoryId(e.target.value)}
           className="p-3 mx-2 font-semibold border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300"
         >
           <option value="C0001">자유 게시판</option>
@@ -114,12 +120,13 @@ const CommunityWritePage = () => {
           <option value="C0003">팁 게시판</option>
         </select>
       </div>
+
       <Tiptap
         setContent={setContent}
         boardType={boardType}
         imageFilesRef={imageFilesRef}
       />
-      ;{/* 업로드 버튼 */}
+
       <div className="flex justify-end mt-6">
         <button
           onClick={handleUpload}
