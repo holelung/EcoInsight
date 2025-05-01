@@ -46,6 +46,15 @@ public class AuthServiceImpl implements AuthService{
     private final PasswordEncoder passwordEncoder;       // BCryptPasswordEncoder 등
 
     @Override
+    public Map<String, Object> adminLogin(MemberDTO member){
+      Map<String, Object> loginResponse = login(member);
+      LoginInfo loginInfo = (LoginInfo)loginResponse.get("loginInfo");
+      if (!(loginInfo.getMemberRole()).equals("ROLE_ADMIN")){
+        throw new CustomAuthenticationException("권한이 없습니다.");
+      }
+      return loginResponse;
+    }
+    @Override
     public Map<String, Object> login(MemberDTO member) {
         Authentication authentication = null;
         try{
@@ -136,7 +145,7 @@ public class AuthServiceImpl implements AuthService{
     }
     @Override
     public void findPasswordEmailVerifyCodeSend(Map<String, String> verifyInfo){
-      String userId = verifyInfo.get("memberId");
+      String userId = verifyInfo.get("id");
       String email  = verifyInfo.get("email");
   
       // 1. 사용자 존재 여부 확인

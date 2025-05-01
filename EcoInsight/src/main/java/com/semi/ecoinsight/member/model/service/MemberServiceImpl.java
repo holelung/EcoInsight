@@ -30,7 +30,8 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void signUp(MemberDTO member) {
         MemberDTO searchedMember = mapper.getMemberByMemberId(member.getMemberId());
-        if(searchedMember != null){
+        MemberDTO searchedMemberEmail = mapper.getMemberByEmail(member.getEmail());
+        if(searchedMember != null || searchedMemberEmail != null){
             throw new MemberIdDuplicateException("이미 가입된 아이디입니다.");
         }
         
