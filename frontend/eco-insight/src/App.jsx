@@ -40,7 +40,6 @@ import NoticeBoardWrite from "./components/Board/Notice/NoticeBoardWrite.jsx";
 import NoticeWrite from "./pages/Admin/NoticeBoardManagementPage/NoticeWrite.jsx";
 import CommunityWritePage from "./components/Board/Community/CommunityWritePage.jsx";
 
-
 function App() {
   return (
     <AuthProvider>
@@ -48,10 +47,13 @@ function App() {
         {/* 사용자 레이아웃 */}
         <Route element={<UserLayout />}>
           <Route path="/" element={<HomePage />} />
-          <Route path="/board/:type" element={<CommunityListPage />} />
-          <Route path="/board/cert" element={<AuthListPage />} />
-          <Route path="/board/cert/:no" element={<AuthBoardDetail />} />
-          <Route path="/board/cert:type" element={<AuthBoardWritePage />} />
+          <Route path="/community/:type" element={<CommunityListPage />} />
+          <Route path="/auth-board/cert" element={<AuthListPage />} />
+          <Route path="/auth-board/cert/:no" element={<AuthBoardDetail />} />
+          <Route
+            path="/auth-board/cert:type"
+            element={<AuthBoardWritePage />}
+          />
           <Route path="/write/:type" element={<CommunityWritePage />} />
           <Route path="/post/:id" element={<CommunityBoardDetail />} />
           <Route path="/dashboard" element={<MainDashBoard />} />

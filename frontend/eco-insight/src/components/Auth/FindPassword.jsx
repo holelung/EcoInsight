@@ -16,7 +16,7 @@ const FindPasswordPage = () => {
   const handleSendCode = () => {
     // 이메일로 인증번호 요청 API 호출
     axios.post("http://localhost/auth/find-password", {
-      memberId : memberId,
+      id : memberId,
       email : email
     }).then(response => {
       if(response.status === 201){
