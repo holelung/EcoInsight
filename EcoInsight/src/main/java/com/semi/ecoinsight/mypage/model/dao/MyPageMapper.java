@@ -16,6 +16,8 @@ public interface MyPageMapper {
     // 내 정보 수정
     void editMyProfile(EditProfileDTO dto);
     
+    // 
+    
 
     // 회원 탈퇴 (활성화 플래그 변경)
     int withdrawalMember(Long memberNo);

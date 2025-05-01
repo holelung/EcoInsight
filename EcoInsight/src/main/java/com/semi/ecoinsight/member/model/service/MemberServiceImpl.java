@@ -36,7 +36,7 @@ public class MemberServiceImpl implements MemberService {
         
         Member memberValue = Member.builder()
                                    .memberName(member.getMemberName())
-                                   .memberPw(passwordEncoder.encode(member.getMemberPw()))
+                                   .memberPw(passwordEncoder.encode(member.getMemberPw())) // 패스워드 인코딩 
                                    .memberId(member.getMemberId())
                                    .email(member.getEmail())
                                    .memberPh(member.getMemberPh())

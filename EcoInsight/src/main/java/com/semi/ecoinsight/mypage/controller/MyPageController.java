@@ -28,17 +28,17 @@ public class MyPageController {
 		return null;
 	}
 	
-	@PostMapping
-	public ResponseEntity<EditProfileDTO>editProfile(){
-		myPageService.editProfile(EditProfileDTO member);
-		return null;
-	}
-	
-	@PostMapping
-	public ResponseEntity<EditProfileDTO>withdrawal(){
-		myPageService.withdrawal(String memberPw);
-		return null;
-	}
-	
+//	@PostMapping
+//	public ResponseEntity<EditProfileDTO>editProfile(){
+//		myPageService.editProfile(EditProfileDTO member);
+//		return null;
+//	}
+//	
+//	@PostMapping
+//	public ResponseEntity<EditProfileDTO>withdrawal(){
+//		myPageService.withdrawal(String memberPw);
+//		return null;
+//	}
+//	
 	
 }

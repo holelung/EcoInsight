@@ -36,18 +36,18 @@ public class MyPageServiceImpl implements MyPageService {
 		 user.getMemberNo();
 		return null;
 	}
-
-	@Override
-	public void editProfile(EditProfileDTO member) {
-		CustomUserDetails user = authService.getUserDetails();
-		EditProfileDTO member = new EditProfileDTO();
-		member.setEmail(user.getEmail());
-		member.setMemberPh(memberPh);
-		user.getMemberNo();
+//
+//	@Override
+//	public void editProfile(EditProfileDTO member) {
+//		CustomUserDetails user = authService.getUserDetails();
+//		EditProfileDTO member = new EditProfileDTO();
+//		member.setEmail(user.getEmail());
+//		member.setMemberPh(memberPh);
+//		user.getMemberNo();
+//		
 		
 		
-		
-	}
+//	}
 
 	@Override
 	public void withdrawal(String memberPw) {
@@ -61,6 +61,13 @@ public class MyPageServiceImpl implements MyPageService {
 		 
 		 
 		 
+	}
+
+
+	@Override
+	public void editProfile(EditProfileDTO member) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

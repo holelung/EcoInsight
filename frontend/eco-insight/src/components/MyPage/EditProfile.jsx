@@ -184,39 +184,9 @@ function EditProfile() {
                 onChange={e => setPhone(e.target.value)}
                 className="flex-1 p-2 border border-gray-300 rounded focus:outline-none"
               />
-              <button
-                type="button"
-                onClick={handleSendPhoneCode}
-                className={`px-4 py-2 rounded text-white ${
-                  isPhoneCodeSent ? 'bg-gray-400' : 'bg-lime-400 hover:bg-lime-500'
-                }`}
-              >
-                {isPhoneCodeSent ? '재전송' : '인증번호 전송'}
-              </button>
             </div>
           </div>
-          <div className="mb-6 flex items-center space-x-2">
-            <input
-              type="text"
-              value={phoneCode}
-              onChange={e => setPhoneCode(e.target.value)}
-              placeholder="인증번호"
-              disabled={!isPhoneCodeSent}
-              className="flex-1 p-2 border border-gray-300 rounded focus:outline-none"
-            />
-            <button
-              type="button"
-              onClick={handleVerifyPhoneCode}
-              disabled={!isPhoneCodeSent || isPhoneVerified}
-              className={`px-4 py-2 rounded text-white ${
-                isPhoneVerified
-                  ? 'bg-gray-400'
-                  : 'bg-lime-400 hover:bg-lime-500'
-              }`}
-            >
-              {isPhoneVerified ? '인증완료' : '인증번호 확인'}
-            </button>
-          </div>
+         
 
           {/* 이메일 인증 */}
           <div className="mb-4">
