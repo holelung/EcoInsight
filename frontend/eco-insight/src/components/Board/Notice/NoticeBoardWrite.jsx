@@ -42,7 +42,7 @@ const NoticeBoardWrite = () => {
       // src 변경
       newContent = newContent.replace(imgRegex, (_, oldSrc) => {
         const newSrc = `${uploadPaths[index++]}`;
-        return `<img src="${newSrc}"`;
+        return `<img src="${newSrc}" />`;
       });
       
       axios
