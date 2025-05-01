@@ -58,18 +58,24 @@ public class CommunityServiceImpl implements CommunityService{
 	}
 	@Override
 	public List<BoardDTO> findAllCommunity(int pageNo, String search, String categoryId) {
-		int size = 5;
-    	RowBounds rowBounds = new RowBounds(pageNo * size, size);
-    	
+		int size = 10;
+		
+		Map<String,String> searchMap = new HashMap<>();
+		searchMap.put("startIndex", Integer.toString(size*pageNo));
+		searchMap.put("size", Integer.toString(size));
     	if(search == null) {
-    		return communityMapper.findAllCommunity(rowBounds, categoryId);  		
+    		return communityMapper.findAllCommunity(categoryId);  		
     	} else {   		
     		
-    		Map<String,String> searchMap = new HashMap<>();
+   		
     		searchMap.put("search", search);
     		searchMap.put("categoryId", categoryId);
     		
-    		return communityMapper.findCommunity(rowBounds, searchMap);
+    		return communityMapper.findCommunity(searchMap);
     	}
+	}
+	@Override
+	public Map<String, Object> detailCommunity(Long boardNo, String categoryId) {
+		return null;
 	}
 }

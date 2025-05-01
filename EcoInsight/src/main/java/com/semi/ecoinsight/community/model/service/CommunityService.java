@@ -1,6 +1,7 @@
 package com.semi.ecoinsight.community.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
@@ -13,5 +14,6 @@ public interface CommunityService {
 	// 게시글 조회	
 	List<BoardDTO> findAllCommunity(int pageNo, String search, String categoryId);
 	
+	Map<String,Object> detailCommunity(Long boardNo, String categoryId);
 	
 }

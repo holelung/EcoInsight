@@ -61,7 +61,7 @@
 			  	  CATEGORY_ID = #{categoryId}	    
 			ORDER
 			  BY
-			  	  BOARD_NO DESC      
+			  	  CREATED_DATE DESC      
 	</select>
 	
 	<!-- 게시글 검색 -->
@@ -80,9 +80,21 @@
 		 	 
 	   ORDER
 	      BY
-	      	 BOARD_NO DESC
+	      	 CREATED_DATE DESC
 	</select>
 	
+	<!-- 게시글 상세 조회-->
+	<select id="detailCommunity" parameterType="com.semi.ecoinsight.board.model.vo.Board">
+			 , Board_CONTENT boardContent
+		FROM		
+			  TB_COMMUNITY_BOARD
+		JOIN 
+			  TB_MEMBER USING(MEMBER_NO)
+	   WHERE
+	   		  BOARD_NO = #{boardNo}
+	   	 AND
+	   	 	  CATEGORY_ID = #{categoryId}	  
+	</select>
 	
 	
 	<!--게시글 수정-->

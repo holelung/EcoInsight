@@ -17,8 +17,12 @@ public interface CommunityMapper {
 	Long getCommunityNo(Long memberNo);
 	
 	// 게시글 조회	
-	List<BoardDTO> findAllCommunity(RowBounds rb, String categoryId);
+	List<BoardDTO> findAllCommunity(String categoryId);
 	
 	// 검색
-	List<BoardDTO> findCommunity(RowBounds rb, Map<String,String> searchMap );
+	List<BoardDTO> findCommunity(Map<String,String> searchMap );
+	
+	// 게시글 상세 조회
+	
+	void detailCommunity()
 }

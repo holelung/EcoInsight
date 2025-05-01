@@ -4,12 +4,12 @@ import Pagination from "../../Pagination/Pagination";
 import axios from "axios";
 
 const CommunityListPage = () => {
-  const { type } = useParams(); // URL에서 게시판 종류 가져오기
+  const { type } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [isPopularOnly, setIsPopularOnly] = useState(false);
   const [posts, setPosts] = useState([]);
-  const postsPerPage = 5;
+  const postsPerPage = 10;
 
   const boardNames = {
     free: "자유게시판",
@@ -19,13 +19,9 @@ const CommunityListPage = () => {
   const boardName = boardNames[type] || "게시판";
 
   let categoryId = "";
-  if (type === "free") {
-    categoryId = "C0001";
-  } else if (type === "qna") {
-    categoryId = "C0002";
-  } else if (type === "tips") {
-    categoryId = "C0003";
-  }
+  if (type === "free") categoryId = "C0001";
+  else if (type === "qna") categoryId = "C0002";
+  else if (type === "tips") categoryId = "C0003";
 
   const fetchPosts = () => {
     axios
@@ -51,6 +47,9 @@ const CommunityListPage = () => {
   const handleButtonClick = (buttonType) => {
     setIsPopularOnly(buttonType === "인기글");
     setCurrentPage(0);
+    if (buttonType === "전체글") {
+      setSearchQuery(""); // 검색어 초기화 → 전체글 보기
+    }
   };
 
   const handleSearchClick = () => {
@@ -58,11 +57,9 @@ const CommunityListPage = () => {
     fetchPosts();
   };
 
-  const filteredPosts = posts
-    .filter((post) =>
-      searchQuery ? post.boardTitle?.includes(searchQuery) : true
-    )
-    .filter((post) => (isPopularOnly ? post.likes >= 10 : true));
+  const filteredPosts = posts.filter((post) =>
+    isPopularOnly ? post.likes >= 10 : true
+  );
 
   const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
   const indexOfLastPost = (currentPage + 1) * postsPerPage;
@@ -88,7 +85,6 @@ const CommunityListPage = () => {
           >
             전체글
           </button>
-
           <button
             className={`px-4 py-2 border rounded ${
               isPopularOnly ? "bg-black text-white" : "bg-white text-black"
@@ -129,18 +125,6 @@ const CommunityListPage = () => {
         <div>날짜</div>
         <div>조회수</div>
         <div>좋아요</div>
-      </div>
-
-      {/* 공지사항 */}
-      <div className="grid grid-cols-7 py-2 text-sm font-semibold text-green-500 border-b border-gray-200">
-        <div>-</div>
-        <div className="text-green-500 font-semibold">공지사항</div>
-        <div className="col-span-2 text-left font-bold">
-          중요한 공지는 우선으로 보여집니다.
-        </div>
-        <div>20xx.xx.xx</div>
-        <div>1,832</div>
-        <div>99</div>
       </div>
 
       {/* 게시글 리스트 */}

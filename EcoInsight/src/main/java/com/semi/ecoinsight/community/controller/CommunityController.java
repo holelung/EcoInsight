@@ -1,6 +1,7 @@
 package com.semi.ecoinsight.community.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,5 +38,11 @@ public class CommunityController {
 														   @RequestParam(name="categoryId") String categoryId){		
 		communityService.findAllCommunity(page, search, categoryId);
 		return ResponseEntity.ok(communityService.findAllCommunity(page, search, categoryId));
+	}
+	
+	@GetMapping
+	public ResponseEntity<Map<String,Object>> detailCommunity(@RequestParam(name="boardNo") Long boardNo,
+															  @RequestParam(name="categoryId") String categoryId){
+		return ResponseEntity.ok(communityService.detailCommunity(boardNo, categoryId));
 	}
 }
