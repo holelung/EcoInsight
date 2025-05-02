@@ -27,6 +27,7 @@ import com.semi.ecoinsight.util.sanitize.SanitizingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
