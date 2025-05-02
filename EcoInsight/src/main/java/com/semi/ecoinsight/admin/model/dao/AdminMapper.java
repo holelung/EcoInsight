@@ -17,4 +17,5 @@ public interface AdminMapper {
 
     void deleteNotice(Long boardNo);
     
+    void restoreNotice(Long boardNo);
 }

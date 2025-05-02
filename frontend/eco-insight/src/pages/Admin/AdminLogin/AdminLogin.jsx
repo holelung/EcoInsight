@@ -6,12 +6,12 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const AdminLogin = () => {
+  const { login } = useContext(AuthContext);
+  const navi = useNavigate();
   const [formData, setFormData] = useState({
     memberId: "",
     memberPw: ""
   });
-  const { login, logout } = useContext(AuthContext);
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,19 +36,20 @@ const AdminLogin = () => {
     axios.post("http://localhost/auth/admin-login", {memberId, memberPw})
     .then(
       response => {
-        if(response.status === 200){
+        if (response.status === 200) {
           if(response.data.loginInfo.isActive === 'N' || response.data.loginInfo.memberRole !== 'ROLE_ADMIN'){
-            alert("권환이 없습니다.");
-            logout();
+            alert("권한이 없습니다.");
           }
-          navigate("/admin");
+          alert("로그인 완료");
+          login(response.data.loginInfo, response.data.tokens);
+          navi("/admin");
         }
       }
     )
     .catch(error =>{
       console.log(error);
       alert("계정 정보를 잘못 입력하였거나 권한이 없습니다.");
-      navigate("/admin/login");
+      navi("/admin/login");
     })
   }
 

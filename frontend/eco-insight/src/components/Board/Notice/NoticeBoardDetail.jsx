@@ -105,7 +105,16 @@ const NoticeBoardDetail = () => {
 
       {/* 돌아가기 */}
       <button
-        onClick={() => navi(-1)}
+        onClick={() => {
+          if (
+            !auth.isAuthenticated ||
+            !auth.loginInfo.memberRole === "ROLE_ADMIN"
+          ) {
+            navi("/notice");
+          } else {
+            navi("/admin/noticeboard-manage");
+          }
+        }}
         className="w-full mt-6 py-2 border border-gray-300 rounded hover:bg-gray-100"
       >
         게시글 목록으로 돌아가기
