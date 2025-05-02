@@ -98,6 +98,7 @@ public class AdminServiceImpl implements AdminService {
         
         if (search.isEmpty()) {
             resultData.put("totalCount", noticeMapper.getTotalNoticeCount());
+            // 10개만 나옴
             resultData.put("boardList", noticeMapper.selectNoticeListForAdmin(pageInfo));
             return resultData;
         }

@@ -106,8 +106,11 @@ const NoticeBoardDetail = () => {
       {/* 돌아가기 */}
       <button
         onClick={() => {
-          if (!auth.loginInfo.memberRole === "ROLE_ADMIN") {
-            navi('/notice');
+          if (
+            !auth.isAuthenticated ||
+            !auth.loginInfo.memberRole === "ROLE_ADMIN"
+          ) {
+            navi("/notice");
           } else {
             navi("/admin/noticeboard-manage");
           }

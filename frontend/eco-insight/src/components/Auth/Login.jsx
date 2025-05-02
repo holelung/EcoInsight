@@ -39,13 +39,12 @@ const Login = () => {
 
     axios.post("http://localhost/auth/login", {memberId, memberPw}).
         then(response => {
-            login(response.data.loginInfo, response.data.tokens);
             if(response.status === 200){
               if(response.data.loginInfo.isActive === 'N'){
                 alert("비활성화된 계정이거나 정지된 계정입니다.");
-                logout();
               }
-                navigate("/");
+              login(response.data.loginInfo, response.data.tokens);
+              navigate("/");
             }
         }).catch(error =>{
             console.log(error);
