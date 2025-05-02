@@ -1,7 +1,8 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Tiptap from "../TipTap/Tiptap";
 import axios from "axios";
+import { AuthContext } from "../../Context/AuthContext";
 
 export default function AuthBoardWritePage() {
     const { type } = useParams();
@@ -11,10 +12,16 @@ export default function AuthBoardWritePage() {
     const [category, setCategory] = useState("");
     const [option, setOption] = useState("");
     const [content, setContent] = useState("");
-
-    const boardType = "auth";
+    const { auth } = useContext(AuthContext);
 
     const handleOnChange = (e) => { setOption(e.target.value); };
+
+    useEffect(() => {
+        if (!auth.isAuthenticated) {
+            alert("로그인이 필요한 서비스입니다.");
+            navi("/login");
+        }
+    }, [auth, navi]);
 
     const handleUpload = async () => {
         if (!title.trim() || !content.trim() || !category) {
@@ -41,6 +48,10 @@ export default function AuthBoardWritePage() {
             alert("게시글 업로드에 실패했습니다.");
         }
     };
+
+    if (!auth.isAuthenticated) {
+        return null;
+    }
 
     return (
         <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md">

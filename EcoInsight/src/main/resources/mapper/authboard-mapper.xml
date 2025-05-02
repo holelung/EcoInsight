@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.semi.ecoinsight.authboard.model.dao.AuthBoardMapper">
-	<insert id="insertAuthBoard">
+	<insert id="insertAuthBoard"
+			parameterType="com.semi.ecoinsight.board.model.vo.Board">
 		INSERT
 		INTO
 			TB_AUTH_BOARD
@@ -10,11 +11,7 @@
 				MEMBER_NO,
 				CATEGORY_ID,
 				BOARD_TITLE,
-				BOARD_CONTENT,
-				CREATED_DATE,
-				MODIFIED_DATE,
-				VIEW_COUNT,
-				IS_DELETED
+				BOARD_CONTENT
 			)
 		VALUES
 			(
@@ -22,34 +19,45 @@
 				#{memberNo},
 				#{categoryId},
 				#{boardTitle},
-				#{boardContent},
-				SYSDATE,
-				SYSDATE,
-				0,
-				'N'
+				#{boardContent}
 			)
 	</insert>
 	
 	<select id="selectAuthBoardList"
 			parameterType="long"
-			resultType="com.semi.ecoinsight.authboard.model.dto.AuthBoardDTO">
+			resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
 	</select>
 	
-	<update id="updateAuthBoard" parameterType="com.semi.ecoinsight.authboard.model.vo.AuthBoard">
+	<!--게시글 번호 -->
+	<select id="getAuthBoardNo" parameterType="long" resultType="long">
+        SELECT
+            BOARD_NO AS boardNo
+        FROM
+            TB_AUTH_BOARD
+        WHERE
+            MEMBER_NO = #{memberNo}
+        ORDER BY
+            CREATED_DATE DESC
+        FETCH FIRST 1 ROWS ONLY
+    </select>
+	
+	<update id="updateAuthBoard" parameterType="com.semi.ecoinsight.board.model.vo.Board">
 		UPDATE
 			TB_AUTH_BOARD
 		SET
 			BOARD_TITLE = #{boardTitle},
-			BOARD_CONTENT = #{boardContent}
+			BOARD_CONTENT = #{boardContent},
+			MODIFIED_DATE = SYSDATE
 		WHERE
 			BOARD_NO = #{boardNo}
 	</update>
 	
-	<delete id="deleteAuthBoard">
-		DELETE
-		FROM
+	<update id="deleteAuthBoard">
+		UPDATE
 			TB_AUTH_BOARD
+		SET
+			IS_DELETED ='Y'
 		WHERE
 			BOARD_NO = #{boardNo}
-	</delete>
+	</update>
 </mapper>

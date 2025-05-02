@@ -55,6 +55,6 @@ public class AuthBoardServiceImpl implements AuthBoardService {
 	
 	@Override
 	public void deleteAuthBoard(Long boardNo) {
-		authBoardMapper.delete(boardNo);
+		authBoardMapper.deleteAuthBoard(boardNo);
 	}
 }
