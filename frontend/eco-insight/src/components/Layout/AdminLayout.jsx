@@ -2,7 +2,6 @@ import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import logo from "../../assets/EcoInsigthLogo2.png";
 import MenuItem from "../Button/MenuItem";
 
-
 const AdminLayout = () => {
   const navi = useNavigate();
   const location = useLocation();
@@ -10,7 +9,7 @@ const AdminLayout = () => {
   const clickLogout = () => {
     localStorage.clear();
     navi("/");
-  }
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -49,6 +48,12 @@ const AdminLayout = () => {
             isActive={location.pathname === "/admin/noticeboard-manage"}
           >
             공지사항 작성
+          </MenuItem>
+          <MenuItem
+            onClick={() => navi("/admin/report-manage")}
+            isActive={location.pathname === "/admin/report-manage"}
+          >
+            신고 관리
           </MenuItem>
         </ul>
       </aside>
