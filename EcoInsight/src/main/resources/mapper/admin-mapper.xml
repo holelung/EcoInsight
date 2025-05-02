@@ -31,7 +31,8 @@
             BOARD_NO = #{boardNo}
     </update>
 
-    <update id="deleteNotice" parameterType="Long">
+    <!-- 공지사항 삭제 -->
+    <update id="deleteNotice" parameterType="long">
         UPDATE
             TB_NOTICE
         SET
@@ -40,7 +41,15 @@
             BOARD_NO = #{boardNo}
     </update>
 
-    
+    <!-- 공지사항 복원 -->
+    <update id="restoreNotice" parameterType="long">
+        UPDATE
+            TB_NOTICE
+        SET
+            IS_DELETED = 'N'
+        WHERE
+            BOARD_NO = #{boardNo}
+    </update>
 
     
 </mapper>

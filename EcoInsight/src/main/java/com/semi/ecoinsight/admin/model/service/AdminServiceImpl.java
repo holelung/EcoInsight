@@ -81,18 +81,32 @@ public class AdminServiceImpl implements AdminService {
 
 
     @Override
-    public List<BoardDTO> selectNoticeListForAdmin(int pageNo, int size, String search, String sortOrder) {
+    public Map<String, Object> selectNoticeListForAdmin(int pageNo, int size, String search, String searchType, String sortOrder) {
         
         int startIndex = pagination.getStartIndex(pageNo, size);
         Map<String, String> pageInfo = new HashMap<>(); 
         pageInfo.put("startIndex", Integer.toString(startIndex));
-        pageInfo.put("endIndex", Integer.toString(size+startIndex));
-        pageInfo.put("sortOrder", sortOrder);
-        if (search == null) {
-            return noticeMapper.selectNoticeListForAdmin(pageInfo);
+        pageInfo.put("size", Integer.toString(size));
+        if (sortOrder.equals("Newest")) {
+            pageInfo.put("sortOrder", "DESC");    
+        } else {
+            pageInfo.put("sortOrder", "ASC");
+        }
+        
+
+        Map<String, Object> resultData = new HashMap<String, Object>();
+        
+        if (search.isEmpty()) {
+            resultData.put("totalCount", noticeMapper.getTotalNoticeCount());
+            resultData.put("boardList", noticeMapper.selectNoticeListForAdmin(pageInfo));
+            return resultData;
         }
         pageInfo.put("search", search);
-        return noticeMapper.selectNoticeListForAdmin(pageInfo);
+        pageInfo.put("searchType", searchType);
+
+        resultData.put("totalCount", noticeMapper.getNoticeCountBySearch(pageInfo));
+        resultData.put("boardList", noticeMapper.selectSearchedNoticeListForAdmin(pageInfo));
+        return resultData;
     }
 
 
@@ -104,7 +118,12 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void deleteNotice(Long boardNo) {
-        
+        adminMapper.deleteNotice(boardNo);
+    }
+
+    @Override
+    public void restoreNotice(Long boardNo) {
+        adminMapper.restoreNotice(boardNo);
     }
     
 }
