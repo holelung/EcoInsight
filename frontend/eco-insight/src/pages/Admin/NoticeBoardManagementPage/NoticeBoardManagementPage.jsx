@@ -21,6 +21,11 @@ const NoticeBoardManagementPage = () => {
   const [sortOrder, setSortOrder] = useState("Newest");
   const [selectedItemId, setSelectedItemId] = useState(null);
 
+  const currentList = useMemo(() => {
+    const startIndex = currentPage * rowsPerPage;
+    return list.slice(startIndex, startIndex + rowsPerPage);
+  }, [list, currentPage, rowsPerPage]);
+  const totalPages = Math.ceil(list.length / rowsPerPage);
 
   useEffect(() => {
     axios.get("http://localhost/admin/notice", {
@@ -42,11 +47,7 @@ const NoticeBoardManagementPage = () => {
     })
   },[currentPage, rowsPerPage, search, sortOrder])
 
-  const currentList = useMemo(() => {
-     const startIndex = currentPage * rowsPerPage;
-    return list.slice(startIndex, startIndex + rowsPerPage);
-  }, [list, currentPage, rowsPerPage]);
-  const totalPages = Math.ceil(list.length / rowsPerPage);
+  
 
   const handleData = (data, status) => {
     if (status === "Y") {
@@ -153,7 +154,7 @@ const NoticeBoardManagementPage = () => {
                 {/* <td>{item.boardCategory}</td> */}
                 <td>카테고리</td>
                 <td>{item.memberName}</td>
-                <td onClick={() => navi(`/board/notice/${item.boardNo}`)}>
+                <td onClick={() => navi(`/notice/detail/${item.boardNo}`)}>
                   {item.boardTitle}
                 </td>
                 <td>{item.viewCount}</td>

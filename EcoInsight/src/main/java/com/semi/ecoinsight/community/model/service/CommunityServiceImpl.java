@@ -1,12 +1,16 @@
 package com.semi.ecoinsight.community.model.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.stereotype.Service;
 
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.board.model.dao.BoardMapper;
+import com.semi.ecoinsight.board.model.dto.BoardDTO;
 import com.semi.ecoinsight.board.model.vo.Attachment;
 import com.semi.ecoinsight.board.model.vo.Board;
 import com.semi.ecoinsight.community.model.dao.CommunityMapper;
@@ -22,6 +26,7 @@ public class CommunityServiceImpl implements CommunityService{
 	private final CommunityMapper communityMapper;
 	private final BoardMapper boardMapper;
 	
+	@Override
 	public void insertCommunityBoard(WriteFormDTO form) {
 		// XSS 방어(유효성)
         String sanitizingTitle = sanitizingService.sanitize(form.getTitle());
@@ -37,19 +42,34 @@ public class CommunityServiceImpl implements CommunityService{
         communityMapper.insertCommunityBoard(board);
         
         Long communityNo = communityMapper.getCommunityNo(form.getMemberNo());
+        
         if (form.getImageUrls() != null) {
-            List<Attachment> Attachments = form.getImageUrls().stream()
+            List<Attachment> attachments = form.getImageUrls().stream()
             .map(url -> Attachment.builder()
                 .boardNo(communityNo)
                 .attachmentItem(url)
                 .boardType(form.getBoardType())
                 .build()
                 ).collect(Collectors.toList());
-            for (Attachment a : Attachments) {
+            for (Attachment a : attachments) {
                 boardMapper.uploadImage(a);
             }
-        }
-        
-        
+        }	
+	}
+	@Override
+	public List<BoardDTO> findAllCommunity(int pageNo, String search, String categoryId) {
+		int size = 5;
+    	RowBounds rowBounds = new RowBounds(pageNo * size, size);
+    	
+    	if(search == null) {
+    		return communityMapper.findAllCommunity(rowBounds, categoryId);  		
+    	} else {   		
+    		
+    		Map<String,String> searchMap = new HashMap<>();
+    		searchMap.put("search", search);
+    		searchMap.put("categoryId", categoryId);
+    		
+    		return communityMapper.findCommunity(rowBounds, searchMap);
+    	}
 	}
 }

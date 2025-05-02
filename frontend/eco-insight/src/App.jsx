@@ -57,7 +57,7 @@ function App() {
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
           <Route path="/privateAskPage" element={<PrivateAskPage />} />
           <Route path="/notice" element={<NoticeBoard />} />
-          <Route path="/board/notice/:id" element={<NoticeBoardDetail />} />
+          <Route path="/notice/detail/:id" element={<NoticeBoardDetail />} />
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
           <Route path="/privateAskPage" element={<PrivateAskPage />} />
         </Route>
