@@ -26,6 +26,19 @@
 	<select id="selectAuthBoardList"
 			parameterType="long"
 			resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
+		SELECT 
+        	BOARD_NO AS boardNo, 
+        	MEMBER_NO AS memberNo, 
+        	CATEGORY_ID AS categoryId, 
+        	BOARD_TITLE AS boardTitle, 
+        	BOARD_CONTENT AS boardContent, 
+        	CREATED_DATE AS createdDate 
+    	FROM 
+    	    TB_AUTH_BOARD 
+    	WHERE 
+    	    IS_DELETED = 'N'
+    	ORDER BY 
+    	    CREATED_DATE DESC
 	</select>
 	
 	<!--게시글 번호 -->

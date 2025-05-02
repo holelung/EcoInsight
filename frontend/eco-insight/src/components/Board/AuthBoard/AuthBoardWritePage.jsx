@@ -8,12 +8,14 @@ export default function AuthBoardWritePage() {
     const { type } = useParams();
     const navi = useNavigate();
     const imageFilesRef = useRef([]);
-    const [title, setTitle] = useState("");
+    const [memberNo, setMemberNo] = useState("");
     const [category, setCategory] = useState("");
-    const [option, setOption] = useState("");
+    const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    const { auth } = useContext(AuthContext);
     const [boardType, setBoardType] = useState("");
+    const [imageUrls, setImageUrls] = useState("");
+    const [option, setOption] = useState("");
+    const { auth } = useContext(AuthContext);
 
     const handleOnChange = (e) => { setOption(e.target.value); };
 
@@ -30,14 +32,22 @@ export default function AuthBoardWritePage() {
             return;
         }
 
+        console.log("memberNo 확인:", auth?.loginInfo?.memberNo);
+
+        console.log("imageFilesRef:", imageFilesRef.current);
+
         const postData = {
             title,
-            category,
-            content
+            content,
+            categoryId: category,
+            boardType: boardType || "AUTH",
+            memberNo: auth.loginInfo.memberNo,
+            imageUrls: imageFilesRef.current || []
         };
+        console.log("전송할 데이터:", postData);
 
         try {
-            const response = await axios.post("http://localhost:5173/auth-board", postData, {
+            const response = await axios.post("/auth-board", postData, {
                 headers: {
                     "Content-Type": "application/json",
                 },

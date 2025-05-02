@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.authboard.model.dao.AuthBoardMapper;
 import com.semi.ecoinsight.board.model.dao.BoardMapper;
+import com.semi.ecoinsight.board.model.dto.BoardDTO;
 import com.semi.ecoinsight.board.model.vo.Attachment;
 import com.semi.ecoinsight.board.model.vo.Board;
 import com.semi.ecoinsight.util.sanitize.SanitizingService;
@@ -56,5 +57,20 @@ public class AuthBoardServiceImpl implements AuthBoardService {
 	@Override
 	public void deleteAuthBoard(Long boardNo) {
 		authBoardMapper.deleteAuthBoard(boardNo);
+	}
+	
+	public BoardDTO getAuthBoardDetail(Long boardNo) {
+	    return authBoardMapper.selectAuthBoardById(boardNo);
+	}
+	
+	public void updateAuthBoard(Long boardNo, WriteFormDTO form) {
+	    String sanitizingTitle = sanitizingService.sanitize(form.getTitle());
+	    String sanitizingContent = sanitizingService.sanitize(form.getContent());
+	    Board board = Board.builder()
+	            .boardNo(boardNo)
+	            .boardTitle(sanitizingTitle)
+	            .boardContent(sanitizingContent)
+	            .build();
+	    authBoardMapper.updateAuthBoard(board);
 	}
 }

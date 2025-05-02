@@ -27,7 +27,7 @@ const AuthListPage = () => {
                 },
             });
     
-            const data = response.data.content || [];
+            const data = Array.isArray(response.data.content) ? response.data.content : [];
             
             if (isInitial) {
                 setBoards(data);
