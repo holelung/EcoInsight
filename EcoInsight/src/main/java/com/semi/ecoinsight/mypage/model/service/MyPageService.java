@@ -14,4 +14,9 @@ public interface MyPageService {
     
     // 회원탈퇴 
     void withdrawal(String memberPw);
+    
+    // mypost 출력
+    // MyPostDTO selectMyPosts();
+    
+    
 }

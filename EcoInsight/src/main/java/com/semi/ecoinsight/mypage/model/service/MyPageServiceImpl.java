@@ -36,7 +36,7 @@ public class MyPageServiceImpl implements MyPageService {
 		 user.getMemberNo();
 		return null;
 	}
-//
+
 //	@Override
 //	public void editProfile(EditProfileDTO member) {
 //		CustomUserDetails user = authService.getUserDetails();
@@ -44,7 +44,7 @@ public class MyPageServiceImpl implements MyPageService {
 //		member.setEmail(user.getEmail());
 //		member.setMemberPh(memberPh);
 //		user.getMemberNo();
-//		
+
 		
 		
 //	}

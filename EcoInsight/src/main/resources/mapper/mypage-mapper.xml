@@ -66,4 +66,21 @@
 	</update>
 	
 	
+	<!--<select id="myposts" parameterType="com.semi.ecoinsight.mypage.mode.dto.MyPostsDTO">
+	
+	SELECT 
+		BOARD_TITLE boardTitle, 
+		BOARD_NO boardNo, 
+		CATEGORY_ID categoryId, 
+		VIEW_COUNT viewCount, 
+		CREATE_DATE createDate, 
+	FROM 
+		TB_
+	
+	동적 SQL을 써서 작성 or mapper를 하나 더 추가해서 사용 ? 흠,...
+	</select>-->
+	
+	
+	
+	
 </mapper>
