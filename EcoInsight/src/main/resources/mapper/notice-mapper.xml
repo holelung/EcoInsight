@@ -48,8 +48,10 @@
             CREATED_DATE DESC FETCH FIRST 1 ROWS ONLY 
     </select>
 
+    <!-- NoticeCount -->
     <!-- 공지사항 전체 크기조회 -->
-    <select id="getTotalNoticeCount">
+    <select id="getTotalNoticeCount"
+            resultType="long">
         SELECT
             COUNT(*)
         FROM
@@ -58,7 +60,8 @@
             IS_DELETED = 'N'
     </select>
     <!-- 공지사항 카테고리별 크기조회 -->
-    <select id="getNoticeCountByCategoryId">
+    <select id="getNoticeCountByCategoryId"
+            resultType="long">
         SELECT
             COUNT(*)
         FROM
@@ -69,24 +72,43 @@
             CATEGORY_ID = #{category}
     </select>
 
-    <!-- 공지사항 목록 조회 -->
-    <select id="selectNoticeList"
-        resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
+    <!-- 관리자용 -->
+    <select id="getTotalNoticeCountForAdmin"
+            resultType="long"> 
+        SELECT 
+            COUNT(*) 
+        FROM 
+            TB_NOTICE 
+    </select>
+    <!-- 공지사항 검색어 결과 기준 갯수 조회 -->
+    <select id="getNoticeCountBySearch"
+            resultType="long">
         SELECT
-            BOARD_NO boardNo,
-            CATEGORY_ID categoryId,
-            MEMBER_NO memberNo,
-            BOARD_TITLE boardTitle,
-            BOARD_CONTENT boardContent,
-            CREATED_DATE createdDate,
-            MODIFIED_DATE modifiedDate,
-            VIEW_COUNT viewCount,
-            MEMBER_ID memberId,
-            MEMBER_NAME memberName
+            COUNT(*)
         FROM
             TB_NOTICE
         JOIN
             TB_MEMBER USING(MEMBER_NO)
+        WHERE
+        <choose>
+            <when test="searchType == 'name'">
+                MEMBER_NAME LIKE '%'||#{search}||'%'
+            </when>
+            <when test="searchType == 'title'">
+                BOARD_TITLE LIKE '%'||#{search}||'%'
+            </when>
+            <otherwise>
+                MEMBER_NAME LIKE '%'||#{search}||'%'
+                OR
+                BOARD_TITLE LIKE '%'||#{search}||'%'
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 공지사항 목록 조회 -->
+    <select id="selectNoticeList"
+        resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
+        <include refid="noticeSelect" />
         WHERE
             IS_DELETED = 'N'
         ORDER BY
@@ -96,21 +118,7 @@
     <!-- 공지사항 카테고리별 목록 조회 -->
     <select id="selectNoticeListByCategory"
         resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
-        SELECT
-            BOARD_NO boardNo,
-            CATEGORY_ID categoryId,
-            MEMBER_NO memberNo,
-            BOARD_TITLE boardTitle,
-            BOARD_CONTENT boardContent,
-            CREATED_DATE createdDate,
-            MODIFIED_DATE modifiedDate,
-            VIEW_COUNT viewCount,
-            MEMBER_ID memberId,
-            MEMBER_NAME memberName
-        FROM
-            TB_NOTICE
-        JOIN
-            TB_MEMBER USING(MEMBER_NO)
+        <include refid="noticeSelect" />
         WHERE
             IS_DELETED = 'N'
         AND
@@ -118,7 +126,6 @@
         ORDER BY
             CREATED_DATE DESC
         OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
-
     </select>
 
 
@@ -126,26 +133,36 @@
     <select id="selectNoticeListForAdmin"
         resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
         <include refid="noticeSelect" />
-        WHERE
-            IS_DELETED = 'N'
         ORDER BY
-            CREATED_DATE DESC;
+            CREATED_DATE DESC
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
     </select>
-
-
-    <!-- 목록 조회 검색 -->
-    <select id="selectSearchNoticeListByMemberName">
+    <!-- 목록 조회 검색(관리자용) -->
+    <select id="selectSearchedNoticeListForAdmin"
+            resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
         <include refid="noticeSelect" /> 
         WHERE
-            IS_DELETED = 'N'
-        AND
-            MEMBER_NAME = #{memberName}
+        <choose>
+            <when test="searchType == 'name'"> 
+                MEMBER_NAME LIKE '%'||#{search}||'%' 
+            </when>
+            <when test="searchType == 'title'"> 
+                BOARD_TITLE LIKE '%'||#{search}||'%' 
+            </when>
+            <otherwise> 
+                    MEMBER_NAME LIKE '%'||#{search}||'%' 
+                OR    
+                    BOARD_TITLE LIKE '%'||#{search}||'%' 
+            </otherwise>
+        </choose>
         ORDER BY
-            CREATED_DATE DESC;
+            CREATED_DATE DESC
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
     </select>
 
     <!-- 공지사항 세부페이지 조회 -->
-    <select id="selectNoticeDetail">
+    <select id="selectNoticeDetail"
+            resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
         <include refid="noticeSelect" />
         WHERE
             BOARD_NO = #{boardNo}
@@ -162,7 +179,7 @@
             VIEW_COUNT = VIEW_COUNT+1 
         WHERE
             BOARD_NO = #{boardNo} 
-        </update>
+    </update>
 
 
 

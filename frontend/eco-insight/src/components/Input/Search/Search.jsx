@@ -1,19 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 
-const Search = ({ value, onChange, searchResult, type }) => {
-  const clickSearchBtn = () => {
-    console.log("click Search");
-    // axios.get(`http://localhost/admin/${type}`, {
-    //   params: {
-    //     keyword: value
-    //   },
-    // }).then(response => {
-    //   searchResult(response.data);
-    // }).catch(error => {
-    //   console.error("실패", error);
-    // })
-  };
+const Search = ({ value, onChange, onClick }) => {
 
   return (
     <>
@@ -26,14 +14,14 @@ const Search = ({ value, onChange, searchResult, type }) => {
           onChange={onChange}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
-              clickSearchBtn();
+              onClick();
             }
           }}
         />
         <button
           className="bg-lime-400 px-3 py-2 mx-2 rounded border hover:bg-lime-300 active:scale-95"
           type="button"
-          onClick={() => clickSearchBtn()}
+          onClick={ onClick }
         >
           <svg
             id="searchIcon"
