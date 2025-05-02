@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import ReportPage from "../ReportPage";
 import AuthBoardComment from "../../Comment/AuthBoardComment/AuthBoardComment";
@@ -6,29 +6,41 @@ import { AuthContext } from "../../Context/AuthContext";
 import axios from "axios";
 
 function AuthBoardDetail() {
-    const { auth, user } = useContext(AuthContext);
+    const { auth } = useContext(AuthContext);
     const navi = useNavigate();
     const location = useLocation();
-    const post = location.state?.post;
+    const { state } = location;
     const { no } = useParams(); // 'no' 파라미터 값 가져오기
+    const [post, setPost] = useState(null); // 게시글 상태
     const [isEditing, setIsEditing] = useState(false);
-    const [likes, setLikes] = useState(5);
-    const [hasLiked, setHasLiked] = useState(false); // 토글 상태 저장
-    const [likedUsers, setLikedUsers] = useState([]);
-    const [title, setTitle] = useState(post.title);
-    const [content, setContent] = useState(post.content);
+    const [likes, setLikes] = useState(0);
+    const [hasLiked, setHasLiked] = useState(false);
+    const [title, setTitle] = useState("");
+    const [writer, setWriter] = useState("");
+    const [content, setContent] = useState("");
     const [isReportOpen, setIsReportOpen] = useState(false);
+    const isAuthor = auth.isAuthenticated && auth.loginInfo.username === post.writer;
 
-    const fetchPostDetails = async () => {
-        try {
-            const response = await axios.get(`/api/posts/${no}`);  // 실제 API 엔드포인트로 수정 필요
-            setPost(response.data);
-        } catch (err) {
-            setError("게시물을 불러오는 데 실패했습니다.");
-        } finally {
-            setIsLoading(false);
-        }
-    };  
+    // 게시글 상세 조회
+    useEffect(() => {
+        const fetchPost = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5173/auth-board/${no}`);
+                const data = response.data;
+                setPost(data);
+                setLikes(data.likes);
+                setWriter(data.writer);
+                setTitle(data.title);
+                setContent(data.content);
+            } catch (error) {
+                console.error("게시글을 불러오는 데 실패했습니다.", error);
+                alert("게시글을 불러오는 데 실패했습니다.");
+            }
+        };
+
+        fetchPost();
+    }, [no]);
+
     if (!post) {
         return (
             <div className="text-center mt-20 text-gray-500">
@@ -42,6 +54,34 @@ function AuthBoardDetail() {
             </div>
         );
     }
+
+    const handleSave = async () => {
+        try {
+            await axios.put(`http://localhost:5173/auth-board/${post.no}`, {
+                title,
+                content,
+            });
+            alert("수정되었습니다.");
+            setIsEditing(false);
+        } catch (error) {
+            console.error("수정 실패", error);
+            alert("수정에 실패했습니다.");
+        }
+    };
+
+    const handleDelete = async () => {
+        const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
+        if (!confirmDelete) return;
+
+        try {
+            await axios.delete(`http://localhost:5173/auth-board/${post.no}`);
+            alert("삭제되었습니다.");
+            navi("/auth-board");
+        } catch (error) {
+            console.error("삭제 실패", error);
+            alert("삭제에 실패했습니다.");
+        }
+    };
 
     const handleLike = () => {
         if (hasLiked) {
@@ -58,12 +98,12 @@ function AuthBoardDetail() {
                 {isEditing ? (
                     <input value={title} onChange={(e) => setTitle(e.target.value)} className="w-full px-4 py-2 border rounded" />
                 ) : (
-                    <h1>{title}</h1>
+                    <h1>{post.title}</h1>
                 )}
             </div>
             <div className="text-sm flex justify-between">
                 <span>
-                    작성자 : <span className="text-black-800 font-bold">{post.writer}</span>
+                    작성자 : <span value={writer} className="text-black-800 font-bold">{post.writer}</span>
                 </span>
                 <span>{post.createdDate}</span>
             </div>
@@ -71,27 +111,30 @@ function AuthBoardDetail() {
                 {isEditing ? (
                     <textarea value={content} onChange={(e) => setContent(e.target.value)} className="w-full h-40 p-2 border rounded" />
                 ) : (
-                    <p className="whitespace-pre-wrap">{content}</p>
+                    <p className="whitespace-pre-wrap">{post.content}</p>
                 )}
             </div>
             <div className="flex justify-between items-center">
                 <button
-                    onClick={handleLike} className={`px-4 py-1 border-none rounded transition cursor-pointer
-                    ${hasLiked ? "font-bold text-blue-600" : ""}`}>
+                    onClick={handleLike}
+                    className={`px-4 py-1 border-none rounded transition cursor-pointer ${hasLiked ? "font-bold text-blue-600" : ""}`}
+                >
                     👍 {likes}
                 </button>
-            </div>  
+            </div>
             <div className="flex justify-end gap-2">
                 {isEditing ? (
-                    <button onClick={() => setIsEditing(false)} className="px-4 py-2 bg-black text-white rounded cursor-pointer">저장</button>
+                    <button onClick={handleSave} className="px-4 py-2 bg-black text-white rounded cursor-pointer">저장</button>
                 ) : (
                     <>
                         <button onClick={() => setIsEditing(true)} className="px-4 py-2 border rounded hover:bg-green-100 cursor-pointer">수정하기</button>
                         <button onClick={() => setIsReportOpen(true)} className="px-4 py-2 border border-red-500 text-red-600 rounded hover:bg-red-100 cursor-pointer">신고</button>
-                        <button className="px-4 py-2 border border-red-500 text-red-600 rounded hover:bg-red-100 cursor-pointer">삭제하기</button>
+                        {isAuthor && (
+                            <button onClick={handleDelete} className="px-4 py-2 border border-red-500 text-red-600 rounded hover:bg-red-100 cursor-pointer">삭제하기</button>
+                        )}
                     </>
                 )}
-            </div>  
+            </div>
             {/* 신고 모달 */}
             {isReportOpen && (
                 <ReportPage
@@ -100,9 +143,8 @@ function AuthBoardDetail() {
                     author={post.writer}
                     postTitle={title}
                 />
-            )}  
-            <AuthBoardComment postId={post.no} user={user} />
-
+            )}
+            <AuthBoardComment postId={post.no} user={auth.loginInfo} />
             <button onClick={() => navi(-1)} className="w-full mt-6 py-2 border rounded hover:bg-gray-100 cursor-pointer">
                 게시글 목록으로 돌아가기
             </button>

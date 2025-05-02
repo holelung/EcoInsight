@@ -13,6 +13,7 @@ export default function AuthBoardWritePage() {
     const [option, setOption] = useState("");
     const [content, setContent] = useState("");
     const { auth } = useContext(AuthContext);
+    const [boardType, setBoardType] = useState("");
 
     const handleOnChange = (e) => { setOption(e.target.value); };
 
@@ -71,6 +72,7 @@ export default function AuthBoardWritePage() {
                 <option value="item4">인증4</option>
             </select>
         </div>
+        
         {/* 제목 입력 */}
         <input
             type="text"
