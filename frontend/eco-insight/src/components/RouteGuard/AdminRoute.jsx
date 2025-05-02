@@ -4,12 +4,13 @@ import { AuthContext } from "../Context/AuthContext";
 
 const AdminRoute = ({ children }) => {
   const { auth } = useContext(AuthContext);
-
-  return auth.isAuthenticated && auth.loginInfo.memberRole === "ROLE_ADMIN" ? (
-    children
-  ) : (
-    <Navigate to="/admin/login" replace />
-  );
+  if (auth.loginInfo.memberRole) {
+    if (auth.isAuthenticated && auth.loginInfo.memberRole === "ROLE_ADMIN") {
+      return children;
+    } else {
+      return <Navigate to="/admin/login" replace />
+    }
+  }
 };
 
 export default AdminRoute;

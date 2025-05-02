@@ -37,6 +37,7 @@
             TB_NOTICE
         SET
             IS_DELETED = 'Y'
+            MODIFIED_DATE = SYSDATE
         WHERE
             BOARD_NO = #{boardNo}
     </update>
@@ -47,6 +48,7 @@
             TB_NOTICE
         SET
             IS_DELETED = 'N'
+            MODIFIED_DATE = SYSDATE
         WHERE
             BOARD_NO = #{boardNo}
     </update>

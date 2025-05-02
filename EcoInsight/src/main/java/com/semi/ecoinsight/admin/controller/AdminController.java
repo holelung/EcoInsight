@@ -58,7 +58,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/notice")
-    public ResponseEntity<?> deleteNotice(@RequestParam Long boardNo) {
+    public ResponseEntity<?> deleteNotice(@RequestParam(name="boardNo") Long boardNo) {
 
         log.info("삭제 요청:{}", boardNo);
 

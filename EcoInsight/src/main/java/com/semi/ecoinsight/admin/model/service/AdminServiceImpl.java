@@ -20,6 +20,7 @@ import com.semi.ecoinsight.board.model.vo.Attachment;
 import com.semi.ecoinsight.board.model.vo.Board;
 import com.semi.ecoinsight.exception.util.BoardInsertException;
 import com.semi.ecoinsight.exception.util.ImageInsertException;
+import com.semi.ecoinsight.exception.util.InvalidAccessException;
 import com.semi.ecoinsight.notice.model.dao.NoticeMapper;
 import com.semi.ecoinsight.util.pagination.PaginationService;
 import com.semi.ecoinsight.util.sanitize.SanitizingService;
@@ -97,7 +98,7 @@ public class AdminServiceImpl implements AdminService {
         Map<String, Object> resultData = new HashMap<String, Object>();
         
         if (search.isEmpty()) {
-            resultData.put("totalCount", noticeMapper.getTotalNoticeCount());
+            resultData.put("totalCount", noticeMapper.getTotalNoticeCountForAdmin());
             // 10개만 나옴
             resultData.put("boardList", noticeMapper.selectNoticeListForAdmin(pageInfo));
             return resultData;
@@ -119,11 +120,17 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void deleteNotice(Long boardNo) {
+        if (boardNo < 1) {
+            throw new InvalidAccessException("잘못된 접근입니다.");
+        }
         adminMapper.deleteNotice(boardNo);
     }
 
     @Override
     public void restoreNotice(Long boardNo) {
+        if (boardNo < 1) {
+            throw new InvalidAccessException("잘못된 접근입니다.");
+        }
         adminMapper.restoreNotice(boardNo);
     }
     

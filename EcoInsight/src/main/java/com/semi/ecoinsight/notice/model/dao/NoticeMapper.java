@@ -32,7 +32,11 @@ public interface NoticeMapper {
     // 전체 게시글 수 확인
     Long getTotalNoticeCount();
     Long getNoticeCountByCategoryId(String category);
+
+    // 관리자페이지용 게시글 수 확인
+    Long getTotalNoticeCountForAdmin();
     Long getNoticeCountBySearch(Map<String, String> pageInfo);
+    
 
     
 }
