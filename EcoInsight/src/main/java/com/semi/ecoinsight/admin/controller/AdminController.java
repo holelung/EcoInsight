@@ -44,17 +44,19 @@ public class AdminController {
 
     @GetMapping("/notice")
     public ResponseEntity<?> selectNoticeListForAdmin(@RequestParam (name="page", defaultValue="0") int page,
-            @RequestParam(name="size") int size,
+            @RequestParam(name = "size") int size,
             @RequestParam(name = "search", required = false) String search,
-            @RequestParam(name="searchType", required = false) String searchType,
-            @RequestParam(name="sortOrder", defaultValue = "Newest") String sortOrder){
+            @RequestParam(name = "searchType", required = false) String searchType,
+            @RequestParam(name = "sortOrder", defaultValue = "Newest") String sortOrder){
         log.info("page:{}\nsize:{}\nsearch:{}\nsortOrder:{}",page, size, search, searchType, sortOrder);
         return ResponseEntity.ok(adminService.selectNoticeListForAdmin(page, size, search, searchType, sortOrder));
     }
 
     @PutMapping("/notice")
-    public ResponseEntity<?> updateNotice(@RequestBody Long boardNo) {
-        return null;
+    public ResponseEntity<?> modifyNotice(@RequestBody @Valid WriteFormDTO writeForm) {
+        log.info("공지사항 수정:{}", writeForm);
+        adminService.updateNotice(writeForm);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/notice")

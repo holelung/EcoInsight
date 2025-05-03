@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,28 +49,20 @@ public class AdminServiceImpl implements AdminService {
         
         // XSS 방어
         
-        Board board = Board.builder()
-                .memberNo(form.getMemberNo())
-                .categoryId(form.getCategoryId())
-                .boardTitle(form.getTitle())
-                .boardContent(form.getContent())            
-                .build();
+        Board board = boardBuilder(form);
+
         try {
             adminMapper.insertNotice(board);
         } catch (RuntimeException e) {
             throw new BoardInsertException("게시글 생성에 실패했습니다.");
+            // uploads에 저장한 파일 삭제 로직 필요
         }
         
-
-        Long boardNo = noticeMapper.getNoticeNo(form.getMemberNo());
+        // 신규 BoardNo 불러오기
+        form.setBoardNo(noticeMapper.getNoticeNo(form.getMemberNo()));
+        
         if (form.getImageUrls() != null) {
-            List<Attachment> attachments = form.getImageUrls().stream()
-            .map(url -> Attachment.builder()
-                .boardNo(boardNo)
-                .attachmentItem(url)
-                .boardType(form.getBoardType())
-                .build()
-                ).collect(Collectors.toList());
+            List<Attachment> attachments = attachmentsBuilder(form);
             for (Attachment a : attachments) {
                 try {
                     boardMapper.uploadImage(a);  
@@ -81,7 +74,14 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
-
+    /**
+     * 관리자페이지용 공지사항 리스트 호출서비스<br>
+     * @param pageNo        호출한 페이지 번호
+     * @param size          한 페이지에 보여줄 게시글 개수
+     * @param search        검색어
+     * @param searchType    검색 타입 정의
+     * @param sortOrder     오름차순/내림차순 정의
+     */
     @Override
     public Map<String, Object> selectNoticeListForAdmin(int pageNo, int size, String search, String searchType, String sortOrder) {
         
@@ -112,10 +112,30 @@ public class AdminServiceImpl implements AdminService {
         return resultData;
     }
 
-
+    // 게시글 수정
+    @Transactional
     @Override
-    public void updateNotice(Long boardNo) {
-        
+    public void updateNotice(WriteFormDTO form) {
+        Board board = boardBuilder(form);
+        log.info("수정할 board정보 잘왓나 확인:{}",board);
+        try{
+            adminMapper.updateNotice(board);
+        }catch(RuntimeException e){
+            throw new BoardInsertException("게시글 수정에 실패했습니다.");
+        }
+
+        if (form.getImageUrls() != null) {
+            List<Attachment> attachments = attachmentsBuilder(form);
+            for (Attachment a : attachments) {
+                try {
+                    boardMapper.uploadImage(a);  
+                } catch (RuntimeException e) {
+                    //uploads에 저장한 파일도 제거해야함
+                    throw new ImageInsertException("추가 이미지 업로드에 실패했습니다.");
+                } 
+            }
+        }
+
     }
 
 
@@ -135,4 +155,25 @@ public class AdminServiceImpl implements AdminService {
         adminMapper.restoreNotice(boardNo);
     }
     
+
+    private Board boardBuilder(WriteFormDTO form) {
+        
+        return Board.builder()
+                .boardNo(form.getBoardNo())
+                .memberNo(form.getMemberNo())
+                .categoryId(form.getCategoryId())
+                .boardTitle(form.getTitle())
+                .boardContent(form.getContent())            
+                .build();
+    }
+
+    private List<Attachment> attachmentsBuilder(WriteFormDTO form) {
+        return form.getImageUrls().stream()
+                    .map(url -> Attachment.builder()
+                            .boardNo(form.getBoardNo())
+                            .attachmentItem(url)
+                            .boardType(form.getBoardType())
+                            .build()
+                        ).collect(Collectors.toList());
+    }
 }

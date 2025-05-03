@@ -4,7 +4,7 @@ import axios from "axios";
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../Context/AuthContext";
 
-const NoticeBoardModify = ( ) => {
+const NoticeBoardModify = () => {
   const { auth } = useContext(AuthContext);
   const { boardNo } = useParams();
   const navi = useNavigate();
@@ -18,6 +18,9 @@ const NoticeBoardModify = ( ) => {
   const boardType = "notice";
 
   useEffect(() => {
+    if (auth.loginInfo.memberRole !== "ROLE_ADMIN") {
+      return navi("/notice");
+    }
     setTitle(boardData.boardTitle);
     setContent(boardData.boardContent);
     setCategoryId(boardData.categoryId);
@@ -29,7 +32,7 @@ const NoticeBoardModify = ( ) => {
       alert("제목과 내용을 모두 입력해주세요!");
       return;
     }
-    const imgRegex = /<img [^>]*src="([^"]+)"/g;
+    const imgRegex = /<img [^>]*src="blob:([^"]+)"/g;
     let newContent = content;
 
     const formData = new FormData();
@@ -55,10 +58,11 @@ const NoticeBoardModify = ( ) => {
         });
 
         axios
-          .post(
-            "http://localhost/admin/notice-write",
+          .put(
+            "http://localhost/admin/notice",
             {
               memberNo: auth.loginInfo.memberNo,
+              boardNo: boardNo,
               categoryId: categoryId,
               title: title,
               content: newContent,
@@ -74,19 +78,18 @@ const NoticeBoardModify = ( ) => {
             }
           )
           .then((response) => {
-            console.log(response.status);
-            if (response.status == 201) {
-              alert("게시글 업로드 완료");
-              navi(`/admin/noticeboard-manage`);
+            if (response.status == 200) {
+              alert("게시글 수정 완료");
+              navi(`/notice/detail/${boardNo}`);
             }
           })
           .catch((error) => {
-            console.log("게시글 업로드 실패", error);
-            alert("게시글 업로드실패 😢");
+            console.log("게시글 수정 실패", error);
+            alert("게시글 수정실패 😢");
           });
       })
       .catch((error) => {
-        console.log("이미지 업로드 실패", error);
+        console.log("이미지 수정 실패", error);
       });
   };
 
@@ -131,7 +134,7 @@ const NoticeBoardModify = ( ) => {
             onClick={handleUpload}
             className="bg-green-400 hover:bg-green-500 text-white px-6 py-2 rounded-md font-bold transition"
           >
-            업로드
+            수정하기
           </button>
         </div>
       </div>

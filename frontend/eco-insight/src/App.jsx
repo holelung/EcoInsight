@@ -85,7 +85,7 @@ function App() {
           />
           <Route path="/mypage/withdrawal/form" element={<WithdrawalForm />} />
           <Route path="/mypage/withdrawal/ok" element={<OkWithdrawal />} />
-          <Route path="/notice/modify/:boardData" element={<NoticeBoardModify />} />
+          <Route path="/notice/modify/:boardNo" element={<NoticeBoardModify />} />
         </Route>
 
         <Route path="/login" element={<Login />} />
