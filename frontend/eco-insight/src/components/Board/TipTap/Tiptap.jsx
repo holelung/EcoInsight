@@ -33,7 +33,6 @@ import { FaQuoteLeft, FaTable } from "react-icons/fa";
 import Separate from "../../Seperate/Seperate";
 import axios from "axios";
 
-
 const MenuBar = ({ editor, imageFilesRef }) => {
   const [textColor, setTextColor] = useState("");
   const handleColorChange = (e) => {

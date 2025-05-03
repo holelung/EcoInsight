@@ -17,12 +17,22 @@ public interface CommunityMapper {
 	Long getCommunityNo(Long memberNo);
 	
 	// 게시글 조회	
-	List<BoardDTO> findAllCommunity(String categoryId);
+	List<BoardDTO> findAllCommunity(String categoryId); 
 	
 	// 검색
 	List<BoardDTO> findCommunity(Map<String,String> searchMap );
 	
 	// 게시글 상세 조회
+	BoardDTO detailCommunity(Map<String,Object> detailMap);
+
+	Long checkedLike(Map<String, String> likeMap);
+
+	void insertLikeCount(Map<String, String> likeMap);
+	void deleteLikeCount(Map<String, String> likeMap);
 	
-	void detailCommunity()
+	Long insertCommunityCountView(Map<String,Object> viewLikeCount);
+	Long getLikeCount(Long boardNo);
+
+	// 게시글 수정	
+	
 }

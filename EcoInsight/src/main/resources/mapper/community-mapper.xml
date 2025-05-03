@@ -84,7 +84,8 @@
 	</select>
 	
 	<!-- 게시글 상세 조회-->
-	<select id="detailCommunity" parameterType="com.semi.ecoinsight.board.model.vo.Board">
+	<select id="detailCommunity" parameterType="com.semi.ecoinsight.board.model.dto.BoardDTO">
+	<include refid="communityBoardColumn"/>
 			 , Board_CONTENT boardContent
 		FROM		
 			  TB_COMMUNITY_BOARD
@@ -110,7 +111,7 @@
 	</update>
 	
 	<!--게시글 삭제-->
-	<update id="deleteCommunity" parameterType="Long">
+	<update id="deleteCommunity" parameterType="long">
 		UPDATE
 	           TB_COMMUNITY_BOARD
 	       SET
@@ -120,7 +121,7 @@
 	</update>
 	
 	<!--조회수 올리기-->
-	<update id="insertCommunityCountView" parameterType="Long">
+	<update id="insertCommunityCountView" parameterType="long">
 		UPDATE
 		        TB_COMMUNITY_BOARD
 		   SET
@@ -129,8 +130,21 @@
 		 	    BOARD_NO = #{boardNo}
 	</update>
 	
+	<!-- 좋아요 확인 여부-->
+	<select id="checkedLike" parameterType="map" resultType="long">
+		SELECT 
+			   COUNT(*)
+		  FROM
+		  	   TB_COMMUNITY_RECOMMEND
+		 WHERE
+		       BOARD_NO = #{boardNo}
+		   AND
+		   	   MEMBER_NO = #{memberNo}    
+	</select>
+	
+	
 	<!--좋아요 올리기-->
-	<insert id="insertLikeCount" parameterType="map">
+	<insert id="insertLikeCount" parameterType="map" >
 		INSERT
 		  INTO
 		       TB_COMMUNITY_RECOMMEND
@@ -157,7 +171,7 @@
 	</delete> 
 	
 	<!--좋아요 조회-->
-	<select id="recommentCount" parameterType="long">
+	<select id="getLikeCount" parameterType="long">
 		SELECT 
 			   COUNT(*)
 		  FROM 

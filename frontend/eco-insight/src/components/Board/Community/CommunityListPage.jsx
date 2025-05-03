@@ -137,7 +137,7 @@ const CommunityListPage = () => {
           <div>{data.memberName || "익명"}</div>
           <div className="col-span-2 text-left">
             <Link
-              to={`/post/${data.boardNo}`}
+              to={`/post/${categoryId}/${data.boardNo}`} // ✅ categoryId 추가
               className="text-black hover:underline"
             >
               {data.boardTitle}

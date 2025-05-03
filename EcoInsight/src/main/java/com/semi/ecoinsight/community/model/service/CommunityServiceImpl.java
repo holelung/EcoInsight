@@ -56,6 +56,7 @@ public class CommunityServiceImpl implements CommunityService{
             }
         }	
 	}
+	
 	@Override
 	public List<BoardDTO> findAllCommunity(int pageNo, String search, String categoryId) {
 		int size = 10;
@@ -74,8 +75,44 @@ public class CommunityServiceImpl implements CommunityService{
     		return communityMapper.findCommunity(searchMap);
     	}
 	}
+	
 	@Override
 	public Map<String, Object> detailCommunity(Long boardNo, String categoryId) {
-		return null;
+			
+		Map<String,Object> detailMap = new HashMap<>();
+		detailMap.put("boardNo", boardNo);
+		detailMap.put("categoryId", categoryId);
+		
+		Map<String, Object> resultMap = new HashMap<>();
+		
+		 BoardDTO board = communityMapper.detailCommunity(detailMap);
+		 resultMap.put("board", board);
+		 
+		 
+		
+		return resultMap;
+	}
+	
+	@Override
+	public Long checkedLike(Map<String, String> likeMap) {
+		 Long likeCount = communityMapper.checkedLike(likeMap);
+		 
+		 if(likeCount == 0) {
+			 communityMapper.insertLikeCount(likeMap);
+		 } else {
+			 communityMapper.deleteLikeCount(likeMap);
+		 }
+		 
+		 Long boardNo = Long.parseLong(likeMap.get("boardNo").toString());
+
+		return communityMapper.getLikeCount(boardNo);
+
+		
+	}
+
+	@Override
+	public void viewAndLike(Map<String, Object> viewLikeCount) {
+		// TODO Auto-generated method stub
+		
 	}
 }
