@@ -27,9 +27,16 @@ const NoticeBoardDetail = () => {
   },[id])
 
   const handleSaveEdit = () => {
-    setTitle(editedTitle);
-    setContent(editedContent);
-    setIsEditing(!isEditing);
+    const boardData = {
+      boardType: "notice",
+      boardNo: notice.boardNo,
+      memberNo: notice.memberNo,
+      memberName: notice.memberName,
+      boardTitle: notice.boardTitle,
+      boardContent: notice.boardContent,
+      categoryId: notice.categoryId,
+    }
+    navi(`/notice/modify/${notice.boardNo}`, { state: boardData });
   };
 
   const handleDelete = () => {

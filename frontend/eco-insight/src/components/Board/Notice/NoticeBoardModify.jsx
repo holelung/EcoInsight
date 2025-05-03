@@ -1,19 +1,28 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Tiptap from "../TipTap/Tiptap";
 import axios from "axios";
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../Context/AuthContext";
 
-
-const NoticeBoardWrite = () => {
+const NoticeBoardModify = ( ) => {
   const { auth } = useContext(AuthContext);
+  const { boardNo } = useParams();
   const navi = useNavigate();
+  const location = useLocation();
+  const boardData = location.state;
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [categoryId, setCategoryId] = useState("N0001");
   const imageFilesRef = useRef([]);
 
   const boardType = "notice";
+
+  useEffect(() => {
+    setTitle(boardData.boardTitle);
+    setContent(boardData.boardContent);
+    setCategoryId(boardData.categoryId);
+  }, [])
+
 
   const handleUpload = () => {
     if (!title || !content) {
@@ -28,56 +37,57 @@ const NoticeBoardWrite = () => {
 
     imageFilesRef.current.forEach((file) => {
       formData.append("files", file);
-    })
+    });
 
-    
-
-    axios.post("http://localhost/boards/upload", formData, {
-      headers: {
-        Authorization: `Bearer ${auth.tokens.accessToken}`,
-      }
-    }).then(response => {
-      const uploadPaths = response.data;
-      let index = 0;
-      // src 변경
-      newContent = newContent.replace(imgRegex, (_, oldSrc) => {
-        const newSrc = `${uploadPaths[index++]}`;
-        return `<img src="${newSrc}"`;
-      });
-      
-      axios
-        .post(
-          "http://localhost/admin/notice-write",
-          {
-            memberNo: auth.loginInfo.memberNo,
-            categoryId: categoryId,
-            title: title,
-            content: newContent,
-            boardType: boardType,
-            ...(uploadPaths &&
-              uploadPaths.length > 0 && { imageUrls: uploadPaths }),
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${auth.tokens.accessToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((response) => {
-          console.log(response.status);
-          if(response.status == 201){
-            alert("게시글 업로드 완료");
-            navi(`/admin/noticeboard-manage`);
-          }
-        })
-        .catch((error) => {
-          console.log("게시글 업로드 실패", error);
-          alert("게시글 업로드실패 😢");
+    axios
+      .post("http://localhost/boards/upload", formData, {
+        headers: {
+          Authorization: `Bearer ${auth.tokens.accessToken}`,
+        },
+      })
+      .then((response) => {
+        const uploadPaths = response.data;
+        let index = 0;
+        // src 변경
+        newContent = newContent.replace(imgRegex, (_, oldSrc) => {
+          const newSrc = `${uploadPaths[index++]}`;
+          return `<img src="${newSrc}"`;
         });
-    }).catch(error => {
-      console.log("이미지 업로드 실패", error);
-    })
+
+        axios
+          .post(
+            "http://localhost/admin/notice-write",
+            {
+              memberNo: auth.loginInfo.memberNo,
+              categoryId: categoryId,
+              title: title,
+              content: newContent,
+              boardType: boardType,
+              ...(uploadPaths &&
+                uploadPaths.length > 0 && { imageUrls: uploadPaths }),
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${auth.tokens.accessToken}`,
+                "Content-Type": "application/json",
+              },
+            }
+          )
+          .then((response) => {
+            console.log(response.status);
+            if (response.status == 201) {
+              alert("게시글 업로드 완료");
+              navi(`/admin/noticeboard-manage`);
+            }
+          })
+          .catch((error) => {
+            console.log("게시글 업로드 실패", error);
+            alert("게시글 업로드실패 😢");
+          });
+      })
+      .catch((error) => {
+        console.log("이미지 업로드 실패", error);
+      });
   };
 
   return (
@@ -109,6 +119,7 @@ const NoticeBoardWrite = () => {
         </div>
 
         <Tiptap
+          prevContent={boardData.boardContent}
           setContent={setContent}
           boardType={boardType}
           imageFilesRef={imageFilesRef}
@@ -128,4 +139,4 @@ const NoticeBoardWrite = () => {
   );
 };
 
-export default NoticeBoardWrite;
+export default NoticeBoardModify;
