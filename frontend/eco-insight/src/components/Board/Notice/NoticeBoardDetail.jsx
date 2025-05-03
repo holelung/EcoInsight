@@ -42,8 +42,25 @@ const NoticeBoardDetail = () => {
   const handleDelete = () => {
     const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
     if (confirmDelete) {
-      alert("삭제되었습니다.");
-      navi(-1);
+      axios
+        .delete(`http://localhost/admin/notice`, {
+          headers: {
+            Authorization: `Bearer ${auth.tokens.accessToken}`,
+          },
+          params: {
+            boardNo: id,
+          },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            console.log(response);
+            alert(response.data);
+            navi("/admin/noticeboard-manage");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   };
 
