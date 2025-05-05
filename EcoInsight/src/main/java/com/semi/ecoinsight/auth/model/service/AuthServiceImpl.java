@@ -279,4 +279,9 @@ public class AuthServiceImpl implements AuthService{
         return getUserDetails().getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 
+    @Override
+    public Map<String, Object> googleLogin(Map<String, Object> body){
+      log.info("{}",body);
+      return null;
+    }
 }

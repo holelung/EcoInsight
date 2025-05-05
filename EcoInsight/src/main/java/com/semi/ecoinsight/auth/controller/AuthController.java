@@ -63,7 +63,6 @@ public class AuthController {
 
     @PostMapping("/verify-code")
     public ResponseEntity<String> checkVerifyCode(@RequestBody Map<String, String> verifyInfo){
-        log.info("-----------------------------------------------------------------------------------------{}",verifyInfo);
         String successMsg = authService.checkVerifyCode(verifyInfo);
         return ResponseEntity.ok(successMsg);
     }
@@ -72,5 +71,11 @@ public class AuthController {
     public ResponseEntity<Map<String, Object>> adminLogin(@Valid @RequestBody MemberDTO member){
         Map<String, Object> loginResponse = authService.adminLogin(member);
         return ResponseEntity.ok(loginResponse);
+    }
+
+    @PostMapping("/google-login")
+    public ResponseEntity<?> googleLogin(@RequestBody Map<String, Object> body){
+        Map<String, Object> result = authService.googleLogin(body);
+        return ResponseEntity.ok(result);
     }
 }

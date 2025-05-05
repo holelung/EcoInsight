@@ -3,7 +3,6 @@ package com.semi.ecoinsight.auth.model.service;
 import java.util.Map;
 
 
-import com.semi.ecoinsight.auth.model.vo.VerifyCodeEmail;
 import com.semi.ecoinsight.auth.model.vo.CustomUserDetails;
 import com.semi.ecoinsight.member.model.dto.MemberDTO;
 
@@ -18,6 +17,7 @@ public interface AuthService {
     String checkVerifyCode(Map<String, String> verifyInfo);
     CustomUserDetails getUserDetails();
     boolean isAdmin();
+    Map<String, Object> googleLogin(Map<String, Object> body);
 
 
 }
