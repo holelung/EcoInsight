@@ -23,6 +23,23 @@ public interface AdminService {
     // 공지사항 복원(활성화)
     void restoreNotice(Long boardNo);
 
+    /**
+     * 커뮤니티 관리
+     **/
+    // 조회
+    Map<String, Object> selectCommunityForAdmin(int pageNo, int size, String search, String searchType, String sortOrder);
+    // 삭제(블라인드 처리)
+    void deleteCommunity(Long boardNo);
+    void restoreCommunity(Long boardNo);
+
+    
+
+    // 인증게시판 관리
+
+    // 계정 관리
+
+    // 포인트 관리
+
     // summaryCard
     List<SummaryCardDTO> selectNoticeSummaryCards();
     List<SummaryCardDTO> selectCommunitySummaryCards();

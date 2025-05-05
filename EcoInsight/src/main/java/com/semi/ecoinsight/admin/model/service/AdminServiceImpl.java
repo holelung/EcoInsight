@@ -90,12 +90,7 @@ public class AdminServiceImpl implements AdminService {
         Map<String, String> pageInfo = new HashMap<>(); 
         pageInfo.put("startIndex", Integer.toString(startIndex));
         pageInfo.put("size", Integer.toString(size));
-        if (sortOrder.equals("Newest")) {
-            pageInfo.put("sortOrder", "DESC");    
-        } else {
-            pageInfo.put("sortOrder", "ASC");
-        }
-        
+        pageInfo.put("sortOrder", sortOrder);
 
         Map<String, Object> resultData = new HashMap<String, Object>();
         
@@ -227,5 +222,47 @@ public class AdminServiceImpl implements AdminService {
     public List<SummaryCardDTO> selectPointSummaryCards() {
 
         throw new UnsupportedOperationException("Unimplemented method 'selectPointSummaryCards'");
+    }
+
+    // Community 관련
+    @Override
+    public Map<String, Object> selectCommunityForAdmin(int pageNo, int size, String search, String searchType, String sortOrder) {
+        int startIndex = pagination.getStartIndex(pageNo, size);
+        Map<String, String> pageInfo = new HashMap<>(); 
+        pageInfo.put("startIndex", Integer.toString(startIndex));
+        pageInfo.put("size", Integer.toString(size));
+        pageInfo.put("sortOrder", sortOrder);
+        
+        Map<String, Object> resultData = new HashMap<String, Object>();
+        
+        if (search.isEmpty()) {
+            resultData.put("totalCount", adminMapper.selectCommunityCount());
+            // 10개만 나옴
+            resultData.put("boardList", adminMapper.selectCommunityListForAdmin(pageInfo));
+            return resultData;
+        }
+        pageInfo.put("search", search);
+        pageInfo.put("searchType", searchType);
+
+        resultData.put("totalCount", adminMapper.selectCommunityCountBySearch(pageInfo));
+        resultData.put("boardList", adminMapper.selectCommunityListForAdminBySearch(pageInfo));
+        return resultData;
+        
+    }
+
+    @Override
+    public void deleteCommunity(Long boardNo) {
+        if (boardNo < 1) {
+            throw new InvalidAccessException("잘못된 접근입니다.");
+        }
+        adminMapper.deleteCommunity(boardNo);
+    }
+
+    @Override
+    public void restoreCommunity(Long boardNo) {
+        if (boardNo < 1) {
+            throw new InvalidAccessException("잘못된 접근입니다.");
+        }
+        adminMapper.restoreCommunity(boardNo);
     }
 }
