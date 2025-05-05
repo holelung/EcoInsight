@@ -17,7 +17,7 @@ public interface AuthService {
     String checkVerifyCode(Map<String, String> verifyInfo);
     CustomUserDetails getUserDetails();
     boolean isAdmin();
-    Map<String, Object> googleLogin(Map<String, Object> body);
+    Map<String, Object> googleLogin(Map<String, String> body);
 
 
 }
