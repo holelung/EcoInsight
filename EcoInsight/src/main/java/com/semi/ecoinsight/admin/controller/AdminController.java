@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.semi.ecoinsight.admin.model.dto.BanDTO;
 import com.semi.ecoinsight.admin.model.dto.SummaryCardDTO;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.admin.model.service.AdminService;
@@ -24,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -148,7 +150,7 @@ public class AdminController {
     // 계정관리
     @GetMapping("/account")
     public ResponseEntity<?> getAccountList(
-            @RequestParam(name="page", defaultValue="0") int page,
+            @RequestParam(name = "page", defaultValue="0") int page,
             @RequestParam(name = "size") int size,
             @RequestParam(name = "search", required = false) String search,
             @RequestParam(name = "searchType", required = false) String searchType,
@@ -158,4 +160,15 @@ public class AdminController {
         return null;
     }
     
+    @DeleteMapping("/account")
+    public ResponseEntity<?> disableAccount(@ModelAttribute BanDTO banInfo) {
+
+        return null;
+    }
+
+    @PatchMapping("/account")
+    public ResponseEntity<?> enableAccount(@RequestBody BanDTO banInfo) {
+        
+        return null;
+    }
 }
