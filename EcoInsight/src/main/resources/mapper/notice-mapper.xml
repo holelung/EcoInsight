@@ -37,7 +37,7 @@
         ) 
     </insert>
 
-    <select id="getNoticeNo" parameterType="long" resultType="long"> 
+    <select id="selectNoticeNo" parameterType="long" resultType="long"> 
         SELECT 
             BOARD_NO AS boardNo 
         FROM
@@ -50,7 +50,7 @@
 
     <!-- NoticeCount -->
     <!-- 공지사항 전체 크기조회 -->
-    <select id="getTotalNoticeCount"
+    <select id="selectTotalNoticeCount"
             resultType="long">
         SELECT
             COUNT(*)
@@ -60,7 +60,7 @@
             IS_DELETED = 'N'
     </select>
     <!-- 공지사항 카테고리별 크기조회 -->
-    <select id="getNoticeCountByCategoryId"
+    <select id="selectNoticeCountByCategoryId"
             resultType="long">
         SELECT
             COUNT(*)
@@ -73,7 +73,7 @@
     </select>
 
     <!-- 관리자용 -->
-    <select id="getTotalNoticeCountForAdmin"
+    <select id="selectTotalNoticeCountForAdmin"
             resultType="long"> 
         SELECT 
             COUNT(*) 
@@ -81,7 +81,7 @@
             TB_NOTICE 
     </select>
     <!-- 공지사항 검색어 결과 기준 갯수 조회 -->
-    <select id="getNoticeCountBySearch"
+    <select id="selectNoticeCountBySearch"
             resultType="long">
         SELECT
             COUNT(*)
@@ -183,5 +183,48 @@
 
 
 
-
+    <!-- SummaryCard -->
+    <!-- 이번달 게시글 수 -->
+    <select id="selectTotalNoticeCountByMonth">
+        SELECT
+            COUNT(*)
+        FROM
+            TB_NOTICE
+        WHERE
+            TO_CHAR(CREATED_DATE, 'YYYY-MM') = TO_CHAR(SYSDATE, 'YYYY-MM')
+    </select>
+    <!-- 지난달 게시글 수 -->
+    <select id="selectTotalNoticeCountByLastMonth">
+        SELECT
+            COUNT(*)
+        FROM
+            TB_NOTICE
+        WHERE
+            TO_CHAR(CREATED_DATE, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYY-MM')
+    </select>
+    <!-- 이번달 조회수 -->
+    <select id="selectTotalNoticeViewCountByMonth">
+        SELECT
+            SUM(VIEW_COUNT)
+        FROM
+            TB_NOTICE
+        WHERE
+            TO_CHAR(CREATED_DATE, 'YYYY-MM') = TO_CHAR(SYSDATE, 'YYYY-MM')
+    </select>
+    <!-- 지난달 조회수 -->
+    <select id="selectTotalNoticeViewCountByLastMonth">
+        SELECT
+            SUM(VIEW_COUNT)
+        FROM
+            TB_NOTICE
+        WHERE
+            TO_CHAR(CREATED_DATE, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYY-MM')
+    </select>
+    <!-- 전체 조회수 -->
+    <select id="selectTotalViewCount">
+        SELECT
+            SUM(VIEW_COUNT)
+        FROM
+            TB_NOTICE
+    </select>
 </mapper>

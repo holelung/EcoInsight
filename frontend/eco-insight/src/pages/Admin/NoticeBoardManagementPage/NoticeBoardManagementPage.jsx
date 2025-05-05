@@ -9,6 +9,7 @@ import Search from "../../../components/Input/Search/Search";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../../components/Context/AuthContext";
+import SummaryBoard from "../../../components/DashBoard/SummaryBoard";
 
 
 const NoticeBoardManagementPage = () => {
@@ -94,6 +95,19 @@ const NoticeBoardManagementPage = () => {
     setSelectedItemId(null);
   };
 
+  const handleModifyButton = (item) => {
+    const boardData = {
+      boardType: "notice",
+      boardNo: item.boarNo,
+      memberNo: item.memberNo,
+      memberName: item.memberName,
+      boardTitle: item.boardTitle,
+      boardContent: item.boardContent,
+      categoryId: item.categoryId,
+    };
+    navi(`/admin/notice/modify/${item.boardNo}`, { state: boardData });
+  }
+
   const handleSelectitemTable = (itemId) => {
     if (selectedItemId == itemId) {
       setSelectedItemId(null);
@@ -109,29 +123,9 @@ const NoticeBoardManagementPage = () => {
   return (
     <div className="p-6 space-y-6">
       {/* 상단 요약 카드 */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <SummaryCard
-          icon="👥"
-          title="포인트 보유 유지"
-          value="5,423"
-          change="+16%"
-          positive
-        />
-        <SummaryCard
-          icon="🚮"
-          title="포인트 사용량"
-          value="1,893"
-          change="-1%"
-          positive={false}
-        />
-        <SummaryCard
-          icon="💻"
-          title="포인트 획득 유지"
-          value="189"
-          change="+3%"
-          positive
-        />
-      </div>
+      <SummaryBoard
+        type={"notice"}
+      />
 
       {/* 검색창 + 정렬 */}
       <div className="flex justify-between items-center">
@@ -241,6 +235,12 @@ const NoticeBoardManagementPage = () => {
                         onClick={() => handleData(item.boardNo, item.isDeleted)}
                       >
                         상태변경
+                      </button>
+                      <button
+                        className="bg-amber-400 px-4 py-2 rounded"
+                        onClick={() => handleModifyButton(item)}
+                      >
+                        글 수정
                       </button>
                     </div>
                   </td>
