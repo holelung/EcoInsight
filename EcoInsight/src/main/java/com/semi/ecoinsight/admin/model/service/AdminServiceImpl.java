@@ -59,7 +59,7 @@ public class AdminServiceImpl implements AdminService {
         }
         
         // 신규 BoardNo 불러오기
-        form.setBoardNo(noticeMapper.getNoticeNo(form.getMemberNo()));
+        form.setBoardNo(noticeMapper.selectNoticeNo(form.getMemberNo()));
         
         if (form.getImageUrls() != null) {
             List<Attachment> attachments = attachmentsBuilder(form);
@@ -99,7 +99,7 @@ public class AdminServiceImpl implements AdminService {
         Map<String, Object> resultData = new HashMap<String, Object>();
         
         if (search.isEmpty()) {
-            resultData.put("totalCount", noticeMapper.getTotalNoticeCountForAdmin());
+            resultData.put("totalCount", noticeMapper.selectTotalNoticeCountForAdmin());
             // 10개만 나옴
             resultData.put("boardList", noticeMapper.selectNoticeListForAdmin(pageInfo));
             return resultData;
@@ -107,7 +107,7 @@ public class AdminServiceImpl implements AdminService {
         pageInfo.put("search", search);
         pageInfo.put("searchType", searchType);
 
-        resultData.put("totalCount", noticeMapper.getNoticeCountBySearch(pageInfo));
+        resultData.put("totalCount", noticeMapper.selectNoticeCountBySearch(pageInfo));
         resultData.put("boardList", noticeMapper.selectSearchedNoticeListForAdmin(pageInfo));
         return resultData;
     }
@@ -156,8 +156,9 @@ public class AdminServiceImpl implements AdminService {
     }
     
 
+    
+
     private Board boardBuilder(WriteFormDTO form) {
-        
         return Board.builder()
                 .boardNo(form.getBoardNo())
                 .memberNo(form.getMemberNo())
@@ -175,5 +176,36 @@ public class AdminServiceImpl implements AdminService {
                             .boardType(form.getBoardType())
                             .build()
                         ).collect(Collectors.toList());
+    }
+
+    // summaryCard
+    @Override
+    public Map<String, Object> selectNoticeSummaryCards() {
+        
+        throw new UnsupportedOperationException("Unimplemented method 'selectNoticeSummaryCards'");
+    }
+
+    @Override
+    public Map<String, Object> selectCommunitySummaryCards() {
+
+        throw new UnsupportedOperationException("Unimplemented method 'selectCommunitySummaryCards'");
+    }
+
+    @Override
+    public Map<String, Object> selectAuthBoardSummaryCards() {
+        
+        throw new UnsupportedOperationException("Unimplemented method 'selectAuthBoardSummaryCards'");
+    }
+
+    @Override
+    public Map<String, Object> selectAccountSummaryCards() {
+        
+        throw new UnsupportedOperationException("Unimplemented method 'selectAccountSummaryCards'");
+    }
+
+    @Override
+    public Map<String, Object> selectPointSummaryCards() {
+
+        throw new UnsupportedOperationException("Unimplemented method 'selectPointSummaryCards'");
     }
 }

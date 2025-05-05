@@ -21,4 +21,11 @@ public interface AdminService {
     void deleteNotice(Long boardNo);
     // 공지사항 복원(활성화)
     void restoreNotice(Long boardNo);
+
+    // summaryCard
+    Map<String, Object> selectNoticeSummaryCards();
+    Map<String, Object> selectCommunitySummaryCards();
+    Map<String, Object> selectAuthBoardSummaryCards();
+    Map<String, Object> selectAccountSummaryCards();
+    Map<String, Object> selectPointSummaryCards();
 }

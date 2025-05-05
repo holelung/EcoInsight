@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.admin.model.service.AdminService;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
+import com.semi.ecoinsight.exception.util.InvalidAccessException;
 import com.semi.ecoinsight.notice.model.service.NoticeService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +36,7 @@ public class AdminController {
 
     private final AdminService adminService;
     
-
+    // 공지사항
     @PostMapping("/notice-write")
     public ResponseEntity<?> noticeWrite(@RequestBody @Valid WriteFormDTO writeForm) {
         log.info("이얏호:{}", writeForm);
@@ -74,5 +76,31 @@ public class AdminController {
         log.info("복원 요청:{}", boardNo);
         adminService.restoreNotice(boardNo);
         return ResponseEntity.status(HttpStatus.OK).body("글이 활성화 되었습니다.");
+    }
+
+    // DashBoard
+    @GetMapping("/summaryCard")
+    public ResponseEntity<?> getSummaryCard(@RequestParam(name = "type") String type) {
+        Map<String,Object> summaryCards = new HashMap<String, Object>();
+        switch (type) {
+            case "notice":
+                summaryCards = adminService.selectNoticeSummaryCards();
+                break;
+            case "community":
+                summaryCards = adminService.selectCommunitySummaryCards();
+                break;
+            case "authBoard":
+                summaryCards = adminService.selectAuthBoardSummaryCards();
+                break;
+            case "account":
+                summaryCards = adminService.selectAccountSummaryCards();
+                break;
+            case "point":
+                summaryCards = adminService.selectPointSummaryCards();
+                break;
+            default:
+                throw new InvalidAccessException("잘못된 접근입니다.");
+        }
+        return ResponseEntity.ok(summaryCards);
     }
 }

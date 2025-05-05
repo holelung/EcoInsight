@@ -94,6 +94,19 @@ const NoticeBoardManagementPage = () => {
     setSelectedItemId(null);
   };
 
+  const handleModifyButton = (item) => {
+    const boardData = {
+      boardType: "notice",
+      boardNo: item.boarNo,
+      memberNo: item.memberNo,
+      memberName: item.memberName,
+      boardTitle: item.boardTitle,
+      boardContent: item.boardContent,
+      categoryId: item.categoryId,
+    };
+    navi(`/admin/notice/modify/${item.boardNo}`, { state: boardData });
+  }
+
   const handleSelectitemTable = (itemId) => {
     if (selectedItemId == itemId) {
       setSelectedItemId(null);
@@ -241,6 +254,12 @@ const NoticeBoardManagementPage = () => {
                         onClick={() => handleData(item.boardNo, item.isDeleted)}
                       >
                         상태변경
+                      </button>
+                      <button
+                        className="bg-amber-400 px-4 py-2 rounded"
+                        onClick={() => handleModifyButton(item)}
+                      >
+                        글 수정
                       </button>
                     </div>
                   </td>
