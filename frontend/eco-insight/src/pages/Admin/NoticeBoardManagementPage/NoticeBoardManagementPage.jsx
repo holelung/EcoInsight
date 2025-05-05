@@ -48,7 +48,7 @@ const NoticeBoardManagementPage = () => {
           setTotalPages(Math.ceil(response.data.totalCount / rowsPerPage));
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
         });
     }
   }, [currentPage, rowsPerPage, sortOrder, listState, auth.tokens.accessToken]);
@@ -189,12 +189,12 @@ const NoticeBoardManagementPage = () => {
           </tr>
         </thead>
         <tbody>
-          {list.map((item, i) => (
+          {list.map((item) => (
             <Fragment key={item.boardNo}>
               <tr className="border-t hover:bg-gray-50">
                 <td className="px-4 py-3">{item.boardNo}</td>
                 {/* <td>{item.boardCategory}</td> */}
-                <td>카테고리</td>
+                <td>{item.categoryId}</td>
                 <td>{item.memberName}</td>
                 <td
                   className="cursor-pointer"
@@ -221,7 +221,7 @@ const NoticeBoardManagementPage = () => {
                   <td colSpan={7} className="px-4 py-3">
                     <div className="flex gap-2 items-center justify-end">
                       <span className="text-sm font-medium">
-                        글 {item.boardNo}번 상태 변경
+                        글 {item.boardNo}번 현재 상태
                       </span>
                       <input
                         type="text"

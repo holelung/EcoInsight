@@ -40,14 +40,15 @@ public class AdminController {
     
     // 공지사항
     @PostMapping("/notice-write")
-    public ResponseEntity<?> noticeWrite(@RequestBody @Valid WriteFormDTO writeForm) {
+    public ResponseEntity<HttpStatus> noticeWrite(@RequestBody @Valid WriteFormDTO writeForm) {
         log.info("이얏호:{}", writeForm);
         adminService.insertNotice(writeForm);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/notice")
-    public ResponseEntity<?> selectNoticeListForAdmin(@RequestParam (name="page", defaultValue="0") int page,
+    public ResponseEntity<Map<String, Object>> selectNoticeListForAdmin(
+            @RequestParam(name="page", defaultValue="0") int page,
             @RequestParam(name = "size") int size,
             @RequestParam(name = "search", required = false) String search,
             @RequestParam(name = "searchType", required = false) String searchType,
@@ -57,14 +58,14 @@ public class AdminController {
     }
 
     @PutMapping("/notice")
-    public ResponseEntity<?> modifyNotice(@RequestBody @Valid WriteFormDTO writeForm) {
+    public ResponseEntity<HttpStatus> modifyNotice(@RequestBody @Valid WriteFormDTO writeForm) {
         log.info("공지사항 수정:{}", writeForm);
         adminService.updateNotice(writeForm);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/notice")
-    public ResponseEntity<?> deleteNotice(@RequestParam(name="boardNo") Long boardNo) {
+    public ResponseEntity<String> deleteNotice(@RequestParam(name="boardNo") Long boardNo) {
 
         log.info("삭제 요청:{}", boardNo);
 
@@ -73,12 +74,49 @@ public class AdminController {
     }
     
     @PatchMapping("/notice/restore")
-    public ResponseEntity<?> restoreNotice(@RequestBody Map<String, String> body) {
+    public ResponseEntity<String> restoreNotice(@RequestBody Map<String, String> body) {
         Long boardNo = Long.parseLong(body.get("boardNo"));
         log.info("복원 요청:{}", boardNo);
         adminService.restoreNotice(boardNo);
         return ResponseEntity.status(HttpStatus.OK).body("글이 활성화 되었습니다.");
     }
+
+    // 커뮤니티 관리
+    
+    // 조회
+    @GetMapping("/community")
+    public ResponseEntity<Map<String, Object>> getMethodName(
+            @RequestParam(name="page", defaultValue="0") int page,
+            @RequestParam(name = "size") int size,
+            @RequestParam(name = "search", required = false) String search,
+            @RequestParam(name = "searchType", required = false) String searchType,
+            @RequestParam(name = "sortOrder", defaultValue = "Newest") String sortOrder) {
+        
+        log.info("관리자 커뮤니티 리스트 요청:\\n" +
+                        "page:{}\\n" + //
+                        "size:{}\\n" + //
+                        "search:{}\\n" + //
+                        "sortOrder:{}", page, size, search, searchType, sortOrder);
+        return ResponseEntity.ok(adminService.selectCommunityForAdmin(page, size, search, searchType, sortOrder));
+    }
+    
+    @DeleteMapping("/community")
+    public ResponseEntity<String> deleteCommunity(@RequestParam(name="boardNo") Long boardNo) {
+
+        log.info("삭제 요청:{}", boardNo);
+
+        adminService.deleteCommunity(boardNo);
+        return ResponseEntity.status(HttpStatus.OK).body("글이 비활성화 되었습니다.");
+    }
+    
+    @PatchMapping("/community/restore")
+    public ResponseEntity<String> restoreCommunity(@RequestBody Map<String, String> body) {
+        Long boardNo = Long.parseLong(body.get("boardNo"));
+        log.info("복원 요청:{}", boardNo);
+        adminService.restoreCommunity(boardNo);
+        return ResponseEntity.status(HttpStatus.OK).body("글이 활성화 되었습니다.");
+    }
+
 
     // DashBoard
     @GetMapping("/summary-card")
