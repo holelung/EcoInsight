@@ -20,12 +20,13 @@
     </insert>
 
     <!-- 공지사항 수정&삭제 -->
-    <update id="updateNotice">
+    <update id="updateNotice" parameterType="com.semi.ecoinsight.board.model.vo.Board">
         UPDATE
             TB_NOTICE
         SET
             BOARD_TITLE = #{boardTitle},
             BOARD_CONTENT = #{boardContent},
+            CATEGORY_ID = #{categoryId},
             MODIFIED_DATE = SYSDATE
         WHERE
             BOARD_NO = #{boardNo}
@@ -36,7 +37,7 @@
         UPDATE
             TB_NOTICE
         SET
-            IS_DELETED = 'Y'
+            IS_DELETED = 'Y',
             MODIFIED_DATE = SYSDATE
         WHERE
             BOARD_NO = #{boardNo}
@@ -47,7 +48,7 @@
         UPDATE
             TB_NOTICE
         SET
-            IS_DELETED = 'N'
+            IS_DELETED = 'N',
             MODIFIED_DATE = SYSDATE
         WHERE
             BOARD_NO = #{boardNo}

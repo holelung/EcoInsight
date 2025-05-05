@@ -39,7 +39,12 @@ import NoticeBoardDetail from "./components/Board/Notice/NoticeBoardDetail.jsx";
 import NoticeBoardWrite from "./components/Board/Notice/NoticeBoardWrite.jsx";
 import NoticeWrite from "./pages/Admin/NoticeBoardManagementPage/NoticeWrite.jsx";
 import CommunityWritePage from "./components/Board/Community/CommunityWritePage.jsx";
+<<<<<<< HEAD
 import { GoogleOAuthProvider } from '@react-oauth/google';
+=======
+import NoticeBoardModify from "./components/Board/Notice/NoticeBoardModify.jsx";
+
+>>>>>>> 9e5d764eb52bad9dd82f810b0813a49dd5d18234
 function App() {
   return (
     <GoogleOAuthProvider clientId="617855234940-dp6iq2v93alink0ttpmgadohvbhj0fo5.apps.googleusercontent.com">
@@ -85,6 +90,7 @@ function App() {
           />
           <Route path="/mypage/withdrawal/form" element={<WithdrawalForm />} />
           <Route path="/mypage/withdrawal/ok" element={<OkWithdrawal />} />
+          <Route path="/notice/modify/:boardNo" element={<NoticeBoardModify />} />
         </Route>
 
         <Route path="/login" element={<Login />} />

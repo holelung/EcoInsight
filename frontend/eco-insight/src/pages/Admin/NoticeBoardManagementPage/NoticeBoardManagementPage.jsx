@@ -202,7 +202,9 @@ const NoticeBoardManagementPage = () => {
                 {/* <td>{item.boardCategory}</td> */}
                 <td>카테고리</td>
                 <td>{item.memberName}</td>
-                <td onClick={() => navi(`/notice/detail/${item.boardNo}`)}>
+                <td
+                  className="cursor-pointer"
+                  onClick={() => navi(`/notice/detail/${item.boardNo}`)}>
                   {item.boardTitle}
                 </td>
                 <td>{item.viewCount}</td>

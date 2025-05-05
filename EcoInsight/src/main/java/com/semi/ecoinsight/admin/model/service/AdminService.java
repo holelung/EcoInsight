@@ -16,7 +16,7 @@ public interface AdminService {
     Map<String, Object> selectNoticeListForAdmin(int pageNo, int size, String search, String searchType, String sortOrder);
     // 공지사항 관리
     // 공지사항 수정
-    void updateNotice(Long boardNo);
+    void updateNotice(WriteFormDTO form);
     // 공지사항 삭제(비활성화)
     void deleteNotice(Long boardNo);
     // 공지사항 복원(활성화)
