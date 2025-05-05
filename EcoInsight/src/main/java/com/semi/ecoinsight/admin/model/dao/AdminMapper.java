@@ -13,7 +13,7 @@ public interface AdminMapper {
     
     void insertNotice(Board board);
 
-    void updateNotice(Long boardNo);
+    void updateNotice(Board board);
 
     void deleteNotice(Long boardNo);
     
