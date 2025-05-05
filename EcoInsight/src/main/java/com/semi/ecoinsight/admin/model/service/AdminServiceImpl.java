@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.semi.ecoinsight.admin.model.dao.AdminMapper;
+import com.semi.ecoinsight.admin.model.dto.SummaryCardDTO;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.board.model.dao.BoardMapper;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
@@ -180,31 +181,50 @@ public class AdminServiceImpl implements AdminService {
 
     // summaryCard
     @Override
-    public Map<String, Object> selectNoticeSummaryCards() {
+    public List<SummaryCardDTO> selectNoticeSummaryCards() {
+        List<SummaryCardDTO> cards = new ArrayList<>();
+        Long totalCount = noticeMapper.selectTotalNoticeCount();
+        Long currentMonthCount = noticeMapper.selectTotalNoticeCountByMonth();
         
-        throw new UnsupportedOperationException("Unimplemented method 'selectNoticeSummaryCards'");
+        Long noticeIncrease = ((long)Math.floor((double)currentMonthCount / (totalCount - currentMonthCount) * 100));
+        
+        cards.add(
+                new SummaryCardDTO("전체 공지사항 수", totalCount, noticeIncrease,noticeIncrease > 0 ? true : false)
+            );
+
+        Long lastMonthCount = noticeMapper.selectTotalNoticeCountByLastMonth();
+        Long noticeIncreaseIndividual = (long)Math.floor((double)currentMonthCount / lastMonthCount * 100);
+        cards.add(
+                new SummaryCardDTO("이번달 공지사항 수", currentMonthCount, noticeIncreaseIndividual, noticeIncreaseIndividual > 0 ? true : false)
+            );
+        
+        Long totalViewCount = noticeMapper.selectTotalViewCount();
+        cards.add(
+                new SummaryCardDTO("전체 조회수", totalViewCount, 0l, true)
+            );
+        return cards;
     }
 
     @Override
-    public Map<String, Object> selectCommunitySummaryCards() {
+    public List<SummaryCardDTO> selectCommunitySummaryCards() {
 
         throw new UnsupportedOperationException("Unimplemented method 'selectCommunitySummaryCards'");
     }
 
     @Override
-    public Map<String, Object> selectAuthBoardSummaryCards() {
+    public List<SummaryCardDTO> selectAuthBoardSummaryCards() {
         
         throw new UnsupportedOperationException("Unimplemented method 'selectAuthBoardSummaryCards'");
     }
 
     @Override
-    public Map<String, Object> selectAccountSummaryCards() {
+    public List<SummaryCardDTO> selectAccountSummaryCards() {
         
         throw new UnsupportedOperationException("Unimplemented method 'selectAccountSummaryCards'");
     }
 
     @Override
-    public Map<String, Object> selectPointSummaryCards() {
+    public List<SummaryCardDTO> selectPointSummaryCards() {
 
         throw new UnsupportedOperationException("Unimplemented method 'selectPointSummaryCards'");
     }

@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.semi.ecoinsight.admin.model.dto.SummaryCardDTO;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.admin.model.service.AdminService;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
@@ -14,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,9 +81,9 @@ public class AdminController {
     }
 
     // DashBoard
-    @GetMapping("/summaryCard")
+    @GetMapping("/summary-card")
     public ResponseEntity<?> getSummaryCard(@RequestParam(name = "type") String type) {
-        Map<String,Object> summaryCards = new HashMap<String, Object>();
+        List<SummaryCardDTO> summaryCards = new ArrayList<SummaryCardDTO>();
         switch (type) {
             case "notice":
                 summaryCards = adminService.selectNoticeSummaryCards();

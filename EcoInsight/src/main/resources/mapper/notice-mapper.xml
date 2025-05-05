@@ -220,5 +220,11 @@
         WHERE
             TO_CHAR(CREATED_DATE, 'YYYY-MM') = TO_CHAR(ADD_MONTHS(SYSDATE, -1), 'YYYY-MM')
     </select>
-
+    <!-- 전체 조회수 -->
+    <select id="selectTotalViewCount">
+        SELECT
+            SUM(VIEW_COUNT)
+        FROM
+            TB_NOTICE
+    </select>
 </mapper>

@@ -4,6 +4,7 @@ package com.semi.ecoinsight.admin.model.service;
 import java.util.List;
 import java.util.Map;
 
+import com.semi.ecoinsight.admin.model.dto.SummaryCardDTO;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
 
@@ -23,9 +24,9 @@ public interface AdminService {
     void restoreNotice(Long boardNo);
 
     // summaryCard
-    Map<String, Object> selectNoticeSummaryCards();
-    Map<String, Object> selectCommunitySummaryCards();
-    Map<String, Object> selectAuthBoardSummaryCards();
-    Map<String, Object> selectAccountSummaryCards();
-    Map<String, Object> selectPointSummaryCards();
+    List<SummaryCardDTO> selectNoticeSummaryCards();
+    List<SummaryCardDTO> selectCommunitySummaryCards();
+    List<SummaryCardDTO> selectAuthBoardSummaryCards();
+    List<SummaryCardDTO> selectAccountSummaryCards();
+    List<SummaryCardDTO> selectPointSummaryCards();
 }

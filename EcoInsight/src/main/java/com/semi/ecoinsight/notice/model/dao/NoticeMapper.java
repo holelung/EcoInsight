@@ -47,5 +47,6 @@ public interface NoticeMapper {
     // 월단위 총 조회수
     Long selectTotalNoticeViewCountByMonth();
     Long selectTotalNoticeViewCountByLastMonth();
-    
+    // 총 조회수
+    Long selectTotalViewCount();
 }
