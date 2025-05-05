@@ -33,10 +33,18 @@ public interface AdminService {
     void restoreCommunity(Long boardNo);
 
     
+    // 계정 관리
+    // 조회
+    Map<String, Object> selectAccountList(int pageNo, int size, String search, String searchType, String sortOrder);
+    // 계정 정지
+    void disableAccount(Long memberNo);
 
+    void enableAccount(Long memberNo);
+    
+    
     // 인증게시판 관리
 
-    // 계정 관리
+    
 
     // 포인트 관리
 

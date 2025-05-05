@@ -81,7 +81,34 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body("글이 활성화 되었습니다.");
     }
 
-    // 커뮤니티 관리
+
+    // DashBoard
+    @GetMapping("/summary-card")
+    public ResponseEntity<?> getSummaryCard(@RequestParam(name = "type") String type) {
+        List<SummaryCardDTO> summaryCards = new ArrayList<SummaryCardDTO>();
+        switch (type) {
+            case "notice":
+                summaryCards = adminService.selectNoticeSummaryCards();
+                break;
+            case "community":
+                summaryCards = adminService.selectCommunitySummaryCards();
+                break;
+            case "authBoard":
+                summaryCards = adminService.selectAuthBoardSummaryCards();
+                break;
+            case "account":
+                summaryCards = adminService.selectAccountSummaryCards();
+                break;
+            case "point":
+                summaryCards = adminService.selectPointSummaryCards();
+                break;
+            default:
+                throw new InvalidAccessException("잘못된 접근입니다.");
+        }
+        return ResponseEntity.ok(summaryCards);
+    }
+
+        // 커뮤니티 관리
     
     // 조회
     @GetMapping("/community")
@@ -117,30 +144,18 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body("글이 활성화 되었습니다.");
     }
 
-
-    // DashBoard
-    @GetMapping("/summary-card")
-    public ResponseEntity<?> getSummaryCard(@RequestParam(name = "type") String type) {
-        List<SummaryCardDTO> summaryCards = new ArrayList<SummaryCardDTO>();
-        switch (type) {
-            case "notice":
-                summaryCards = adminService.selectNoticeSummaryCards();
-                break;
-            case "community":
-                summaryCards = adminService.selectCommunitySummaryCards();
-                break;
-            case "authBoard":
-                summaryCards = adminService.selectAuthBoardSummaryCards();
-                break;
-            case "account":
-                summaryCards = adminService.selectAccountSummaryCards();
-                break;
-            case "point":
-                summaryCards = adminService.selectPointSummaryCards();
-                break;
-            default:
-                throw new InvalidAccessException("잘못된 접근입니다.");
-        }
-        return ResponseEntity.ok(summaryCards);
+    
+    // 계정관리
+    @GetMapping("/account")
+    public ResponseEntity<?> getAccountList(
+            @RequestParam(name="page", defaultValue="0") int page,
+            @RequestParam(name = "size") int size,
+            @RequestParam(name = "search", required = false) String search,
+            @RequestParam(name = "searchType", required = false) String searchType,
+            @RequestParam(name = "sortOrder", defaultValue = "Newest") String sortOrder) 
+            {
+        
+        return null;
     }
+    
 }
