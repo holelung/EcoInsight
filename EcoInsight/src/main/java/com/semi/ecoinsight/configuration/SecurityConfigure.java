@@ -50,11 +50,14 @@ public class SecurityConfigure {
 							"/auth/find-id",
 							"/auth/find-password",
 							"/auth/verifycode-password",
-							"/auth/admin-login").permitAll();
-					requests.requestMatchers(HttpMethod.GET).permitAll();
+							"/auth/admin-login",
+							"/communities/like").permitAll();
+					
+					requests.requestMatchers(HttpMethod.GET,  "/communities/**").permitAll();
 					requests.requestMatchers(HttpMethod.POST,"/change-email").authenticated();
+					requests.requestMatchers(HttpMethod.POST, "/communities/like").authenticated();
 					requests.requestMatchers(HttpMethod.PUT, "/members/password").authenticated();
-					requests.requestMatchers(HttpMethod.DELETE).authenticated();
+					requests.requestMatchers(HttpMethod.DELETE, "/communities/community-delete").authenticated();
 					requests.anyRequest().authenticated();
 				})
 				.sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

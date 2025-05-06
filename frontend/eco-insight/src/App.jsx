@@ -56,7 +56,10 @@ function App() {
             element={<AuthBoardWritePage />}
           />
           <Route path="/write/:type" element={<CommunityWritePage />} />
-          <Route path="/post/:id" element={<CommunityBoardDetail />} />
+          <Route
+            path="/post/:categoryId/:boardNo"
+            element={<CommunityBoardDetail />}
+          />
           <Route path="/dashboard" element={<MainDashBoard />} />
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
           <Route path="/privateAskPage" element={<PrivateAskPage />} />
