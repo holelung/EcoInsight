@@ -20,6 +20,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.semi.ecoinsight.configuration.filter.CoopFilter;
 import com.semi.ecoinsight.configuration.filter.JwtFilter;
 
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,8 @@ import lombok.RequiredArgsConstructor;
 @EnableMethodSecurity
 public class SecurityConfigure {
 
-	private final JwtFilter filter;
+	private final JwtFilter jwtfilter;
+	private final CoopFilter coopFilter;
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
 		
@@ -50,15 +52,18 @@ public class SecurityConfigure {
 							"/auth/find-id",
 							"/auth/find-password",
 							"/auth/verifycode-password",
-							"/auth/admin-login").permitAll();
-					requests.requestMatchers(HttpMethod.GET).permitAll();
+							"/auth/admin-login",
+							"/auth/google-login").permitAll();
+					requests.requestMatchers(HttpMethod.GET,  "/communities/**").permitAll();
 					requests.requestMatchers(HttpMethod.POST,"/change-email").authenticated();
+					requests.requestMatchers(HttpMethod.POST, "/communities/like").authenticated();
 					requests.requestMatchers(HttpMethod.PUT, "/members/password").authenticated();
-					requests.requestMatchers(HttpMethod.DELETE).authenticated();
+					requests.requestMatchers(HttpMethod.DELETE, "/communities/community-delete").authenticated();
 					requests.anyRequest().authenticated();
 				})
 				.sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
+				.addFilterBefore(coopFilter, UsernamePasswordAuthenticationFilter.class)
+				.addFilterBefore(jwtfilter, UsernamePasswordAuthenticationFilter.class)
 				.build();
 	}
 	@Bean
