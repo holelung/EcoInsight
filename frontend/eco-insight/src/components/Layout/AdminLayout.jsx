@@ -42,13 +42,13 @@ const AdminLayout = () => {
             onClick={() => navi("/admin/communityboard-manage")}
             isActive={location.pathname === "/admin/communityboard-manage"}
           >
-            게시글 관리
+            커뮤니티 관리
           </MenuItem>
           <MenuItem
             onClick={() => navi("/admin/noticeboard-manage")}
             isActive={location.pathname === "/admin/noticeboard-manage"}
           >
-            공지사항 작성
+            공지사항 관리
           </MenuItem>
         </ul>
       </aside>

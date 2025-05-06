@@ -55,4 +55,154 @@
     </update>
 
     
+
+    <!-- 커뮤니티 관리 -->
+    <!-- 커뮤니티 글 조회 -->
+    <select id="selectCommunityListForAdmin" 
+            parameterType="map" 
+            resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
+        SELECT
+            C.BOARD_NO boardNo,
+            C.CATEGORY_ID categoryId,
+            C.MEMBER_NO memberNo,
+            C.BOARD_TITLE boardTitle,
+            C.BOARD_CONTENT boardContent,
+            C.CREATED_DATE createdDate,
+            C.MODIFIED_DATE modifiedDate,
+            C.VIEW_COUNT viewCount,
+            C.IS_DELETED isDeleted,
+            MEMBER_ID memberId,
+            MEMBER_NAME memberName,
+            (
+                SELECT
+                    COUNT(*)
+                FROM
+                    TB_COMMUNITY_RECOMMEND R
+                WHERE
+                    R.BOARD_NO = C.BOARD_NO
+            )AS likeCount
+        FROM
+            TB_COMMUNITY_BOARD C
+        JOIN
+            TB_MEMBER M ON(M.MEMBER_NO = C.MEMBER_NO)
+        ORDER BY
+        <choose>
+            <when test="sortOrder == 'Newest'">
+                C.CREATED_DATE DESC
+            </when>
+            <otherwise>
+                C.CREATED_DATE ASC
+            </otherwise>
+        </choose>
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <!-- 커뮤니티 글 조회(검색) -->
+    <select id="selectCommunityListForAdminBySearch"
+            parameterType="map"
+            resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
+        SELECT
+            C.BOARD_NO boardNo,
+            C.CATEGORY_ID categoryId,
+            C.MEMBER_NO memberNo,
+            C.BOARD_TITLE boardTitle,
+            C.BOARD_CONTENT boardContent,
+            C.CREATED_DATE createdDate,
+            C.MODIFIED_DATE modifiedDate,
+            C.VIEW_COUNT viewCount,
+            C.IS_DELETED isDeleted,
+            MEMBER_ID memberId,
+            MEMBER_NAME memberName,
+            (
+                SELECT
+                    COUNT(*)
+                FROM
+                    TB_COMMUNITY_RECOMMEND R
+                WHERE
+                    R.BOARD_NO = C.BOARD_NO
+            )AS likeCount
+        FROM
+            TB_COMMUNITY_BOARD C
+        JOIN
+            TB_MEMBER M ON(M.MEMBER_NO = C.MEMBER_NO)
+        WHERE
+        <choose>
+            <when test="searchType == 'name'"> 
+                MEMBER_NAME LIKE '%'||#{search}||'%' 
+            </when>
+            <when test="searchType == 'title'"> 
+                BOARD_TITLE LIKE '%'||#{search}||'%' 
+            </when>
+            <otherwise> 
+                    MEMBER_NAME LIKE '%'||#{search}||'%' 
+                OR    
+                    BOARD_TITLE LIKE '%'||#{search}||'%' 
+            </otherwise>
+        </choose>
+        ORDER BY
+        <choose>
+            <when test="sortOrder == 'Newest'">
+                C.CREATED_DATE DESC
+            </when>
+            <otherwise>
+                C.CREATED_DATE ASC
+            </otherwise>
+        </choose>
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <!-- 전체 글 개수 -->
+    <select id="selectCommunityCount"
+            resultType="long">
+        SELECT
+            COUNT(*)
+        FROM
+            TB_COMMUNITY_BOARD
+    </select>
+
+    <!-- 검색어 기준 글 갯수 -->
+    <select id="selectCommunityCountBySearch">
+        SELECT
+            COUNT(*)
+        FROM
+            TB_COMMUNITY_BOARD
+        JOIN
+            TB_MEMBER USING(MEMBER_NO)
+        WHERE
+        <choose>
+            <when test="searchType == 'name'">
+                MEMBER_NAME LIKE '%'||#{search}||'%'
+            </when>
+            <when test="searchType == 'title'">
+                BOARD_TITLE LIKE '%'||#{search}||'%'
+            </when>
+            <otherwise>
+                MEMBER_NAME LIKE '%'||#{search}||'%'
+                OR
+                BOARD_TITLE LIKE '%'||#{search}||'%'
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 커뮤니티 글 삭제 -->
+    <update id="deleteCommunity" parameterType="long">
+        UPDATE
+            TB_COMMUNITY_BOARD
+        SET
+            IS_DELETED = 'Y'
+        WHERE
+            BOARD_NO = #{boardNo}
+    </update>
+
+    <!-- 커뮤니티 글 복원 -->
+    <update id="restoreCommunity" parameterType="long">
+        UPDATE
+            TB_COMMUNITY_BOARD
+        SET
+            IS_DELETED = 'N'
+        WHERE
+            BOARD_NO = #{boardNo}
+    </update>
+
+    
 </mapper>

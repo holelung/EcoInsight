@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.semi.ecoinsight.admin.model.dao.AdminMapper;
+import com.semi.ecoinsight.admin.model.dto.SummaryCardDTO;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.board.model.dao.BoardMapper;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
@@ -59,7 +60,7 @@ public class AdminServiceImpl implements AdminService {
         }
         
         // 신규 BoardNo 불러오기
-        form.setBoardNo(noticeMapper.getNoticeNo(form.getMemberNo()));
+        form.setBoardNo(noticeMapper.selectNoticeNo(form.getMemberNo()));
         
         if (form.getImageUrls() != null) {
             List<Attachment> attachments = attachmentsBuilder(form);
@@ -89,17 +90,12 @@ public class AdminServiceImpl implements AdminService {
         Map<String, String> pageInfo = new HashMap<>(); 
         pageInfo.put("startIndex", Integer.toString(startIndex));
         pageInfo.put("size", Integer.toString(size));
-        if (sortOrder.equals("Newest")) {
-            pageInfo.put("sortOrder", "DESC");    
-        } else {
-            pageInfo.put("sortOrder", "ASC");
-        }
-        
+        pageInfo.put("sortOrder", sortOrder);
 
         Map<String, Object> resultData = new HashMap<String, Object>();
         
         if (search.isEmpty()) {
-            resultData.put("totalCount", noticeMapper.getTotalNoticeCountForAdmin());
+            resultData.put("totalCount", noticeMapper.selectTotalNoticeCountForAdmin());
             // 10개만 나옴
             resultData.put("boardList", noticeMapper.selectNoticeListForAdmin(pageInfo));
             return resultData;
@@ -107,7 +103,7 @@ public class AdminServiceImpl implements AdminService {
         pageInfo.put("search", search);
         pageInfo.put("searchType", searchType);
 
-        resultData.put("totalCount", noticeMapper.getNoticeCountBySearch(pageInfo));
+        resultData.put("totalCount", noticeMapper.selectNoticeCountBySearch(pageInfo));
         resultData.put("boardList", noticeMapper.selectSearchedNoticeListForAdmin(pageInfo));
         return resultData;
     }
@@ -156,8 +152,9 @@ public class AdminServiceImpl implements AdminService {
     }
     
 
+    
+
     private Board boardBuilder(WriteFormDTO form) {
-        
         return Board.builder()
                 .boardNo(form.getBoardNo())
                 .memberNo(form.getMemberNo())
@@ -175,5 +172,97 @@ public class AdminServiceImpl implements AdminService {
                             .boardType(form.getBoardType())
                             .build()
                         ).collect(Collectors.toList());
+    }
+
+    // summaryCard
+    @Override
+    public List<SummaryCardDTO> selectNoticeSummaryCards() {
+        List<SummaryCardDTO> cards = new ArrayList<>();
+        Long totalCount = noticeMapper.selectTotalNoticeCount();
+        Long currentMonthCount = noticeMapper.selectTotalNoticeCountByMonth();
+        
+        Long noticeIncrease = ((long)Math.floor((double)currentMonthCount / (totalCount - currentMonthCount) * 100));
+        
+        cards.add(
+                new SummaryCardDTO("전체 공지사항 수", totalCount, noticeIncrease,noticeIncrease > 0 ? true : false)
+            );
+
+        Long lastMonthCount = noticeMapper.selectTotalNoticeCountByLastMonth();
+        Long noticeIncreaseIndividual = (long)Math.floor((double)currentMonthCount / lastMonthCount * 100);
+        cards.add(
+                new SummaryCardDTO("이번달 공지사항 수", currentMonthCount, noticeIncreaseIndividual, noticeIncreaseIndividual > 0 ? true : false)
+            );
+        
+        Long totalViewCount = noticeMapper.selectTotalViewCount();
+        cards.add(
+                new SummaryCardDTO("전체 조회수", totalViewCount, 0l, true)
+            );
+        return cards;
+    }
+
+    @Override
+    public List<SummaryCardDTO> selectCommunitySummaryCards() {
+
+        throw new UnsupportedOperationException("Unimplemented method 'selectCommunitySummaryCards'");
+    }
+
+    @Override
+    public List<SummaryCardDTO> selectAuthBoardSummaryCards() {
+        
+        throw new UnsupportedOperationException("Unimplemented method 'selectAuthBoardSummaryCards'");
+    }
+
+    @Override
+    public List<SummaryCardDTO> selectAccountSummaryCards() {
+        
+        throw new UnsupportedOperationException("Unimplemented method 'selectAccountSummaryCards'");
+    }
+
+    @Override
+    public List<SummaryCardDTO> selectPointSummaryCards() {
+
+        throw new UnsupportedOperationException("Unimplemented method 'selectPointSummaryCards'");
+    }
+
+    // Community 관련
+    @Override
+    public Map<String, Object> selectCommunityForAdmin(int pageNo, int size, String search, String searchType, String sortOrder) {
+        int startIndex = pagination.getStartIndex(pageNo, size);
+        Map<String, String> pageInfo = new HashMap<>(); 
+        pageInfo.put("startIndex", Integer.toString(startIndex));
+        pageInfo.put("size", Integer.toString(size));
+        pageInfo.put("sortOrder", sortOrder);
+        
+        Map<String, Object> resultData = new HashMap<String, Object>();
+        
+        if (search.isEmpty()) {
+            resultData.put("totalCount", adminMapper.selectCommunityCount());
+            // 10개만 나옴
+            resultData.put("boardList", adminMapper.selectCommunityListForAdmin(pageInfo));
+            return resultData;
+        }
+        pageInfo.put("search", search);
+        pageInfo.put("searchType", searchType);
+
+        resultData.put("totalCount", adminMapper.selectCommunityCountBySearch(pageInfo));
+        resultData.put("boardList", adminMapper.selectCommunityListForAdminBySearch(pageInfo));
+        return resultData;
+        
+    }
+
+    @Override
+    public void deleteCommunity(Long boardNo) {
+        if (boardNo < 1) {
+            throw new InvalidAccessException("잘못된 접근입니다.");
+        }
+        adminMapper.deleteCommunity(boardNo);
+    }
+
+    @Override
+    public void restoreCommunity(Long boardNo) {
+        if (boardNo < 1) {
+            throw new InvalidAccessException("잘못된 접근입니다.");
+        }
+        adminMapper.restoreCommunity(boardNo);
     }
 }

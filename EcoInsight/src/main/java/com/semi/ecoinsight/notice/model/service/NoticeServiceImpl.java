@@ -39,14 +39,14 @@ public class NoticeServiceImpl implements NoticeService{
         
 
         if (category.equals("all")) {
-            Long totalCount = noticeMapper.getTotalNoticeCount();
+            Long totalCount = noticeMapper.selectTotalNoticeCount();
             resultData.put("totalCount", totalCount);
 
             List<BoardDTO> result = noticeMapper.selectNoticeList(pageInfo);
             resultData.put("boardList", result);
             return resultData;
         }
-        Long totalCount = noticeMapper.getNoticeCountByCategoryId(category);
+        Long totalCount = noticeMapper.selectNoticeCountByCategoryId(category);
         resultData.put("totalCount", totalCount);
 
         pageInfo.put("category", category);

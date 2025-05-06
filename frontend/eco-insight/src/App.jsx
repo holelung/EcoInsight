@@ -58,7 +58,10 @@ function App() {
             element={<AuthBoardWritePage />}
           />
           <Route path="/write/:type" element={<CommunityWritePage />} />
-          <Route path="/post/:id" element={<CommunityBoardDetail />} />
+          <Route
+            path="/post/:categoryId/:boardNo"
+            element={<CommunityBoardDetail />}
+          />
           <Route path="/dashboard" element={<MainDashBoard />} />
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
           <Route path="/privateAskPage" element={<PrivateAskPage />} />
@@ -87,7 +90,6 @@ function App() {
           />
           <Route path="/mypage/withdrawal/form" element={<WithdrawalForm />} />
           <Route path="/mypage/withdrawal/ok" element={<OkWithdrawal />} />
-          <Route path="/notice/modify/:boardNo" element={<NoticeBoardModify />} />
         </Route>
 
         <Route path="/login" element={<Login />} />
@@ -122,8 +124,6 @@ function App() {
             path="noticeboard-manage"
             element={<NoticeBoardManagementPage />}
           />
-
-          {/*<Route path="notice-write" element={<NoticeWrite />} />*/}
           <Route path="notice-write" element={<NoticeBoardWrite />} />
           <Route
             path="authboard-manage"
@@ -137,7 +137,10 @@ function App() {
             path="noticeboard-manage"
             element={<NoticeBoardManagementPage />}
           />
-          <Route path="notice-write" element={<NoticeWrite />} />
+          <Route
+            path="notice/modify/:boardNo"
+            element={<NoticeBoardModify />}
+          />
         </Route>
       </Routes>
     </AuthProvider>

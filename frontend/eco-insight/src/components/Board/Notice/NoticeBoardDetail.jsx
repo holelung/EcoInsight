@@ -36,7 +36,7 @@ const NoticeBoardDetail = () => {
       boardContent: notice.boardContent,
       categoryId: notice.categoryId,
     }
-    navi(`/notice/modify/${notice.boardNo}`, { state: boardData });
+    navi(`/admin/notice/modify/${notice.boardNo}`, { state: boardData });
   };
 
   const handleDelete = () => {

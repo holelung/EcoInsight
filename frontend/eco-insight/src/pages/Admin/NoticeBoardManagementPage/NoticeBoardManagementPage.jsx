@@ -9,6 +9,7 @@ import Search from "../../../components/Input/Search/Search";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../../components/Context/AuthContext";
+import SummaryBoard from "../../../components/DashBoard/SummaryBoard";
 
 
 const NoticeBoardManagementPage = () => {
@@ -47,7 +48,7 @@ const NoticeBoardManagementPage = () => {
           setTotalPages(Math.ceil(response.data.totalCount / rowsPerPage));
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
         });
     }
   }, [currentPage, rowsPerPage, sortOrder, listState, auth.tokens.accessToken]);
@@ -94,6 +95,19 @@ const NoticeBoardManagementPage = () => {
     setSelectedItemId(null);
   };
 
+  const handleModifyButton = (item) => {
+    const boardData = {
+      boardType: "notice",
+      boardNo: item.boarNo,
+      memberNo: item.memberNo,
+      memberName: item.memberName,
+      boardTitle: item.boardTitle,
+      boardContent: item.boardContent,
+      categoryId: item.categoryId,
+    };
+    navi(`/admin/notice/modify/${item.boardNo}`, { state: boardData });
+  }
+
   const handleSelectitemTable = (itemId) => {
     if (selectedItemId == itemId) {
       setSelectedItemId(null);
@@ -109,29 +123,9 @@ const NoticeBoardManagementPage = () => {
   return (
     <div className="p-6 space-y-6">
       {/* 상단 요약 카드 */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <SummaryCard
-          icon="👥"
-          title="포인트 보유 유지"
-          value="5,423"
-          change="+16%"
-          positive
-        />
-        <SummaryCard
-          icon="🚮"
-          title="포인트 사용량"
-          value="1,893"
-          change="-1%"
-          positive={false}
-        />
-        <SummaryCard
-          icon="💻"
-          title="포인트 획득 유지"
-          value="189"
-          change="+3%"
-          positive
-        />
-      </div>
+      <SummaryBoard
+        type={"notice"}
+      />
 
       {/* 검색창 + 정렬 */}
       <div className="flex justify-between items-center">
@@ -195,12 +189,12 @@ const NoticeBoardManagementPage = () => {
           </tr>
         </thead>
         <tbody>
-          {list.map((item, i) => (
+          {list.map((item) => (
             <Fragment key={item.boardNo}>
               <tr className="border-t hover:bg-gray-50">
                 <td className="px-4 py-3">{item.boardNo}</td>
                 {/* <td>{item.boardCategory}</td> */}
-                <td>카테고리</td>
+                <td>{item.categoryId}</td>
                 <td>{item.memberName}</td>
                 <td
                   className="cursor-pointer"
@@ -227,7 +221,7 @@ const NoticeBoardManagementPage = () => {
                   <td colSpan={7} className="px-4 py-3">
                     <div className="flex gap-2 items-center justify-end">
                       <span className="text-sm font-medium">
-                        글 {item.boardNo}번 상태 변경
+                        글 {item.boardNo}번 현재 상태
                       </span>
                       <input
                         type="text"
@@ -241,6 +235,12 @@ const NoticeBoardManagementPage = () => {
                         onClick={() => handleData(item.boardNo, item.isDeleted)}
                       >
                         상태변경
+                      </button>
+                      <button
+                        className="bg-amber-400 px-4 py-2 rounded"
+                        onClick={() => handleModifyButton(item)}
+                      >
+                        글 수정
                       </button>
                     </div>
                   </td>
