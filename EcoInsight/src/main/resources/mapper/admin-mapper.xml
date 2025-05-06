@@ -230,10 +230,10 @@
         ORDER BY
         <choose>
             <when test="sortOrder == 'Newest'">
-                IS_ACTIVE DESC
+                MEMBER_ENROLL_DATE DESC
             </when>
             <otherwise>
-                IS_ACTIVE ASC
+                MEMBER_ENROLL_DATE ASC
             </otherwise>
         </choose>
         OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
@@ -274,10 +274,10 @@
         ORDER BY
         <choose>
             <when test="sortOrder == 'Newest'">
-                IS_ACTIVE DESC
+                MEMBER_ENROLL_DATE DESC
             </when>
             <otherwise>
-                IS_ACTIVE ASC
+                MEMBER_ENROLL_DATE ASC
             </otherwise>
         </choose>
         OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
@@ -316,7 +316,8 @@
         UPDATE
             TB_MEMBER
         SET
-            IS_ACTIVE = 'N'
+            IS_ACTIVE = 'N',
+            MEMBER_UPDATE_DATE = SYSDATE
         WHERE
             MEMBER_NO = #{memberNo}
     </update>
@@ -325,28 +326,29 @@
         UPDATE
             TB_MEMBER
         SET
-            IS_ACTIVE = 'Y'
+            IS_ACTIVE = 'Y',
+            MEMBER_UPDATE_DATE = SYSDATE
         WHERE
             MEMBER_NO = #{memberNo}        
     </update>
 
-    <insert id="insertBanList">
+    <insert id="insertBanList" parameterType="com.semi.ecoinsight.admin.model.dto.BanDTO">
         INSERT
         INTO
             TB_BANLIST(
                 MEMBER_NO,
                 BAN_ID,
-                BAN_START_DATE,
-                BAN_END_DATE,
                 BAN_PERIOD,
+                BAN_START_DATE,
+                BAN_END_DATE
             )
         VALUES
         (
             #{memberNo},
             #{banId},
-            #{banStartDate},
-            #{banEndDate},
-            #{banPeriod}
+            #{banPeriod},
+            SYSDATE,
+            SYSDATE + #{banPeriod}
         )
     </insert>
 
@@ -355,6 +357,6 @@
         FROM
             TB_BANLIST
         WHERE
-            BAN_NO = #{banNO}
+            MEMBER_NO = #{memberNo}
     </delete>
 </mapper>

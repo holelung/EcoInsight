@@ -21,7 +21,8 @@ const AccountManagementPage = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortOrder, setSortOrder] = useState("Newest");
   const [selectedUserId, setSelectedUserId] = useState(null);
-  const [banPeriod, setBanPeriod] = useState();
+  const [banPeriod, setBanPeriod] = useState("3");
+  const [banId, setBanId] = useState("B0001");
   const [totalPages, setTotalPages] = useState(0);
   const [listState, setListState] = useState(false);
   
@@ -49,11 +50,50 @@ const AccountManagementPage = () => {
   }, [currentPage, rowsPerPage, sortOrder, listState, auth.tokens.accessToken]);
 
 
-  const handleApplyPoint = (memberName) => {
-    alert(`${memberName} 님에게 ${banPeriod}일 정지가 적용됩니다.`);
-    setBanPeriod(0);
-    setSelectedUserId(null);
+  const handleDisableAccount = (memberName, memberNo) => {
+    axios
+      .delete("http://localhost/admin/account", {
+        params: {
+          memberNo: memberNo,
+          banPeriod: banPeriod,
+          banId: banId,
+        },
+        headers: {
+          Authorization: `Bearer ${auth.tokens.accessToken}`,
+        },
+      })
+      .then((response) => {
+        console.log(response);
+        alert(`${memberName} 님에게 ${banPeriod}일 정지가 적용됩니다.`);
+        setSelectedUserId(null);
+        setListState(!listState);
+      })
+      .error((error) => {
+        console.error(error);
+        alert("정지 적용 실패");
+      });
+    setBanPeriod("");
   };
+
+  const handleEnableAccount = (memberName, memberNo) => {
+    axios
+      .patch("http://localhost/admin/account", {
+          memberNo: memberNo,
+        },{
+        headers: {
+          Authorization: `Bearer ${auth.tokens.accessToken}`,
+        }
+      })
+      .then((response) => {
+        console.log(response);
+        alert(`${memberName}회원 정지 해제`);
+        setSelectedUserId(null);
+        setListState(!listState);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
   const handleSelectUserTable = (userId) => {
     if (selectedUserId == userId) {
@@ -119,7 +159,7 @@ const AccountManagementPage = () => {
             selectValue={rowsPerPage}
             onChange={(e) => {
               setRowsPerPage(Number(e.target.value));
-              setCurrentPage(1);
+              setCurrentPage(0);
             }}
             labelName={"행 개수"}
           >
@@ -127,7 +167,10 @@ const AccountManagementPage = () => {
           </Select>
           <Select
             selectValue={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
+            onChange={(e) => {
+              setSortOrder(e.target.value);
+              setCurrentPage(0);
+            }}
             labelName={"정렬"}
           >
             <option value="Newest">최신순</option>
@@ -145,6 +188,7 @@ const AccountManagementPage = () => {
             <th>전화번호</th>
             <th>Email</th>
             <th>정지 정보</th>
+            <th>정지 사유</th>
             <th>활성상태</th>
           </tr>
         </thead>
@@ -161,8 +205,9 @@ const AccountManagementPage = () => {
                     ? `${item.banDate} - ${dayjs(item.banDate)
                         .add(item.banPeriod, "day")
                         .format("YYYY-MM-DD")}(${item.banPeriod}일) `
-                    : "정지정보 없음"}
+                    : "없음"}
                 </td>
+                <td>{item.banId != null ? `${item.banId}` : "없음"}</td>
                 <td>
                   <span
                     className={`px-2 py-1 rounded text-sm cursor-pointer ${
@@ -178,25 +223,56 @@ const AccountManagementPage = () => {
               </tr>
               {selectedUserId === item.memberId && (
                 <tr className="bg-gray-50">
-                  <td colSpan={6} className="px-4 py-3">
+                  <td colSpan={7} className="px-4 py-3">
                     <div className="flex gap-2 items-center justify-end">
-                      <span className="text-sm font-medium flex ">
-                        <p className="font-bold pr-1">{item.memberName}</p>
-                        회원 정지 일자 설정 :
-                      </span>
-                      <input
-                        type="number"
-                        value={banPeriod}
-                        onChange={(e) => setBanPeriod(e.target.value)}
-                        className="border px-3 py-2 w-32 rounded"
-                        placeholder="정지 일수 입력"
-                      />
-                      <button
-                        className="bg-black text-white px-4 py-2 rounded"
-                        onClick={() => handleApplyPoint(item.memberName)}
-                      >
-                        적용
-                      </button>
+                      {item.isActive === "Y" ? (
+                        <>
+                          <span className="text-sm font-medium flex ">
+                            <p className="font-bold pr-1">{item.memberName}</p>
+                            회원 정지 :
+                          </span>
+                          <Select
+                            selectValue={banId}
+                            onChange={(e) => setBanId(e.target.value)}
+                            labelName={"정지 사유"}
+                          >
+                            <option value="B0001">사유 1</option>
+                            <option value="B0002">사유 2</option>
+                            <option value="B0003">사유 3</option>
+                          </Select>
+                          <Select
+                            selectValue={banPeriod}
+                            onChange={(e) => setBanPeriod(e.target.value)}
+                            labelName={"정지 기간"}
+                          >
+                            <option value="3">3일</option>
+                            <option value="7">7일</option>
+                            <option value="14">14일</option>
+                            <option value="30">30일</option>
+                            <option value="36500">100년</option>
+                          </Select>
+                          <button
+                            className="bg-black text-white px-4 py-2 rounded"
+                            onClick={() =>
+                              handleDisableAccount(item.memberName, item.memberNo)
+                            }
+                          >
+                            적용
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-sm font-medium flex ">
+                            <p className="font-bold pr-1">{item.memberName}</p>
+                          </span>
+                          <button
+                            className="bg-black text-white px-4 py-2 rounded"
+                            onClick={() => handleEnableAccount(item.memberName, item.memberNo)}
+                          >
+                            정지 해제
+                          </button>
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>

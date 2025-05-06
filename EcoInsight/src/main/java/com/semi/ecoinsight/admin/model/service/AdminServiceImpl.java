@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.semi.ecoinsight.admin.model.dao.AdminMapper;
+import com.semi.ecoinsight.admin.model.dto.BanDTO;
 import com.semi.ecoinsight.admin.model.dto.SummaryCardDTO;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.board.model.dao.BoardMapper;
@@ -290,15 +291,37 @@ public class AdminServiceImpl implements AdminService {
         return resultData;
     }
 
+    @Transactional
     @Override
-    public void disableAccount(Long memberNo) {
+    public void disableAccount(BanDTO banInfo) {
         
-        throw new UnsupportedOperationException("Unimplemented method 'disableAccount'");
+        // banList table에 추가
+        try{
+            adminMapper.insertBanList(banInfo);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("BanList에 추가 실패", e);
+        }
+        // isActive = 'N' 으로 변경
+        try{
+            adminMapper.disableAccount(banInfo.getMemberNo());
+        }catch(RuntimeException e){
+            throw new RuntimeException("계정 상태 변경 실패", e);
+        }
     }
 
     @Override
     public void enableAccount(Long memberNo) {
-        
-        throw new UnsupportedOperationException("Unimplemented method 'enableAccount'");
+        // banList table에서 삭제
+        try{
+            adminMapper.deleteBanList(memberNo);
+        } catch (RuntimeException e) {
+            throw new RuntimeException("BanList에서 삭제 실패");
+        }
+        // isActive = 'Y' 으로 변경
+        try{
+            adminMapper.enableAccount(memberNo);
+        }catch(RuntimeException e){
+            throw new RuntimeException("계정 상태 변경 실패");
+        }
     }
 }

@@ -149,7 +149,7 @@ public class AdminController {
     
     // 계정관리
     @GetMapping("/account")
-    public ResponseEntity<?> getAccountList(
+    public ResponseEntity<Map<String,Object>> getAccountList(
             @RequestParam(name = "page", defaultValue="0") int page,
             @RequestParam(name = "size") int size,
             @RequestParam(name = "search", required = false) String search,
@@ -161,14 +161,16 @@ public class AdminController {
     }
     
     @DeleteMapping("/account")
-    public ResponseEntity<?> disableAccount(@ModelAttribute BanDTO banInfo) {
-
-        return null;
+    public ResponseEntity<HttpStatus> disableAccount(@ModelAttribute BanDTO banInfo) {
+        log.info("정지 요청:{}", banInfo);
+        adminService.disableAccount(banInfo);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PatchMapping("/account")
-    public ResponseEntity<?> enableAccount(@RequestBody BanDTO banInfo) {
-        
-        return null;
+    public ResponseEntity<HttpStatus> enableAccount(@RequestBody BanDTO banInfo) {
+        log.info("정지 해제 요청:{}", banInfo);
+        adminService.enableAccount(banInfo.getMemberNo());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
