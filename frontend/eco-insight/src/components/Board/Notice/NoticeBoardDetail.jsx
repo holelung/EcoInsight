@@ -27,16 +27,40 @@ const NoticeBoardDetail = () => {
   },[id])
 
   const handleSaveEdit = () => {
-    setTitle(editedTitle);
-    setContent(editedContent);
-    setIsEditing(!isEditing);
+    const boardData = {
+      boardType: "notice",
+      boardNo: notice.boardNo,
+      memberNo: notice.memberNo,
+      memberName: notice.memberName,
+      boardTitle: notice.boardTitle,
+      boardContent: notice.boardContent,
+      categoryId: notice.categoryId,
+    }
+    navi(`/admin/notice/modify/${notice.boardNo}`, { state: boardData });
   };
 
   const handleDelete = () => {
     const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
     if (confirmDelete) {
-      alert("삭제되었습니다.");
-      navi(-1);
+      axios
+        .delete(`http://localhost/admin/notice`, {
+          headers: {
+            Authorization: `Bearer ${auth.tokens.accessToken}`,
+          },
+          params: {
+            boardNo: id,
+          },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            console.log(response);
+            alert(response.data);
+            navi("/admin/noticeboard-manage");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   };
 
