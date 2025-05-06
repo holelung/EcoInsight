@@ -31,4 +31,5 @@ public class BoardDTO {
     // 조회용
     private String memberId;
     private String memberName;
+    private Long likeCount;
 }

@@ -42,7 +42,7 @@ const CommunityListPage = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, [currentPage, type]);
+  }, [currentPage, type, searchQuery]);
 
   const handleButtonClick = (buttonType) => {
     setIsPopularOnly(buttonType === "인기글");
@@ -58,7 +58,7 @@ const CommunityListPage = () => {
   };
 
   const filteredPosts = posts.filter((post) =>
-    isPopularOnly ? post.likes >= 10 : true
+    isPopularOnly ? post.likeCount >= 10 : true
   );
 
   const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
@@ -134,7 +134,7 @@ const CommunityListPage = () => {
           className="grid grid-cols-7 border-b border-gray-200 text-center text-sm py-2 hover:bg-gray-50"
         >
           <div>{data.boardNo}</div>
-          <div>{data.memberName || "익명"}</div>
+          <div>{data.memberName}</div>
           <div className="col-span-2 text-left">
             <Link
               to={`/post/${categoryId}/${data.boardNo}`} // ✅ categoryId 추가
@@ -145,7 +145,7 @@ const CommunityListPage = () => {
           </div>
           <div>{data.createdDate?.substring(0, 10)}</div>
           <div>{data.viewCount || 0}</div>
-          <div>{data.likes || 0}</div>
+          <div>{data.likeCount || 0}</div>
         </div>
       ))}
 

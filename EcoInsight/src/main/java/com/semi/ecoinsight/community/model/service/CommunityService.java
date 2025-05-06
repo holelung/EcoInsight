@@ -17,9 +17,16 @@ public interface CommunityService {
 	// 게시글 상세 조회
 	Map<String,Object> detailCommunity(Long boardNo, String categoryId);
 
+	// 좋아요 확인여부
 	Long checkedLike(Map<String, String> likeMap);
 
-	void viewAndLike(Map<String, Object> viewLikeCount);
+	// 삭제하기
+	void deleteCommunity(Map<String, Object> deleteMap);
+
+
+	
+
+	
 
 	
 	

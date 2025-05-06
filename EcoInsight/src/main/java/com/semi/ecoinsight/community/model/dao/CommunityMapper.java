@@ -27,11 +27,20 @@ public interface CommunityMapper {
 
 	Long checkedLike(Map<String, String> likeMap);
 
+	// 좋아요버튼 누르면 증가/감소
 	void insertLikeCount(Map<String, String> likeMap);
 	void deleteLikeCount(Map<String, String> likeMap);
 	
-	Long insertCommunityCountView(Map<String,Object> viewLikeCount);
+	Long getCommunityCountView(Long boardNo);
 	Long getLikeCount(Long boardNo);
+
+	Long getWriterMemberNo(Long boardNo);
+
+	// 게시글 삭제
+	void deleteCommunity(Long boardNo);
+
+
+	
 
 	// 게시글 수정	
 	

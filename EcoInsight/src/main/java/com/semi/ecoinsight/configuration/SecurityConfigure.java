@@ -57,7 +57,7 @@ public class SecurityConfigure {
 					requests.requestMatchers(HttpMethod.POST,"/change-email").authenticated();
 					requests.requestMatchers(HttpMethod.POST, "/communities/like").authenticated();
 					requests.requestMatchers(HttpMethod.PUT, "/members/password").authenticated();
-					requests.requestMatchers(HttpMethod.DELETE).authenticated();
+					requests.requestMatchers(HttpMethod.DELETE, "/communities/community-delete").authenticated();
 					requests.anyRequest().authenticated();
 				})
 				.sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

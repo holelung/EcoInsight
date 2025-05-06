@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.semi.ecoinsight.exception.util.BoardInsertException;
+import com.semi.ecoinsight.exception.util.CommunityAccessException;
 import com.semi.ecoinsight.exception.util.CustomAuthenticationException;
 
 import com.semi.ecoinsight.exception.util.CustomMessagingException;
@@ -81,4 +82,10 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<Map<String, String>> handleImageInsertException(ImageInsertException e) {
 		return makeResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
+	
+	@ExceptionHandler(CommunityAccessException.class)
+		public ResponseEntity<?> handleCommunityAccessException(CommunityAccessException e){
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage()); 
+		}
+	
 }

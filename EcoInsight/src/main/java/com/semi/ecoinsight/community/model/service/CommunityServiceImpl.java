@@ -3,9 +3,11 @@ package com.semi.ecoinsight.community.model.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.apache.ibatis.session.RowBounds;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
@@ -14,6 +16,7 @@ import com.semi.ecoinsight.board.model.dto.BoardDTO;
 import com.semi.ecoinsight.board.model.vo.Attachment;
 import com.semi.ecoinsight.board.model.vo.Board;
 import com.semi.ecoinsight.community.model.dao.CommunityMapper;
+import com.semi.ecoinsight.exception.util.CommunityAccessException;
 import com.semi.ecoinsight.util.sanitize.SanitizingService;
 
 import lombok.RequiredArgsConstructor;
@@ -83,13 +86,16 @@ public class CommunityServiceImpl implements CommunityService{
 		detailMap.put("boardNo", boardNo);
 		detailMap.put("categoryId", categoryId);
 		
+		communityMapper.getCommunityCountView(boardNo);
+		BoardDTO board = communityMapper.detailCommunity(detailMap);
+		 
+		Long likeCount = communityMapper.getLikeCount(boardNo);
+		board.setLikeCount(likeCount); // 값을 저장하기 위함
+		
 		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("board", board);
 		
-		 BoardDTO board = communityMapper.detailCommunity(detailMap);
-		 resultMap.put("board", board);
-		 
-		 
-		
+		 	
 		return resultMap;
 	}
 	
@@ -111,8 +117,20 @@ public class CommunityServiceImpl implements CommunityService{
 	}
 
 	@Override
-	public void viewAndLike(Map<String, Object> viewLikeCount) {
-		// TODO Auto-generated method stub
+	public void deleteCommunity(Map<String, Object> deleteMap) {
+	
+		Long boardNo = Long.parseLong(deleteMap.get("boardNo").toString());
+        Long memberNo = Long.parseLong(deleteMap.get("memberNo").toString());
+
+        Long writerNo = communityMapper.getWriterMemberNo(boardNo);
+ 
+
+        if (writerNo.longValue() != memberNo.longValue()) {
+            throw new CommunityAccessException("삭제 권한이 없습니다.");
+        }
+
+         communityMapper.deleteCommunity(boardNo);
+    }
 		
-	}
 }
+

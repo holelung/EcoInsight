@@ -30,12 +30,12 @@ const CommunityBoardDetail = () => {
         const data = response.data.board;
         setTitle(data.boardTitle);
         setContent(data.boardContent);
-        setLikes(response.data.likeCount);
+        setLikes(data.likeCount);
         setCreatedDate(data.createdDate);
         setEditedTitle(data.boardTitle);
         setEditedContent(data.boardContent);
         setAuthorName(data.memberName); // 보여줄 이름
-        setAuthorId(data.memberId); // 비교용 ID (user999 등)
+        setAuthorId(data.memberId); // id 비교
       })
       .catch((err) => {
         console.error("게시글 상세 조회 실패:", err);
@@ -47,12 +47,42 @@ const CommunityBoardDetail = () => {
   }, [boardNo, categoryId]);
 
   useEffect(() => {
+    console.log("likeCount:", likes);
+  }, [likes]);
+
+  useEffect(() => {
     console.log("auth.loginInfo?.username:", auth.loginInfo?.username);
     console.log("authorId:", authorId);
     console.log("같은가?:", auth.loginInfo?.username === authorId);
   }, [auth, authorId]);
 
-  const handleLike = () => setLikes(likes + 1);
+  const handleLike = () => {
+    if (!auth.isAuthenticated) {
+      alert("로그인 후 이용 가능합니다.");
+      return;
+    }
+
+    axios
+      .post(
+        "http://localhost/communities/like",
+        {
+          boardNo: boardNo,
+          memberNo: auth.loginInfo?.memberNo,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${auth.tokens.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("좋아요 처리 응답:", response.data);
+        setLikes(response.data);
+      })
+      .catch((err) => {
+        console.error("좋아요 처리 실패:", err);
+      });
+  };
 
   const handleEditSubmit = () => {
     axios
@@ -75,19 +105,25 @@ const CommunityBoardDetail = () => {
 
   const handleDelete = () => {
     const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
-    if (confirmDelete) {
-      axios
-        .delete("http://localhost/communities/community-delete", {
-          params: { boardNo },
-        })
-        .then(() => {
-          alert("삭제되었습니다.");
-          navigate(-1);
-        })
-        .catch((err) => {
-          console.error("삭제 실패:", err);
-        });
-    }
+    if (!confirmDelete) return;
+
+    axios
+      .delete(`http://localhost/communities/community-delete`, {
+        params: {
+          boardNo: Number(boardNo),
+          memberNo: Number(auth.loginInfo?.memberNo),
+        },
+        headers: {
+          Authorization: `Bearer ${auth.tokens.accessToken}`,
+        },
+      })
+      .then(() => {
+        alert("삭제되었습니다.");
+        navigate(-1);
+      })
+      .catch((err) => {
+        console.error("삭제 실패:", err);
+      });
   };
 
   const isAuthor =
@@ -127,9 +163,6 @@ const CommunityBoardDetail = () => {
         ) : (
           <div dangerouslySetInnerHTML={{ __html: content }} />
         )}
-        <div className="border-t pt-2 text-sm text-gray-600">
-          📎 첨부파일: 예시파일.png
-        </div>
       </div>
 
       {/* 좋아요 */}
@@ -144,10 +177,18 @@ const CommunityBoardDetail = () => {
         </div>
       )}
 
-      {/* 버튼 영역 */}
       <div className="flex justify-end gap-2">
-        {isAuthor ? (
-          isEditing ? (
+        {/* 신고하기 버튼은 항상 보임 */}
+        <button
+          onClick={() => setIsReportOpen(true)}
+          className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
+        >
+          신고
+        </button>
+
+        {/* 작성자만 수정/삭제 가능 */}
+        {isAuthor &&
+          (isEditing ? (
             <button
               onClick={handleEditSubmit}
               className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
@@ -169,15 +210,7 @@ const CommunityBoardDetail = () => {
                 삭제하기
               </button>
             </>
-          )
-        ) : (
-          <button
-            onClick={() => setIsReportOpen(true)}
-            className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
-          >
-            신고
-          </button>
-        )}
+          ))}
       </div>
 
       {/* 돌아가기 */}

@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -50,19 +52,30 @@ public class CommunityController {
 	}
 	
 	@PostMapping("/like")
-	public ResponseEntity<?> checkedLike(@RequestBody Map<String,String> likeMap, Long boardNo){
-		
-		Map<String,Object> like = new HashMap<>();		
-		like.put("baordNo", boardNo);
-			
+	public ResponseEntity<?> checkedLike(@RequestBody Map<String,String> likeMap){
+					
 		Long likeCount = communityService.checkedLike(likeMap);
-		return ResponseEntity.status(HttpStatus.CREATED).build();		
+		return ResponseEntity.ok(likeCount);		
 	}
 	
-	@PostMapping("/view-and-count")
-	public ResponseEntity<?> viewAndLike(@RequestBody Map<String,Object> viewLikeCount ){
-		communityService.viewAndLike(viewLikeCount);
-		return null;
-		
+	
+
+	@DeleteMapping("/community-delete")
+	public ResponseEntity<?> deleteCommunity(@RequestParam(name="boardNo") Long boardNo,
+						 					 @RequestParam(name="memberNo") Long memberNo) {
+	    try {
+	        Map<String, Object> deleteMap = new HashMap<>();
+	        deleteMap.put("boardNo", boardNo);
+	        deleteMap.put("memberNo", memberNo);
+	        communityService.deleteCommunity(deleteMap);
+	        return ResponseEntity.ok().build();
+	    } catch (AccessDeniedException e) {
+	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());  //권한이 없을 떄
+	    }
 	}
+
+
+		
 }
+
+	
