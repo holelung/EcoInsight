@@ -19,6 +19,7 @@ import com.semi.ecoinsight.exception.util.InvalidUserNameAndEmailException;
 import com.semi.ecoinsight.exception.util.FileStreamException;
 import com.semi.ecoinsight.exception.util.FileTypeNotAllowedException;
 import com.semi.ecoinsight.exception.util.ImageInsertException;
+import com.semi.ecoinsight.exception.util.InvalidAccessException;
 import com.semi.ecoinsight.exception.util.MemberIdDuplicateException;
 import com.semi.ecoinsight.exception.util.VerifyCodeExpiredException;
 import com.semi.ecoinsight.exception.util.VerifyCodeIsIncorrectException;
@@ -84,8 +85,13 @@ public class GlobalExceptionHandler {
 	}
 	
 	@ExceptionHandler(CommunityAccessException.class)
-		public ResponseEntity<?> handleCommunityAccessException(CommunityAccessException e){
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage()); 
-		}
-	
+  public ResponseEntity<?> handleCommunityAccessException(CommunityAccessException e){
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage()); 
+  }
+
+	@ExceptionHandler(InvalidAccessException.class)
+	public ResponseEntity<Map<String, String>> handleInvalidAccessException(InvalidAccessException e) {
+		return makeResponseEntity(e, HttpStatus.NOT_FOUND);
+	}
+
 }

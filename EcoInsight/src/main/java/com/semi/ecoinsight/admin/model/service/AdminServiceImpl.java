@@ -7,11 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.semi.ecoinsight.admin.model.dao.AdminMapper;
+import com.semi.ecoinsight.admin.model.dto.SummaryCardDTO;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.board.model.dao.BoardMapper;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
@@ -20,11 +22,13 @@ import com.semi.ecoinsight.board.model.vo.Attachment;
 import com.semi.ecoinsight.board.model.vo.Board;
 import com.semi.ecoinsight.exception.util.BoardInsertException;
 import com.semi.ecoinsight.exception.util.ImageInsertException;
+import com.semi.ecoinsight.exception.util.InvalidAccessException;
 import com.semi.ecoinsight.notice.model.dao.NoticeMapper;
 import com.semi.ecoinsight.util.pagination.PaginationService;
 import com.semi.ecoinsight.util.sanitize.SanitizingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 
 @Service
 @Slf4j
@@ -46,28 +50,20 @@ public class AdminServiceImpl implements AdminService {
         
         // XSS 방어
         
-        Board board = Board.builder()
-                .memberNo(form.getMemberNo())
-                .categoryId(form.getCategoryId())
-                .boardTitle(form.getTitle())
-                .boardContent(form.getContent())            
-                .build();
+        Board board = boardBuilder(form);
+
         try {
             adminMapper.insertNotice(board);
         } catch (RuntimeException e) {
             throw new BoardInsertException("게시글 생성에 실패했습니다.");
+            // uploads에 저장한 파일 삭제 로직 필요
         }
         
-
-        Long boardNo = noticeMapper.getNoticeNo(form.getMemberNo());
+        // 신규 BoardNo 불러오기
+        form.setBoardNo(noticeMapper.selectNoticeNo(form.getMemberNo()));
+        
         if (form.getImageUrls() != null) {
-            List<Attachment> attachments = form.getImageUrls().stream()
-            .map(url -> Attachment.builder()
-                .boardNo(boardNo)
-                .attachmentItem(url)
-                .boardType(form.getBoardType())
-                .build()
-                ).collect(Collectors.toList());
+            List<Attachment> attachments = attachmentsBuilder(form);
             for (Attachment a : attachments) {
                 try {
                     boardMapper.uploadImage(a);  
@@ -79,32 +75,194 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
-
+    /**
+     * 관리자페이지용 공지사항 리스트 호출서비스<br>
+     * @param pageNo        호출한 페이지 번호
+     * @param size          한 페이지에 보여줄 게시글 개수
+     * @param search        검색어
+     * @param searchType    검색 타입 정의
+     * @param sortOrder     오름차순/내림차순 정의
+     */
     @Override
-    public List<BoardDTO> selectNoticeListForAdmin(int pageNo, int size, String search, String sortOrder) {
+    public Map<String, Object> selectNoticeListForAdmin(int pageNo, int size, String search, String searchType, String sortOrder) {
         
         int startIndex = pagination.getStartIndex(pageNo, size);
         Map<String, String> pageInfo = new HashMap<>(); 
         pageInfo.put("startIndex", Integer.toString(startIndex));
-        pageInfo.put("endIndex", Integer.toString(size+startIndex));
+        pageInfo.put("size", Integer.toString(size));
         pageInfo.put("sortOrder", sortOrder);
-        if (search == null) {
-            return noticeMapper.selectNoticeListForAdmin(pageInfo);
+
+        Map<String, Object> resultData = new HashMap<String, Object>();
+        
+        if (search.isEmpty()) {
+            resultData.put("totalCount", noticeMapper.selectTotalNoticeCountForAdmin());
+            // 10개만 나옴
+            resultData.put("boardList", noticeMapper.selectNoticeListForAdmin(pageInfo));
+            return resultData;
         }
         pageInfo.put("search", search);
-        return noticeMapper.selectNoticeListForAdmin(pageInfo);
+        pageInfo.put("searchType", searchType);
+
+        resultData.put("totalCount", noticeMapper.selectNoticeCountBySearch(pageInfo));
+        resultData.put("boardList", noticeMapper.selectSearchedNoticeListForAdmin(pageInfo));
+        return resultData;
     }
 
-
+    // 게시글 수정
+    @Transactional
     @Override
-    public void updateNotice(Long boardNo) {
-        
+    public void updateNotice(WriteFormDTO form) {
+        Board board = boardBuilder(form);
+        log.info("수정할 board정보 잘왓나 확인:{}",board);
+        try{
+            adminMapper.updateNotice(board);
+        }catch(RuntimeException e){
+            throw new BoardInsertException("게시글 수정에 실패했습니다.");
+        }
+
+        if (form.getImageUrls() != null) {
+            List<Attachment> attachments = attachmentsBuilder(form);
+            for (Attachment a : attachments) {
+                try {
+                    boardMapper.uploadImage(a);  
+                } catch (RuntimeException e) {
+                    //uploads에 저장한 파일도 제거해야함
+                    throw new ImageInsertException("추가 이미지 업로드에 실패했습니다.");
+                } 
+            }
+        }
+
     }
 
 
     @Override
     public void deleteNotice(Long boardNo) {
-        
+        if (boardNo < 1) {
+            throw new InvalidAccessException("잘못된 접근입니다.");
+        }
+        adminMapper.deleteNotice(boardNo);
+    }
+
+    @Override
+    public void restoreNotice(Long boardNo) {
+        if (boardNo < 1) {
+            throw new InvalidAccessException("잘못된 접근입니다.");
+        }
+        adminMapper.restoreNotice(boardNo);
     }
     
+
+    
+
+    private Board boardBuilder(WriteFormDTO form) {
+        return Board.builder()
+                .boardNo(form.getBoardNo())
+                .memberNo(form.getMemberNo())
+                .categoryId(form.getCategoryId())
+                .boardTitle(form.getTitle())
+                .boardContent(form.getContent())            
+                .build();
+    }
+
+    private List<Attachment> attachmentsBuilder(WriteFormDTO form) {
+        return form.getImageUrls().stream()
+                    .map(url -> Attachment.builder()
+                            .boardNo(form.getBoardNo())
+                            .attachmentItem(url)
+                            .boardType(form.getBoardType())
+                            .build()
+                        ).collect(Collectors.toList());
+    }
+
+    // summaryCard
+    @Override
+    public List<SummaryCardDTO> selectNoticeSummaryCards() {
+        List<SummaryCardDTO> cards = new ArrayList<>();
+        Long totalCount = noticeMapper.selectTotalNoticeCount();
+        Long currentMonthCount = noticeMapper.selectTotalNoticeCountByMonth();
+        
+        Long noticeIncrease = ((long)Math.floor((double)currentMonthCount / (totalCount - currentMonthCount) * 100));
+        
+        cards.add(
+                new SummaryCardDTO("전체 공지사항 수", totalCount, noticeIncrease,noticeIncrease > 0 ? true : false)
+            );
+
+        Long lastMonthCount = noticeMapper.selectTotalNoticeCountByLastMonth();
+        Long noticeIncreaseIndividual = (long)Math.floor((double)currentMonthCount / lastMonthCount * 100);
+        cards.add(
+                new SummaryCardDTO("이번달 공지사항 수", currentMonthCount, noticeIncreaseIndividual, noticeIncreaseIndividual > 0 ? true : false)
+            );
+        
+        Long totalViewCount = noticeMapper.selectTotalViewCount();
+        cards.add(
+                new SummaryCardDTO("전체 조회수", totalViewCount, 0l, true)
+            );
+        return cards;
+    }
+
+    @Override
+    public List<SummaryCardDTO> selectCommunitySummaryCards() {
+
+        throw new UnsupportedOperationException("Unimplemented method 'selectCommunitySummaryCards'");
+    }
+
+    @Override
+    public List<SummaryCardDTO> selectAuthBoardSummaryCards() {
+        
+        throw new UnsupportedOperationException("Unimplemented method 'selectAuthBoardSummaryCards'");
+    }
+
+    @Override
+    public List<SummaryCardDTO> selectAccountSummaryCards() {
+        
+        throw new UnsupportedOperationException("Unimplemented method 'selectAccountSummaryCards'");
+    }
+
+    @Override
+    public List<SummaryCardDTO> selectPointSummaryCards() {
+
+        throw new UnsupportedOperationException("Unimplemented method 'selectPointSummaryCards'");
+    }
+
+    // Community 관련
+    @Override
+    public Map<String, Object> selectCommunityForAdmin(int pageNo, int size, String search, String searchType, String sortOrder) {
+        int startIndex = pagination.getStartIndex(pageNo, size);
+        Map<String, String> pageInfo = new HashMap<>(); 
+        pageInfo.put("startIndex", Integer.toString(startIndex));
+        pageInfo.put("size", Integer.toString(size));
+        pageInfo.put("sortOrder", sortOrder);
+        
+        Map<String, Object> resultData = new HashMap<String, Object>();
+        
+        if (search.isEmpty()) {
+            resultData.put("totalCount", adminMapper.selectCommunityCount());
+            // 10개만 나옴
+            resultData.put("boardList", adminMapper.selectCommunityListForAdmin(pageInfo));
+            return resultData;
+        }
+        pageInfo.put("search", search);
+        pageInfo.put("searchType", searchType);
+
+        resultData.put("totalCount", adminMapper.selectCommunityCountBySearch(pageInfo));
+        resultData.put("boardList", adminMapper.selectCommunityListForAdminBySearch(pageInfo));
+        return resultData;
+        
+    }
+
+    @Override
+    public void deleteCommunity(Long boardNo) {
+        if (boardNo < 1) {
+            throw new InvalidAccessException("잘못된 접근입니다.");
+        }
+        adminMapper.deleteCommunity(boardNo);
+    }
+
+    @Override
+    public void restoreCommunity(Long boardNo) {
+        if (boardNo < 1) {
+            throw new InvalidAccessException("잘못된 접근입니다.");
+        }
+        adminMapper.restoreCommunity(boardNo);
+    }
 }

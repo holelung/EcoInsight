@@ -1,13 +1,15 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Tiptap from "../TipTap/Tiptap";
 import axios from "axios";
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../Context/AuthContext";
 
-
-const NoticeBoardWrite = () => {
+const NoticeBoardModify = () => {
   const { auth } = useContext(AuthContext);
+  const { boardNo } = useParams();
   const navi = useNavigate();
+  const location = useLocation();
+  const boardData = location.state;
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [categoryId, setCategoryId] = useState("N0001");
@@ -15,12 +17,22 @@ const NoticeBoardWrite = () => {
 
   const boardType = "notice";
 
+  useEffect(() => {
+    if (auth.loginInfo.memberRole !== "ROLE_ADMIN") {
+      return navi("/notice");
+    }
+    setTitle(boardData.boardTitle);
+    setContent(boardData.boardContent);
+    setCategoryId(boardData.categoryId);
+  }, [])
+
+
   const handleUpload = () => {
     if (!title || !content) {
       alert("제목과 내용을 모두 입력해주세요!");
       return;
     }
-    const imgRegex = /<img [^>]*src="([^"]+)"/g;
+    const imgRegex = /<img [^>]*src="blob:([^"]+)"/g;
     let newContent = content;
 
     const formData = new FormData();
@@ -28,56 +40,57 @@ const NoticeBoardWrite = () => {
 
     imageFilesRef.current.forEach((file) => {
       formData.append("files", file);
-    })
+    });
 
-    
-
-    axios.post("http://localhost/boards/upload", formData, {
-      headers: {
-        Authorization: `Bearer ${auth.tokens.accessToken}`,
-      }
-    }).then(response => {
-      const uploadPaths = response.data;
-      let index = 0;
-      // src 변경
-      newContent = newContent.replace(imgRegex, (_, oldSrc) => {
-        const newSrc = `${uploadPaths[index++]}`;
-        return `<img src="${newSrc}"`;
-      });
-      
-      axios
-        .post(
-          "http://localhost/admin/notice-write",
-          {
-            memberNo: auth.loginInfo.memberNo,
-            categoryId: categoryId,
-            title: title,
-            content: newContent,
-            boardType: boardType,
-            ...(uploadPaths &&
-              uploadPaths.length > 0 && { imageUrls: uploadPaths }),
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${auth.tokens.accessToken}`,
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((response) => {
-          console.log(response.status);
-          if(response.status == 201){
-            alert("게시글 업로드 완료");
-            navi(`/admin/noticeboard-manage`);
-          }
-        })
-        .catch((error) => {
-          console.log("게시글 업로드 실패", error);
-          alert("게시글 업로드실패 😢");
+    axios
+      .post("http://localhost/boards/upload", formData, {
+        headers: {
+          Authorization: `Bearer ${auth.tokens.accessToken}`,
+        },
+      })
+      .then((response) => {
+        const uploadPaths = response.data;
+        let index = 0;
+        // src 변경
+        newContent = newContent.replace(imgRegex, (_, oldSrc) => {
+          const newSrc = `${uploadPaths[index++]}`;
+          return `<img src="${newSrc}"`;
         });
-    }).catch(error => {
-      console.log("이미지 업로드 실패", error);
-    })
+
+        axios
+          .put(
+            "http://localhost/admin/notice",
+            {
+              memberNo: auth.loginInfo.memberNo,
+              boardNo: boardNo,
+              categoryId: categoryId,
+              title: title,
+              content: newContent,
+              boardType: boardType,
+              ...(uploadPaths &&
+                uploadPaths.length > 0 && { imageUrls: uploadPaths }),
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${auth.tokens.accessToken}`,
+                "Content-Type": "application/json",
+              },
+            }
+          )
+          .then((response) => {
+            if (response.status == 200) {
+              alert("게시글 수정 완료");
+              navi(`/notice/detail/${boardNo}`);
+            }
+          })
+          .catch((error) => {
+            console.log("게시글 수정 실패", error);
+            alert("게시글 수정실패 😢");
+          });
+      })
+      .catch((error) => {
+        console.log("이미지 수정 실패", error);
+      });
   };
 
   return (
@@ -109,6 +122,7 @@ const NoticeBoardWrite = () => {
         </div>
 
         <Tiptap
+          prevContent={boardData.boardContent}
           setContent={setContent}
           boardType={boardType}
           imageFilesRef={imageFilesRef}
@@ -120,7 +134,7 @@ const NoticeBoardWrite = () => {
             onClick={handleUpload}
             className="bg-green-400 hover:bg-green-500 text-white px-6 py-2 rounded-md font-bold transition"
           >
-            업로드
+            수정하기
           </button>
         </div>
       </div>
@@ -128,4 +142,4 @@ const NoticeBoardWrite = () => {
   );
 };
 
-export default NoticeBoardWrite;
+export default NoticeBoardModify;

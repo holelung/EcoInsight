@@ -27,16 +27,40 @@ const NoticeBoardDetail = () => {
   },[id])
 
   const handleSaveEdit = () => {
-    setTitle(editedTitle);
-    setContent(editedContent);
-    setIsEditing(!isEditing);
+    const boardData = {
+      boardType: "notice",
+      boardNo: notice.boardNo,
+      memberNo: notice.memberNo,
+      memberName: notice.memberName,
+      boardTitle: notice.boardTitle,
+      boardContent: notice.boardContent,
+      categoryId: notice.categoryId,
+    }
+    navi(`/admin/notice/modify/${notice.boardNo}`, { state: boardData });
   };
 
   const handleDelete = () => {
     const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
     if (confirmDelete) {
-      alert("삭제되었습니다.");
-      navi(-1);
+      axios
+        .delete(`http://localhost/admin/notice`, {
+          headers: {
+            Authorization: `Bearer ${auth.tokens.accessToken}`,
+          },
+          params: {
+            boardNo: id,
+          },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            console.log(response);
+            alert(response.data);
+            navi("/admin/noticeboard-manage");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
   };
 
@@ -105,7 +129,16 @@ const NoticeBoardDetail = () => {
 
       {/* 돌아가기 */}
       <button
-        onClick={() => navi(-1)}
+        onClick={() => {
+          if (
+            !auth.isAuthenticated ||
+            !auth.loginInfo.memberRole === "ROLE_ADMIN"
+          ) {
+            navi("/notice");
+          } else {
+            navi("/admin/noticeboard-manage");
+          }
+        }}
         className="w-full mt-6 py-2 border border-gray-300 rounded hover:bg-gray-100"
       >
         게시글 목록으로 돌아가기

@@ -267,12 +267,12 @@ const extensions = [
   }),
 ];
 
-const content = ``;
+const content = `\n\n\n\n`;
 
-const Tiptap = ({ setContent, boardType, imageFilesRef }) => {
+const Tiptap = ({ prevContent, setContent, boardType, imageFilesRef }) => {
   const editor = useEditor({
     extensions,
-    content,
+    content:prevContent === "" ? content : prevContent,
     onUpdate({ editor }) {
       // const dirtyHtml = editor.getHTML();
       // const cleanHtml = DOMpurify.sanitize(dirtyHtml, {

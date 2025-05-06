@@ -39,6 +39,7 @@ import NoticeBoardDetail from "./components/Board/Notice/NoticeBoardDetail.jsx";
 import NoticeBoardWrite from "./components/Board/Notice/NoticeBoardWrite.jsx";
 import NoticeWrite from "./pages/Admin/NoticeBoardManagementPage/NoticeWrite.jsx";
 import CommunityWritePage from "./components/Board/Community/CommunityWritePage.jsx";
+import NoticeBoardModify from "./components/Board/Notice/NoticeBoardModify.jsx";
 
 function App() {
   return (
@@ -121,8 +122,6 @@ function App() {
             path="noticeboard-manage"
             element={<NoticeBoardManagementPage />}
           />
-
-          {/*<Route path="notice-write" element={<NoticeWrite />} />*/}
           <Route path="notice-write" element={<NoticeBoardWrite />} />
           <Route
             path="authboard-manage"
@@ -136,7 +135,10 @@ function App() {
             path="noticeboard-manage"
             element={<NoticeBoardManagementPage />}
           />
-          <Route path="notice-write" element={<NoticeWrite />} />
+          <Route
+            path="notice/modify/:boardNo"
+            element={<NoticeBoardModify />}
+          />
         </Route>
       </Routes>
     </AuthProvider>

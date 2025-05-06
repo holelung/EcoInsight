@@ -9,6 +9,7 @@ import Search from "../../../components/Input/Search/Search";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../../components/Context/AuthContext";
+import SummaryBoard from "../../../components/DashBoard/SummaryBoard";
 
 
 const NoticeBoardManagementPage = () => {
@@ -16,49 +17,96 @@ const NoticeBoardManagementPage = () => {
   const navi = useNavigate();
   const [list, setList] = useState([]);
   const [search, setSearch] = useState("");
+  const [searchType, setSearchType] = useState("name");
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortOrder, setSortOrder] = useState("Newest");
   const [selectedItemId, setSelectedItemId] = useState(null);
+  const [totalPages, setTotalPages] = useState(0);
+  const [listState, setListState] = useState(false);
+  
 
-  const currentList = useMemo(() => {
-    const startIndex = currentPage * rowsPerPage;
-    return list.slice(startIndex, startIndex + rowsPerPage);
-  }, [list, currentPage, rowsPerPage]);
-  const totalPages = Math.ceil(list.length / rowsPerPage);
 
   useEffect(() => {
-    axios.get("http://localhost/admin/notice", {
-      params: {
-        page: currentPage,
-        size: rowsPerPage,
-        search: search,
-        sortOrder: sortOrder,
-      }, 
-        headers: {
-          Authorization: `Bearer ${auth.tokens.accessToken}`,
-      }
-    }).then((response) => {
-      console.log(response);
-      setList([...response.data]);
-      
-    }).catch(error => {
-      console.log(error);
-    })
-  },[currentPage, rowsPerPage, search, sortOrder])
+    if (auth.tokens.accessToken) {
+      axios
+        .get("http://localhost/admin/notice", {
+          params: {
+            page: currentPage,
+            size: rowsPerPage,
+            search: search,
+            searchType: searchType,
+            sortOrder: sortOrder,
+          },
+          headers: {
+            Authorization: `Bearer ${auth.tokens.accessToken}`,
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          setList([...response.data.boardList]);
+          setTotalPages(Math.ceil(response.data.totalCount / rowsPerPage));
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, [currentPage, rowsPerPage, sortOrder, listState, auth.tokens.accessToken]);
 
   
 
-  const handleData = (data, status) => {
-    if (status === "Y") {
-      status = "Disable";
+  const handleData = (boardNo, isDeleted) => {
+    if (isDeleted === 'N') {
+      axios.delete(`http://localhost/admin/notice`, {
+        headers: {
+          Authorization: `Bearer ${auth.tokens.accessToken}`,
+        },
+        params: {
+          boardNo: boardNo,
+        },
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            console.log(response);
+            alert(response.data);
+            setListState(!listState);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     } else {
-      status = "Active";
+      axios.patch(`http://localhost/admin/notice/restore`, 
+        {
+          boardNo: boardNo,
+        }, {
+          headers: {
+            Authorization: `Bearer ${auth.tokens.accessToken}`,
+          }
+        }
+      ).then(response => {
+        alert(response.data);
+        setListState(!listState);
+      }).catch(error => {
+        console.log(error);
+      });
     }
-    alert(`${data}번 글의 상태가 ${status}로 변경되었습니다.`);
 
     setSelectedItemId(null);
   };
+
+  const handleModifyButton = (item) => {
+    const boardData = {
+      boardType: "notice",
+      boardNo: item.boarNo,
+      memberNo: item.memberNo,
+      memberName: item.memberName,
+      boardTitle: item.boardTitle,
+      boardContent: item.boardContent,
+      categoryId: item.categoryId,
+    };
+    navi(`/admin/notice/modify/${item.boardNo}`, { state: boardData });
+  }
 
   const handleSelectitemTable = (itemId) => {
     if (selectedItemId == itemId) {
@@ -68,43 +116,37 @@ const NoticeBoardManagementPage = () => {
     }
   };
 
-  
+  const handleSearch = () => {
+    setListState(!listState);
+  }
 
   return (
     <div className="p-6 space-y-6">
       {/* 상단 요약 카드 */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <SummaryCard
-          icon="👥"
-          title="포인트 보유 유지"
-          value="5,423"
-          change="+16%"
-          positive
-        />
-        <SummaryCard
-          icon="🚮"
-          title="포인트 사용량"
-          value="1,893"
-          change="-1%"
-          positive={false}
-        />
-        <SummaryCard
-          icon="💻"
-          title="포인트 획득 유지"
-          value="189"
-          change="+3%"
-          positive
-        />
-      </div>
+      <SummaryBoard
+        type={"notice"}
+      />
 
       {/* 검색창 + 정렬 */}
       <div className="flex justify-between items-center">
-        <Search
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          searchResult={setList}
-          type={"memberPointList"}
-        />
+        <div className="flex items-center gap-0.5">
+          <Select
+            selectValue={searchType}
+            onChange={(e) => {
+              setSearchType(e.target.value);
+            }}
+          >
+            <option value="name">글쓴이</option>
+            <option value="title">제목</option>
+            <option value="all">글쓴이+제목</option>
+          </Select>
+          <Search
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onClick={() => handleSearch()}
+            type={"memberPointList"}
+          />
+        </div>
         <div className="flex items-center gap-4">
           <Select
             selectValue={rowsPerPage}
@@ -147,14 +189,16 @@ const NoticeBoardManagementPage = () => {
           </tr>
         </thead>
         <tbody>
-          {list.map((item, i) => (
+          {list.map((item) => (
             <Fragment key={item.boardNo}>
               <tr className="border-t hover:bg-gray-50">
-                <td className="px-4 py-3">{i++}</td>
+                <td className="px-4 py-3">{item.boardNo}</td>
                 {/* <td>{item.boardCategory}</td> */}
-                <td>카테고리</td>
+                <td>{item.categoryId}</td>
                 <td>{item.memberName}</td>
-                <td onClick={() => navi(`/notice/detail/${item.boardNo}`)}>
+                <td
+                  className="cursor-pointer"
+                  onClick={() => navi(`/notice/detail/${item.boardNo}`)}>
                   {item.boardTitle}
                 </td>
                 <td>{item.viewCount}</td>
@@ -162,13 +206,13 @@ const NoticeBoardManagementPage = () => {
                 <td>
                   <span
                     className={`px-2 py-1 rounded text-sm cursor-pointer ${
-                      item.status === "Y"
-                        ? "bg-green-100 text-green-600"
-                        : "bg-red-100 text-red-600"
+                      item.isDeleted === "Y"
+                        ? "bg-red-100 text-red-600"
+                        : "bg-green-100 text-green-600"
                     }`}
                     onClick={() => handleSelectitemTable(item.boardNo)}
                   >
-                    {item.status === "Y" ? "Active" : "Disable"}
+                    {item.isDeleted === "Y" ? "Disable" : "Active"}
                   </span>
                 </td>
               </tr>
@@ -177,20 +221,26 @@ const NoticeBoardManagementPage = () => {
                   <td colSpan={7} className="px-4 py-3">
                     <div className="flex gap-2 items-center justify-end">
                       <span className="text-sm font-medium">
-                        {item.boardNo} 상태 변경
+                        글 {item.boardNo}번 현재 상태
                       </span>
                       <input
                         type="text"
-                        value={item.status === "Y" ? "Active" : "Disable"}
+                        value={item.IsDeleted === "Y" ? "Active" : "Disable"}
                         className="border px-3 py-2 w-32 rounded"
                         placeholder="상태변경"
                         disabled
                       />
                       <button
                         className="bg-black text-white px-4 py-2 rounded"
-                        onClick={() => handleData(item.boardNo, item.status)}
+                        onClick={() => handleData(item.boardNo, item.isDeleted)}
                       >
                         상태변경
+                      </button>
+                      <button
+                        className="bg-amber-400 px-4 py-2 rounded"
+                        onClick={() => handleModifyButton(item)}
+                      >
+                        글 수정
                       </button>
                     </div>
                   </td>
