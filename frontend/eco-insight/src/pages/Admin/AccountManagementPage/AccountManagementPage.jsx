@@ -201,10 +201,8 @@ const AccountManagementPage = () => {
                 <td>{item.memberPh}</td>
                 <td>{item.email}</td>
                 <td>
-                  {item.banDate != null
-                    ? `${item.banDate} - ${dayjs(item.banDate)
-                        .add(item.banPeriod, "day")
-                        .format("YYYY-MM-DD")}(${item.banPeriod}일) `
+                  {item.banId != null
+                    ? `${item.banStartDate} - ${item.banEndDate}(${item.banPeriod}일)`
                     : "없음"}
                 </td>
                 <td>{item.banId != null ? `${item.banId}` : "없음"}</td>
