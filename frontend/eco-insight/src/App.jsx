@@ -41,6 +41,7 @@ import NoticeWrite from "./pages/Admin/NoticeBoardManagementPage/NoticeWrite.jsx
 import CommunityWritePage from "./components/Board/Community/CommunityWritePage.jsx";
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import NoticeBoardModify from "./components/Board/Notice/NoticeBoardModify.jsx";
+import ReportManagementPage from "./pages/Admin/ReportManagementPage/ReportManagementPage.jsx";
 
 function App() {
   return (
@@ -124,6 +125,8 @@ function App() {
             path="noticeboard-manage"
             element={<NoticeBoardManagementPage />}
           />
+          <Route path="report-manage" element={<ReportManagementPage />} />
+          {/*<Route path="notice-write" element={<NoticeWrite />} />*/}
           <Route path="notice-write" element={<NoticeBoardWrite />} />
           <Route
             path="authboard-manage"
