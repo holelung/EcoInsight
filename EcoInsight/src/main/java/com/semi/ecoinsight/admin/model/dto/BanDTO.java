@@ -1,6 +1,6 @@
-package com.semi.ecoinsight.member.model.dto;
+package com.semi.ecoinsight.admin.model.dto;
 
-import java.util.Date;
+import java.sql.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,16 +13,19 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class MemberDTO {
+public class BanDTO {
+    private Long banNo;
     private Long memberNo;
+    private String banId;
+    private Long banPeriod;
+    private Date banStartDate;
+    private Date banEndDate;
+    
     private String memberId;
-    private String memberPw;
     private String memberName;
     private String email;
     private String memberPh;
-    private String memberRole;
-    private String gradeNo;
     private Date memberEnrollDate;
     private Date memberUpdateDate;
-    private char isActive;
-};
+    private String isActive;
+}

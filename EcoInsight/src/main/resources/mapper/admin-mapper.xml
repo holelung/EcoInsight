@@ -204,5 +204,159 @@
             BOARD_NO = #{boardNo}
     </update>
 
+    <!-- 계정 관리 -->
     
+    <!-- 계정 정보 Select -->
+    <select id="selectAccountList" parameterType="map">
+        SELECT
+            MEMBER_NO memberNo,
+            MEMBER_ID memberId,
+            MEMBER_NAME memberName,
+            EMAIL email,
+            MEMBER_PH memberPh,
+            MEMBER_ENROLL_DATE memberEnrollDate,
+            MEMBER_UPDATE_DATE memberUpdateDate,
+            IS_ACTIVE isActive,
+            BAN_ID banId,
+            BAN_PERIOD banPeriod,
+            BAN_START_DATE banStartDate,
+            BAN_END_DATE banEndDate
+        FROM
+            TB_MEMBER
+        LEFT JOIN
+            TB_BANLIST USING(MEMBER_NO)
+        WHERE
+            MEMBER_ROLE = 'ROLE_COMMON'
+        ORDER BY
+        <choose>
+            <when test="sortOrder == 'Newest'">
+                MEMBER_ENROLL_DATE DESC
+            </when>
+            <otherwise>
+                MEMBER_ENROLL_DATE ASC
+            </otherwise>
+        </choose>
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <select id="selectAccountListBySearch" parameterType="map">
+        SELECT
+            MEMBER_NO memberNo,
+            MEMBER_ID memberId,
+            MEMBER_NAME memberName,
+            EMAIL email,
+            MEMBER_PH memberPh,
+            MEMBER_ENROLL_DATE memberEnrollDate,
+            MEMBER_UPDATE_DATE memberUpdateDate,
+            IS_ACTIVE isActive,
+            BAN_ID banId,
+            BAN_PERIOD banPeriod,
+            BAN_START_DATE banStartDate,
+            BAN_END_DATE banEndDate
+        FROM
+            TB_MEMBER
+        LEFT JOIN
+            TB_BANLIST USING(MEMBER_NO)
+        WHERE
+            MEMBER_ROLE = 'ROLE_COMMON'
+        AND
+        <choose>
+            <when test="searchType == 'name'"> 
+                MEMBER_NAME LIKE '%'||#{search}||'%' 
+            </when>
+            <when test="searchType == 'id'"> 
+                MEMBER_ID LIKE '%'||#{search}||'%' 
+            </when>
+            <otherwise> 
+                EMAIL LIKE '%'||#{search}||'%'  
+            </otherwise>
+        </choose>
+        ORDER BY
+        <choose>
+            <when test="sortOrder == 'Newest'">
+                MEMBER_ENROLL_DATE DESC
+            </when>
+            <otherwise>
+                MEMBER_ENROLL_DATE ASC
+            </otherwise>
+        </choose>
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <select id="selectAccountCount" resultType="long">
+        SELECT
+            COUNT(*)
+        FROM
+            TB_MEMBER
+        WHERE
+            MEMBER_ROLE = 'ROLE_COMMON'
+    </select>
+    <select id="selectAccountCountBySearch">
+        SELECT
+            COUNT(*)
+        FROM 
+            TB_MEMBER
+        WHERE
+            MEMBER_ROLE = 'ROLE_COMMON'
+        AND
+        <choose>
+            <when test="searchType == 'name'"> 
+                MEMBER_NAME LIKE '%'||#{search}||'%' 
+            </when>
+            <when test="searchType == 'id'"> 
+                MEMBER_ID LIKE '%'||#{search}||'%' 
+            </when>
+            <otherwise> 
+                EMAIL LIKE '%'||#{search}||'%'  
+            </otherwise>
+        </choose>        
+    </select>
+
+    <update id="disableAccount">
+        UPDATE
+            TB_MEMBER
+        SET
+            IS_ACTIVE = 'N',
+            MEMBER_UPDATE_DATE = SYSDATE
+        WHERE
+            MEMBER_NO = #{memberNo}
+    </update>
+
+    <update id="enableAccount">
+        UPDATE
+            TB_MEMBER
+        SET
+            IS_ACTIVE = 'Y',
+            MEMBER_UPDATE_DATE = SYSDATE
+        WHERE
+            MEMBER_NO = #{memberNo}        
+    </update>
+
+    <insert id="insertBanList" parameterType="com.semi.ecoinsight.admin.model.dto.BanDTO">
+        INSERT
+        INTO
+            TB_BANLIST(
+                MEMBER_NO,
+                BAN_ID,
+                BAN_PERIOD,
+                BAN_START_DATE,
+                BAN_END_DATE
+            )
+        VALUES
+        (
+            #{memberNo},
+            #{banId},
+            #{banPeriod},
+            SYSDATE,
+            SYSDATE + #{banPeriod}
+        )
+    </insert>
+
+    <delete id="deleteBanList">
+        DELETE
+        FROM
+            TB_BANLIST
+        WHERE
+            MEMBER_NO = #{memberNo}
+    </delete>
 </mapper>

@@ -22,7 +22,6 @@ import com.semi.ecoinsight.community.model.service.CommunityService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import oracle.jdbc.proxy.annotation.Post;
 
 @RequestMapping("/communities")
 @RestController
