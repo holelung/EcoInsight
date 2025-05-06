@@ -247,7 +247,6 @@ public class AdminServiceImpl implements AdminService {
         resultData.put("totalCount", adminMapper.selectCommunityCountBySearch(pageInfo));
         resultData.put("boardList", adminMapper.selectCommunityListForAdminBySearch(pageInfo));
         return resultData;
-        
     }
 
     @Override
@@ -264,5 +263,42 @@ public class AdminServiceImpl implements AdminService {
             throw new InvalidAccessException("잘못된 접근입니다.");
         }
         adminMapper.restoreCommunity(boardNo);
+    }
+
+    @Override
+    public Map<String, Object> selectAccountList(int pageNo, int size, String search, String searchType, String sortOrder) {
+        
+        int startIndex = pagination.getStartIndex(pageNo, size);
+        Map<String, String> pageInfo = new HashMap<>(); 
+        pageInfo.put("startIndex", Integer.toString(startIndex));
+        pageInfo.put("size", Integer.toString(size));
+        pageInfo.put("sortOrder", sortOrder);
+        
+        Map<String, Object> resultData = new HashMap<String, Object>();
+        
+        if (search.isEmpty()) {
+            resultData.put("totalCount", adminMapper.selectAccountCount());
+            // 10개만 나옴
+            resultData.put("memberList", adminMapper.selectAccountList(pageInfo));
+            return resultData;
+        }
+        pageInfo.put("search", search);
+        pageInfo.put("searchType", searchType);
+
+        resultData.put("totalCount", adminMapper.selectAccountCountBySearch(pageInfo));
+        resultData.put("memberList", adminMapper.selectAccountListBySearch(pageInfo));
+        return resultData;
+    }
+
+    @Override
+    public void disableAccount(Long memberNo) {
+        
+        throw new UnsupportedOperationException("Unimplemented method 'disableAccount'");
+    }
+
+    @Override
+    public void enableAccount(Long memberNo) {
+        
+        throw new UnsupportedOperationException("Unimplemented method 'enableAccount'");
     }
 }

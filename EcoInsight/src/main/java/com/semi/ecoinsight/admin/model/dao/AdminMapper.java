@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.semi.ecoinsight.admin.model.dto.BanDTO;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
 import com.semi.ecoinsight.board.model.vo.Board;
 
@@ -33,4 +34,17 @@ public interface AdminMapper {
     
     void deleteCommunity(Long boardNo);
     void restoreCommunity(Long boardNo);
+    
+    // 계정관리
+    List<BanDTO> selectAccountList(Map<String, String> pageInfo);
+    List<BanDTO> selectAccountListBySearch(Map<String, String> pageInfo);
+    
+    Long selectAccountCount();
+    Long selectAccountCountBySearch(Map<String, String> pageInfo);
+
+    void disableAccount(Long memberNo);
+    void enableAccount(Long memberNo);
+    
+    void insertBanList(BanDTO ban);
+    void deleteBanList(Long banNo);
 }

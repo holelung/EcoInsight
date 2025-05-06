@@ -16,8 +16,16 @@ import lombok.ToString;
 public class BanDTO {
     private Long banNo;
     private Long memberNo;
-    private String banType;
+    private String banId;
     private Long banPeriod;
     private Date banStartDate;
     private Date banEndDate;
+    
+    private String memberId;
+    private String memberName;
+    private String email;
+    private String memberPh;
+    private Date memberEnrollDate;
+    private Date memberUpdateDate;
+    private String isActive;
 }

@@ -41,7 +41,7 @@ const AccountManagementPage = () => {
           },
         })
         .then((response) => {
-          console.info(response);
+          console.info(response.data);
           setList([...response.data.memberList]);
           setTotalPages(Math.ceil(response.data.totalCount / rowsPerPage));
         });
