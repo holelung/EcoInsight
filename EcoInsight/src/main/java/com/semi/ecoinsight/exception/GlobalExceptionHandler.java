@@ -85,9 +85,9 @@ public class GlobalExceptionHandler {
 	}
 	
 	@ExceptionHandler(CommunityAccessException.class)
-  public ResponseEntity<?> handleCommunityAccessException(CommunityAccessException e){
-    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage()); 
-  }
+	public ResponseEntity<?> handleCommunityAccessException(CommunityAccessException e){
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage()); 
+	}
 
 	@ExceptionHandler(InvalidAccessException.class)
 	public ResponseEntity<Map<String, String>> handleInvalidAccessException(InvalidAccessException e) {
