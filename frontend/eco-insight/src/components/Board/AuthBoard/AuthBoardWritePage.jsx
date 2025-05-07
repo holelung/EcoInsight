@@ -47,15 +47,17 @@ export default function AuthBoardWritePage() {
         console.log("전송할 데이터:", postData);
 
         try {
-            const response = await axios.post("/auth-board", postData, {
+            const response = await axios.post("http://localhost/auth-board", postData, {
                 headers: {
                     "Content-Type": "application/json",
                 },
             });
             console.log(response.data); // 성공한 응답 데이터
             alert("게시글 업로드 완료!");
+            navi("/auth-board");
         } catch (error) {
             console.error("업로드 중 오류 발생:", error);
+            console.error("응답 데이터:", error.response?.data);
             alert("게시글 업로드에 실패했습니다.");
         }
     };

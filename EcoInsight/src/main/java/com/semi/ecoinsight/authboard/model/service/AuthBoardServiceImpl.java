@@ -73,4 +73,9 @@ public class AuthBoardServiceImpl implements AuthBoardService {
 	            .build();
 	    authBoardMapper.updateAuthBoard(board);
 	}
+
+	@Override
+	public List<BoardDTO> getAllAuthBoards() {
+	    return authBoardMapper.selectAuthBoardList();
+	}
 }

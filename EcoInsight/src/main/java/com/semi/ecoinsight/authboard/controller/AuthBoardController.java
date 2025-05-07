@@ -1,7 +1,10 @@
 package com.semi.ecoinsight.authboard.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth-board")
+@CrossOrigin(origins = "http://localhost:5173")
 public class AuthBoardController {
 	private final AuthBoardService authBoardService;
 	
@@ -59,4 +63,14 @@ public class AuthBoardController {
         authBoardService.deleteAuthBoard(boardNo);
         return ResponseEntity.ok("게시글이 삭제되었습니다.");
     }
+
+	@GetMapping
+	public ResponseEntity<?> getAllAuthBoards() {
+    	try {
+    	    List<BoardDTO> boardList = authBoardService.getAllAuthBoards();
+    	    return ResponseEntity.ok(boardList);
+    	} catch (Exception e) {
+    	    return ResponseEntity.status(500).body("목록 조회 실패: " + e.getMessage());
+    	}
+	}
 }
