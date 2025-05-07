@@ -39,9 +39,13 @@ import NoticeBoardDetail from "./components/Board/Notice/NoticeBoardDetail.jsx";
 import NoticeBoardWrite from "./components/Board/Notice/NoticeBoardWrite.jsx";
 import NoticeWrite from "./pages/Admin/NoticeBoardManagementPage/NoticeWrite.jsx";
 import CommunityWritePage from "./components/Board/Community/CommunityWritePage.jsx";
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import NoticeBoardModify from "./components/Board/Notice/NoticeBoardModify.jsx";
+import ReportManagementPage from "./pages/Admin/ReportManagementPage/ReportManagementPage.jsx";
 
 function App() {
   return (
+    <GoogleOAuthProvider clientId="617855234940-dp6iq2v93alink0ttpmgadohvbhj0fo5.apps.googleusercontent.com">
     <AuthProvider>
       <Routes>
         {/* 사용자 레이아웃 */}
@@ -52,7 +56,10 @@ function App() {
           <Route path="/auth-board/:no" element={<AuthBoardDetail />} />
           <Route path="/auth-board/write" element={<AuthBoardWritePage />} />
           <Route path="/write/:type" element={<CommunityWritePage />} />
-          <Route path="/post/:id" element={<CommunityBoardDetail />} />
+          <Route
+            path="/post/:categoryId/:boardNo"
+            element={<CommunityBoardDetail />}
+          />
           <Route path="/dashboard" element={<MainDashBoard />} />
           <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
           <Route path="/privateAskPage" element={<PrivateAskPage />} />
@@ -115,7 +122,7 @@ function App() {
             path="noticeboard-manage"
             element={<NoticeBoardManagementPage />}
           />
-
+          <Route path="report-manage" element={<ReportManagementPage />} />
           {/*<Route path="notice-write" element={<NoticeWrite />} />*/}
           <Route path="notice-write" element={<NoticeBoardWrite />} />
           <Route
@@ -130,10 +137,14 @@ function App() {
             path="noticeboard-manage"
             element={<NoticeBoardManagementPage />}
           />
-          <Route path="notice-write" element={<NoticeWrite />} />
+          <Route
+            path="notice/modify/:boardNo"
+            element={<NoticeBoardModify />}
+          />
         </Route>
       </Routes>
     </AuthProvider>
+    </GoogleOAuthProvider>
   );
 }
 

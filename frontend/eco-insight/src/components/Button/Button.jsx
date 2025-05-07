@@ -6,10 +6,9 @@ export const Button = () => {
   );
 }
 
-export const PageButton = ({children, onClick, className, key}) => {
+export const PageButton = ({children, onClick, className}) => {
   return (
     <button
-      key={key}
       onClick={onClick}
       className={`px-3 py-1 rounded bg-gray-200 hover:bg-lime-400 active:scale-105 ${className}`}
     >

@@ -13,7 +13,7 @@ import com.semi.ecoinsight.board.model.dto.BoardDTO;
 public interface NoticeMapper {
 
     // 공지사항 번호
-    Long getNoticeNo(Long memberNo);
+    Long selectNoticeNo(Long memberNo);
     // 관리자용 공지사항 목록
     List<BoardDTO> selectNoticeListForAdmin(Map<String, String> pageInfo);
     List<BoardDTO> selectSearchedNoticeListForAdmin(Map<String, String> pageInfo);
@@ -30,13 +30,23 @@ public interface NoticeMapper {
     void increaseNoticeViewCount(Long boardNo);
 
     // 전체 게시글 수 확인
-    Long getTotalNoticeCount();
-    Long getNoticeCountByCategoryId(String category);
+    Long selectTotalNoticeCount();
+    Long selectNoticeCountByCategoryId(String category);
 
     // 관리자페이지용 게시글 수 확인
-    Long getTotalNoticeCountForAdmin();
-    Long getNoticeCountBySearch(Map<String, String> pageInfo);
+    Long selectTotalNoticeCountForAdmin();
+    Long selectNoticeCountBySearch(Map<String, String> pageInfo);
     
 
-    
+    /**
+     * dashboard용
+     */
+    // 월단위 총 게시글 수
+    Long selectTotalNoticeCountByMonth();
+    Long selectTotalNoticeCountByLastMonth();
+    // 월단위 총 조회수
+    Long selectTotalNoticeViewCountByMonth();
+    Long selectTotalNoticeViewCountByLastMonth();
+    // 총 조회수
+    Long selectTotalViewCount();
 }

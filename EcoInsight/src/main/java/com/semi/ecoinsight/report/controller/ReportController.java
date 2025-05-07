@@ -2,6 +2,7 @@ package com.semi.ecoinsight.report.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,34 +26,30 @@ public class ReportController {
 	private final ReportService reportService;
 	
 	@PostMapping("/community-board")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<?> insertCommunityBoardReport(@RequestBody BoardReportDTO dto){
-		
 		reportService.insertCommunityBoardReport(dto);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
 	@PostMapping("/auth-board")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<?> insertAuthBoardReport(@RequestBody BoardReportDTO dto){
-		
 		reportService.insertAuthBoardReport(dto);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
 	@PostMapping("/community-comment")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<?> insertCommunityCommentReport(@RequestBody CommentReportDTO dto) {
-		
 		reportService.insertCommunityCommentReport(dto);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
 	@PostMapping("auth-comment")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<?> insertAuthCommentReport(@RequestBody CommentReportDTO dto) {
-		
 		reportService.insertAuthCommentReport(dto);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
-	
-	
-	
-
 }

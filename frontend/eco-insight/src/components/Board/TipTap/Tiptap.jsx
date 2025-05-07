@@ -33,7 +33,6 @@ import { FaQuoteLeft, FaTable } from "react-icons/fa";
 import Separate from "../../Seperate/Seperate";
 import axios from "axios";
 
-
 const MenuBar = ({ editor, imageFilesRef }) => {
   const [textColor, setTextColor] = useState("");
   const handleColorChange = (e) => {
@@ -268,12 +267,12 @@ const extensions = [
   }),
 ];
 
-const content = ``;
+const content = `\n\n\n\n`;
 
-const Tiptap = ({ setContent, boardType, imageFilesRef }) => {
+const Tiptap = ({ prevContent, setContent, boardType, imageFilesRef }) => {
   const editor = useEditor({
     extensions,
-    content,
+    content:prevContent === "" ? content : prevContent,
     onUpdate({ editor }) {
       // const dirtyHtml = editor.getHTML();
       // const cleanHtml = DOMpurify.sanitize(dirtyHtml, {

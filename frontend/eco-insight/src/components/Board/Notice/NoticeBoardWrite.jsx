@@ -20,7 +20,7 @@ const NoticeBoardWrite = () => {
       alert("제목과 내용을 모두 입력해주세요!");
       return;
     }
-    const imgRegex = /<img [^>]*src="([^"]+)"[^>]*>/g;
+    const imgRegex = /<img [^>]*src="([^"]+)"/g;
     let newContent = content;
 
     const formData = new FormData();
@@ -42,7 +42,7 @@ const NoticeBoardWrite = () => {
       // src 변경
       newContent = newContent.replace(imgRegex, (_, oldSrc) => {
         const newSrc = `${uploadPaths[index++]}`;
-        return `<img src="${newSrc}" />`;
+        return `<img src="${newSrc}"`;
       });
       
       axios

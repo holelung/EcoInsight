@@ -17,4 +17,5 @@ public class Board {
     private Date modifiedDate;
     private Long viewCount;
     private String isDeleted;
+    private Long likeCount;
 }

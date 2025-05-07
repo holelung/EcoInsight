@@ -16,6 +16,7 @@ import lombok.ToString;
 @ToString
 public class WriteFormDTO {
     
+    private Long boardNo;
     private Long memberNo;
     @NotBlank
     private String categoryId;
