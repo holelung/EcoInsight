@@ -19,11 +19,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.gson.GsonFactory;
+//import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+//import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+//import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
+//import com.google.api.client.http.javanet.NetHttpTransport;
+//import com.google.api.client.json.gson.GsonFactory;
 import com.semi.ecoinsight.auth.model.dao.AuthMapper;
 import com.semi.ecoinsight.auth.model.vo.CustomUserDetails;
 import com.semi.ecoinsight.auth.model.vo.LoginInfo;

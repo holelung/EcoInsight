@@ -1,62 +1,69 @@
-import { useContext, useEffect } from 'react';
-import { AuthContext } from '../Context/AuthContext';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { AuthContext } from '../Context/AuthContext';
+import Pagination from '../Pagination/Pagination';
 
-function Myposts() {
-  const navigate = useNavigate();  
+export default function Myposts() {
+  const navi = useNavigate();
   const { auth } = useContext(AuthContext);
-   useEffect(() => {
-     if (!auth.isAuthenticated) {
-       navigate('/login', { replace: true });
-     }
-   }, [auth.isAuthenticated, navigate]);
-  const PAGE_SIZE = 8;
-  
-  // 예시 데이터 
-  const [posts, setPosts] = useState([
-    { id: 1,  title: '오늘 ~~~ 한 날이었어요',           category: '자유',  date: '2025-04-15', views: 999 },
-    { id: 2,  title: '자유 게시판 테스트',                 category: '질문',  date: '2025-04-14', views: 555 },
-    { id: 3,  title: '이건 멋진 게시글',          category: '인증',  date: '2025-04-13', views: 123 },
-    { id: 4,  title: '이것 안멋진 게시글...',   category: '팁',    date: '2025-04-12', views: 88  },
-    { id: 5,  title: '이건 착한 게시글...',             category: '팁',    date: '2025-04-11', views: 76  },
-    { id: 6,  title: '이건 나쁜 게시글...',    category: '인증',  date: '2025-04-10', views: 45  },
-    { id: 7,  title: '환경좀 지킵시다',             category: '자유',  date: '2025-04-09', views: 150 },
-    { id: 8,  title: '에너지를 아낍시다',      category: '질문',  date: '2025-04-08', views: 210 },
-    { id: 9,  title: '에너지 야무지게 아낀 썰 푼다',         category: '자유',  date: '2025-04-07', views: 34  },
-    { id: 10, title: '예시 데이터 아이디어가 없어요..',            category: '팁',    date: '2025-04-06', views: 98  },
-    { id: 11, title: '11개는 보여줘야 버튼 작동을 보여줄수있음',             category: '인증',  date: '2025-04-05', views: 12  },
-  ]);
+  const { isAuthenticated, tokens } = auth;
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_SIZE = 8;
+  const [posts, setPosts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState('전체');
   const [searchKeyword, setSearchKeyword] = useState('');
+  const [error, setError] = useState(null);
 
-  // (실제 API 연동 시) // try-catch 말고 then 사용 
   useEffect(() => {
-    // axios.get('/api/user/myposts')
-    //   .then(res => setPosts(res.data))
-    //   .catch(err => console.error(err));
-  }, []);
+    if (!isAuthenticated) {
+      navi('/login', { replace: true });
+      return;
+    }
 
-  // 카테고리 목록 추출
-  const categories = ['전체', ...Array.from(new Set(posts.map(p => p.category)))];
+    axios
+      .get('http://localhost/mypage/myposts', {
+        headers: { Authorization: `Bearer ${tokens.accessToken}` }
+      })
+      .then(res => {
+        const formatted = res.data.posts.map(item => ({
+          id:       item.boardNo,
+          title:    item.boardTitle,
+          category: item.categoryName,
+          date:     item.createdDate,
+          views:    item.viewCount
+        }));
+        setPosts(formatted);
+      })
+      .catch(err => {
+        console.error('내 게시글 조회 실패:', err);
+        setError('내 게시글을 불러오는 데 실패했습니다.');
+      });
+  }, [isAuthenticated, tokens.accessToken, navi]);
 
-  // 카테고리드롭다운 메뉴 & 검색어 기준으로 필터링
+  if (error) {
+    return <div className="p-8 text-center text-red-500">{error}</div>;
+  }
+
+  // 1) 카테고리 목록
+  const categories = ['전체', ...new Set(posts.map(p => p.category))];
+
+  // 2) 필터링
   const filtered = posts.filter(post => {
     const matchCategory = selectedCategory === '전체' || post.category === selectedCategory;
-    const matchSearch = post.title.includes(searchKeyword);
+    const matchSearch   = post.title.includes(searchKeyword);
     return matchCategory && matchSearch;
   });
 
-  // 페이지 계산식
+  // 3) 페이지네이션 로직
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const startIdx = (currentPage - 1) * PAGE_SIZE;
-  const displayedPosts = filtered.slice(startIdx, startIdx + PAGE_SIZE);
+  const startIdx   = currentPage * PAGE_SIZE;
+  const displayed  = filtered.slice(startIdx, startIdx + PAGE_SIZE);  // ← 여기 선언 필수!
 
-  // 게시글 클릭시 
-  const handleRowClick = id => console.log(`게시글 ${id} 클릭`);
+  const handleRowClick = id => {
+    navi(`/communities/community-detail?boardNo=${id}`);
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 text-gray-900">
@@ -65,31 +72,18 @@ function Myposts() {
 
         {/* 필터바 */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
-          {/* 카테고리 드롭다운 */}
           <select
             value={selectedCategory}
-            onChange={e => {
-              setSelectedCategory(e.target.value);
-              setCurrentPage(1);  // 카테고리 다시 선택시 1페이지로 이동
-            }}
+            onChange={e => { setSelectedCategory(e.target.value); setCurrentPage(0); }}
             className="px-3 py-2 border rounded"
           >
-            {categories.map(cat => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
+            {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
           </select>
-
-          {/* 제목 검색 넣는 인풋태그 */}
           <input
             type="text"
-            placeholder="검색할 제목을 입력하세요"
+            placeholder="제목으로 검색"
             value={searchKeyword}
-            onChange={e => {
-              setSearchKeyword(e.target.value);
-              setCurrentPage(1);
-            }}
+            onChange={e => { setSearchKeyword(e.target.value); setCurrentPage(0); }}
             className="px-3 py-2 border rounded w-full sm:w-1/3"
           />
         </div>
@@ -106,22 +100,20 @@ function Myposts() {
             </tr>
           </thead>
           <tbody>
-            {displayedPosts.map((post, idx) => (
+            {displayed.map((post, idx) => (
               <tr
                 key={post.id}
                 onClick={() => handleRowClick(post.id)}
                 className="cursor-pointer hover:bg-gray-100 transition-colors"
               >
-                <td className="py-2 px-4 border-b text-center">
-                  {startIdx + idx + 1}
-                </td>
+                <td className="py-2 px-4 border-b text-center">{startIdx + idx + 1}</td>
                 <td className="py-2 px-4 border-b">{post.title}</td>
                 <td className="py-2 px-4 border-b text-center">{post.category}</td>
                 <td className="py-2 px-4 border-b text-center">{post.date}</td>
                 <td className="py-2 px-4 border-b text-center">{post.views}</td>
               </tr>
             ))}
-            {displayedPosts.length === 0 && (
+            {displayed.length === 0 && (
               <tr>
                 <td colSpan="5" className="py-4 text-center text-gray-500">
                   조건에 맞는 게시글이 없습니다.
@@ -131,25 +123,13 @@ function Myposts() {
           </tbody>
         </table>
 
-        {/* 페이징 */}
-        <div className="flex justify-center mt-6 space-x-2">
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-            <button
-              key={page}
-              onClick={() => setCurrentPage(page)}
-              className={`px-4 py-1 rounded-lg transition-colors ${
-                page === currentPage
-                  ? 'bg-lime-400 text-white'
-                  : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-            >
-              {page}
-            </button>
-          ))}
-        </div>
+        {/* 페이지네이션 컴포넌트 */}
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </div>
   );
 }
-
-export default Myposts;

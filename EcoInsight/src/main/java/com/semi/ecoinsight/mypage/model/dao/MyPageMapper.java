@@ -1,9 +1,13 @@
 package com.semi.ecoinsight.mypage.model.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
+import com.semi.ecoinsight.mypage.model.dto.ChangePasswordDTO;
 import com.semi.ecoinsight.mypage.model.dto.EditProfileDTO;
 import com.semi.ecoinsight.mypage.model.dto.MyPageDTO;
+import com.semi.ecoinsight.mypage.model.dto.MyPostsDTO;
 
 @Mapper
 public interface MyPageMapper {
@@ -13,13 +17,17 @@ public interface MyPageMapper {
     // 내가 쓴 게시글 목록 조회
     // List<PostDTO> selectMyPosts(int memberNo);
 
+    // 비밀번호 변경 
+    void updatePassword(ChangePasswordDTO dto);
     // 내 정보 수정
     void editMyProfile(EditProfileDTO dto);
-    
-    // 
-    
-
     // 회원 탈퇴 (활성화 플래그 변경)
     int withdrawalMember(Long memberNo);
+
+    // 커뮤니티 게시글 조회
+    List<MyPostsDTO> selectMyPosts(Long memberNo);
+    
+	EditProfileDTO getMemberByMemberNo(Long memberNo);
 }
 
+ 

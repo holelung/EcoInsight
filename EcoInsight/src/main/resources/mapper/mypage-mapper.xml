@@ -1,29 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.semi.ecoinsight.mypage.dao.MyPageMapper">
+<mapper namespace="com.semi.ecoinsight.mypage.model.dao.MyPageMapper">
 	
-	<select id="findMyPageMemberByMemberId" 
-			parameterType="long" 
-			resultType="com.semi.ecoinsight.mypage.model.dto.MyPageDTO">
-	
-	  SELECT
-    M.MEMBER_NAME memberName, 
-    M.MEMBER_ID memberId, 
-    g.GRADE_NAME grade, 
-    M.MEMBER_ENROLL_DATE enrollDate, 
-    NVL(
-      ( SELECT SUM(p.CHANGE_POINT) 
-        FROM TB_POINT p
-        WHERE p.MEMBER_NO = m.MEMBER_NO
-      ), 0
-    ) point 
-  FROM TB_MEMBER m
-  LEFT JOIN TB_GRADE g
-    ON m.GRADE_NO = g.GRADE_NO
-  WHERE m.MEMBER_ID = #{memberId};
-
-		
-	</select>
+	<select id="selectMemberInfo"
+          parameterType="long"
+          resultType="com.semi.ecoinsight.mypage.model.dto.MyPageDTO">
+    SELECT
+      m.MEMBER_NAME    AS memberName,
+      m.MEMBER_ID      AS memberId,
+      g.GRADE_NAME     AS grade,
+      m.MEMBER_ENROLL_DATE AS enrollDate,
+      NVL(
+        (SELECT SUM(p.CHANGE_POINT)
+           FROM TB_POINT p
+          WHERE p.MEMBER_NO = m.MEMBER_NO),
+        0
+      ) AS point
+    FROM TB_MEMBER m
+    LEFT JOIN TB_GRADE g
+      ON m.GRADE_NO = g.GRADE_NO
+    WHERE m.MEMBER_NO = #{memberNo}
+  </select>
 	
 	<select id="getMemberByMemberNo" 
 			parameterType="long" 
@@ -56,7 +53,15 @@
 	</update>
 	
 	
-	<update id="withdrawal" parameterType="long">
+	<update id="updatePassword"
+          parameterType="com.semi.ecoinsight.mypage.model.dto.ChangePasswordDTO">
+    UPDATE TB_MEMBER
+      SET MEMBER_PW = #{newPassword}
+    WHERE MEMBER_NO = #{memberNo}
+  </update>
+	
+	
+	<update id="withdrawalMember" parameterType="long">
 	UPDATE 
 		TB_MEMBER 
 	SET 
@@ -66,19 +71,22 @@
 	</update>
 	
 	
-	<!--<select id="myposts" parameterType="com.semi.ecoinsight.mypage.mode.dto.MyPostsDTO">
-	
-	SELECT 
-		BOARD_TITLE boardTitle, 
-		BOARD_NO boardNo, 
-		CATEGORY_ID categoryId, 
-		VIEW_COUNT viewCount, 
-		CREATE_DATE createDate, 
-	FROM 
-		TB_
-	
-	동적 SQL을 써서 작성 or mapper를 하나 더 추가해서 사용 ? 흠,...
-	</select>-->
+	<select id="selectMyPosts"
+          parameterType="long"
+          resultType="com.semi.ecoinsight.mypage.model.dto.MyPostsDTO">
+    SELECT
+      b.BOARD_NO        AS boardNo,
+      b.BOARD_TITLE     AS boardTitle,
+      t.CATEGORY_NAME   AS categoryName,
+      TO_CHAR(b.CREATED_DATE,'YYYY-MM-DD') AS createdDate,
+      b.VIEW_COUNT      AS viewCount
+    FROM TB_COMMUNITY_BOARD b
+    LEFT JOIN TB_BOARD_TYPE t
+      ON b.CATEGORY_ID = t.CATEGORY_ID
+    WHERE b.MEMBER_NO = #{memberNo}
+      AND b.IS_DELETED = 'N'
+    ORDER BY b.CREATED_DATE DESC
+  </select>
 	
 	
 	
