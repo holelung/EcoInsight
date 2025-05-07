@@ -141,7 +141,7 @@ const MenuBar = ({ editor, imageFilesRef }) => {
           editor.isActive("heading", { level: 1 })
             ? "bg-black text-white"
             : "bg-white text-black"
-        }`}
+        }`} 
       >
         <RiH1 className="text-lg" />
       </button>
