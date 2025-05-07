@@ -5,16 +5,12 @@ import axios from "axios";
 import { AuthContext } from "../../Context/AuthContext";
 
 export default function AuthBoardWritePage() {
-    const { type } = useParams();
     const navi = useNavigate();
     const imageFilesRef = useRef([]);
-    const [memberNo, setMemberNo] = useState("");
     const [category, setCategory] = useState("");
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [boardType, setBoardType] = useState("");
-    const [imageUrls, setImageUrls] = useState("");
-    const [option, setOption] = useState("");
     const { auth } = useContext(AuthContext);
 
     const handleOnChange = (e) => { setOption(e.target.value); };
@@ -31,17 +27,15 @@ export default function AuthBoardWritePage() {
             alert("제목, 카테고리, 내용을 모두 입력해주세요!");
             return;
         }
-
-        console.log("memberNo 확인:", auth?.loginInfo?.memberNo);
-
-        console.log("imageFilesRef:", imageFilesRef.current);
+        if (!imageFilesRef[0]){
+            alert("이미지 첨부는 필수 입니다.");
+            return;
+        }
 
         const postData = {
+            categoryId: category,
             title,
             content,
-            categoryId: category,
-            boardType: boardType || "AUTH",
-            memberNo: auth.loginInfo.memberNo,
             imageUrls: imageFilesRef.current || []
         };
         console.log("전송할 데이터:", postData);
@@ -49,6 +43,7 @@ export default function AuthBoardWritePage() {
         try {
             const response = await axios.post("http://localhost/auth-board", postData, {
                 headers: {
+                    Authorization: `Bearer ${auth.tokens.accessToken}`,
                     "Content-Type": "application/json",
                 },
             });
@@ -78,10 +73,10 @@ export default function AuthBoardWritePage() {
                 onChange={(e) => setCategory(e.target.value)}
                 className="mb-3 border px-11 py-2 rounded">
                 <option value="category">카테고리 선택</option>
-                <option value="item1">인증1</option>
-                <option value="item2">인증2</option>
-                <option value="item3">인증3</option>
-                <option value="item4">인증4</option>
+                <option value="AUTH_01">인증1</option>
+                <option value="AUTH_02">인증2</option>
+                <option value="AUTH_03">인증3</option>
+                <option value="AUTH_04">인증4</option>
             </select>
         </div>
         
