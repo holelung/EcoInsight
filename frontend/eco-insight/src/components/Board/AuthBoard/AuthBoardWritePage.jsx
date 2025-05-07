@@ -22,7 +22,7 @@ export default function AuthBoardWritePage() {
         }
     }, [auth, navi]);
 
-    const handleUpload = async () => {
+    const handleUpload = () => {
         if (!title.trim() || !content.trim() || !category) {
             alert("제목, 카테고리, 내용을 모두 입력해주세요!");
             return;
@@ -38,7 +38,6 @@ export default function AuthBoardWritePage() {
             content,
             imageUrls: imageFilesRef.current || []
         };
-        console.log("전송할 데이터:", postData);
         axios.post("http://localhost/auth-board", postData, {
             headers: {
                 Authorization: `Bearer ${auth.tokens.accessToken}`,
