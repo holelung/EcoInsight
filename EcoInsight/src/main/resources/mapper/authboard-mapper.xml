@@ -36,6 +36,53 @@
         OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
     </select>
 
+	<select id="selectAuthBoardListBySearch"
+            parameterType="map"
+            resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
+        SELECT
+            A.BOARD_NO boardNo,
+            A.CATEGORY_ID categoryId,
+            A.MEMBER_NO memberNo,
+            A.BOARD_TITLE boardTitle,
+            A.BOARD_CONTENT boardContent,
+            A.CREATED_DATE createdDate,
+            A.MODIFIED_DATE modifiedDate,
+            A.VIEW_COUNT viewCount,
+            MEMBER_ID memberId,
+            MEMBER_NAME memberName,
+            (
+                SELECT
+                    COUNT(*)
+                FROM
+                    TB_AUTH_RECOMMEND R
+                WHERE
+                    R.BOARD_NO = A.BOARD_NO
+            )AS likeCount
+        FROM
+            TB_AUTH_BOARD A
+        JOIN
+            TB_MEMBER M ON(M.MEMBER_NO = A.MEMBER_NO)
+		WHERE
+			A.IS_DELETED = 'N'
+		AND
+		<choose>
+            <when test="searchType == 'name'"> 
+                MEMBER_NAME LIKE '%'||#{search}||'%' 
+            </when>
+            <when test="searchType == 'title'"> 
+                BOARD_TITLE LIKE '%'||#{search}||'%' 
+            </when>
+            <otherwise> 
+                    MEMBER_NAME LIKE '%'||#{search}||'%' 
+                OR    
+                    BOARD_TITLE LIKE '%'||#{search}||'%' 
+            </otherwise>
+        </choose>
+        ORDER BY
+            A.CREATED_DATE DESC
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
 	<select id="selectAuthBoardCount"
 			resultType="long">
 		SELECT
@@ -44,6 +91,32 @@
 			TB_AUTH_BOARD
 		WHERE
 			IS_DELETED = 'N'
+	</select>
+
+	<select id="selectAuthBoardCountBySearch"
+		resultType="long">
+		SELECT
+			COUNT(*)
+		FROM
+			TB_AUTH_BOARD
+		JOIN
+			TB_MEMBER USING(MEMBER_NO)
+		WHERE
+			IS_DELETED = 'N'
+		AND
+		<choose>
+			<when test="searchType == 'name'">
+				MEMBER_NAME LIKE '%'||#{search}||'%'
+			</when>
+			<when test="searchType == 'title'">
+				BOARD_TITLE LIKE '%'||#{search}||'%'
+			</when>
+			<otherwise>
+				MEMBER_NAME LIKE '%'||#{search}||'%'
+				OR
+				BOARD_TITLE LIKE '%'||#{search}||'%'
+			</otherwise>
+		</choose>
 	</select>
 
 
