@@ -56,21 +56,14 @@ public class AuthBoardController {
 	
 	@PutMapping
 	public ResponseEntity<?> updateAuthBoard(@RequestBody WriteFormDTO form) {
-		try {
-			authBoardService.updateAuthBoard(form);
-			return ResponseEntity.ok("게시글이 수정되었습니다.");
-		} catch (Exception e) {
-			return ResponseEntity.status(500).body("수정 실패: " + e.getMessage());
-		}
+		authBoardService.updateAuthBoard(form);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
-	
-
-	
-    @DeleteMapping("/{boardNo}")
-    public ResponseEntity<?> deleteAuthBoard(@PathVariable Long boardNo) {
+    @DeleteMapping
+    public ResponseEntity<?> deleteAuthBoard(@RequestParam(name = "boardNo") Long boardNo) {
         authBoardService.deleteAuthBoard(boardNo);
-        return ResponseEntity.ok("게시글이 삭제되었습니다.");
+        return ResponseEntity.status(HttpStatus.OK).body("글이 삭제되었습니다.");
     }
 
 	
