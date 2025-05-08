@@ -19,13 +19,13 @@
 		INSERT 
 		  INTO
 		       TB_COMMUNITY_BOARD
-		        (
+			(
 			     MEMBER_NO 
 			   , CATEGORY_ID 
 			   , BOARD_TITLE 
 			   , BOARD_CONTENT 			
 			     )
-	    VALUES 
+	VALUES 
 	    	  (
 				 #{memberNo}
 			   , #{categoryId}
@@ -57,13 +57,13 @@
 				 , BOARD_TITLE boardTitle
 				 , MEMBER_NAME memberName	
 				 , VIEW_COUNT viewCount 
-	    	, (
+			, (
 			  SELECT 
 					  COUNT(*)
 				FROM
 				      TB_COMMUNITY_RECOMMEND R
 			   WHERE
-		          	  R.BOARD_NO = TB_COMMUNITY_BOARD.BOARD_NO 			
+					R.BOARD_NO = TB_COMMUNITY_BOARD.BOARD_NO 			
 			) AS likeCount
 			FROM 
 				  TB_COMMUNITY_BOARD
@@ -72,10 +72,10 @@
 			WHERE
 			      IS_DELETED = 'N'
 			  AND
-			  	  CATEGORY_ID = #{categoryId}	    
+				CATEGORY_ID = #{categoryId}	    
 			ORDER
 			  BY
-			  	  CREATED_DATE DESC      
+				CREATED_DATE DESC      
 	</select>
 	
 	<!-- 게시글 검색 -->
@@ -88,13 +88,13 @@
 				 , BOARD_TITLE boardTitle
 				 , MEMBER_NAME memberName	
 				 , VIEW_COUNT viewCount 
-	    	, (
+		, (
 			  SELECT 
 					  COUNT(*)
 				FROM
 				      TB_COMMUNITY_RECOMMEND R
 			   WHERE
-		          	  R.BOARD_NO = TB_COMMUNITY_BOARD.BOARD_NO 			
+					R.BOARD_NO = TB_COMMUNITY_BOARD.BOARD_NO 			
 			) AS likeCount
 		FROM 
 			 TB_COMMUNITY_BOARD
@@ -123,7 +123,7 @@
 			  TB_MEMBER USING(MEMBER_NO)
 	   WHERE
 	   		  BOARD_NO = #{boardNo}
-	   	 AND
+		AND
 	   	 	  CATEGORY_ID = #{categoryId}	  
 	</select>
 	
@@ -131,11 +131,11 @@
 	<!--게시글 수정-->
 	<update id="updateCommunity" parameterType="com.semi.ecoinsight.board.model.vo.Board">
 		UPDATE 
-			    TB_COMMUNITY_BOARD
+			TB_COMMUNITY_BOARD
 		   SET 
 		          BOARD_TITLE = #{boardTitle}
-		        , BOARD_CONTENT = #{boardContent}
-		        , MODIFIED_DATE = SYSDATE
+			, BOARD_CONTENT = #{boardContent}
+			, MODIFIED_DATE = SYSDATE
 		 WHERE 
 		          BOARD_NO = #{boardNo}
 	</update>
@@ -164,7 +164,7 @@
 	<!--조회수 올리기-->
 	<update id="getCommunityCountView" parameterType="long">
 		UPDATE
-		        TB_COMMUNITY_BOARD
+			TB_COMMUNITY_BOARD
 		   SET
 		   	    VIEW_COUNT = VIEW_COUNT + 1
 		 WHERE
@@ -193,7 +193,7 @@
 				  BOARD_NO 
 				, MEMBER_NO 
 			   )
-	    VALUES
+	VALUES
 	          (
 				 #{boardNo}
 			   , #{memberNo}
@@ -206,7 +206,7 @@
 	     FROM 
 	          TB_COMMUNITY_RECOMMEND
   		WHERE 
-  		      BOARD_NO = #{boardNo}
+			BOARD_NO = #{boardNo}
     	  AND 
     	      MEMBER_NO = #{memberNo}
 	</delete> 
@@ -227,14 +227,14 @@
 		  INTO
 		  	   TB_COMMUNITY_COMMENT
 		  	   (
-			    BOARD_NO
+			BOARD_NO
 			  , MEMBER_NO
 			  , COMMENT_CONTENT
 			  , PARENT_COMMENT_NO	
-			    )
+			)
 		VALUES 
 	    	 (
-			    #{boardNo}
+			#{boardNo}
 			  , #{memberNo}	
 			  , #{commentContent}
 			  , #{parentCommentNo}
@@ -248,7 +248,7 @@
 		  FROM
 		  	   TB_COMMUNITY_COMMENT
 		 WHERE
-		 	   BOARD_NO = #{baordNo}
+			BOARD_NO = #{baordNo}
 		   AND
 		   	   IS_DELETD = 'N' 	   
 	</select>
@@ -262,7 +262,7 @@
 			 , PARENT_COMMENT_NO = #{parentCommentNo}
 		     , MODIFIED_DATE = SYSDATE		
 		 WHERE
-		 	   COMMENT_NO = #{commentNo}
+			COMMENT_NO = #{commentNo}
 	</update>
 	
 	<!--댓글 삭제하기-->
