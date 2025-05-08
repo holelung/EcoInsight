@@ -22,8 +22,8 @@ const AuthBoardDetail = () =>{
     const [createdDate, setCreatedDate] = useState("");
 
     const fetchPostDetail = () => {
-        axios.get("http://localhost/auth-board/board-detail",{
-            params: { boardNo, categoryId },
+        axios.get(`http://localhost/auth-board/boardNo=${boardNo}`,{
+            params: { boardNo, category },
         })
         .then((response) => {
             const data = response.data.board;
@@ -128,7 +128,7 @@ const AuthBoardDetail = () =>{
                 {isEditing ? (
                     <input 
                     value={editedTitle} 
-                    onChange={(e) => setTitle(e.target.value)} 
+                    onChange={(e) => setEditedTitle(e.target.value)} 
                     className="w-full px-4 py-2 border rounded" />
                 ) : (
                     <h1>{title}</h1>
@@ -137,16 +137,15 @@ const AuthBoardDetail = () =>{
             <div className="text-sm flex justify-between">
                 <span>
                     작성자 : <span value={authorName} 
-                    className="text-black-800 font-bold">
-                        {post.writer}</span>
+                    className="text-black-800 font-bold"></span>
                 </span>
-                <span>{post.createdDate}</span>
+                <span>{createdDate}</span>
             </div>
             <div className="p-4 bg-gray-50 border rounded-md">
                 {isEditing ? (
-                    <textarea value={content} onChange={(e) => setContent(e.target.value)} className="w-full h-40 p-2 border rounded" />
+                    <textarea value={editedContent} onChange={(e) => setEditedContent(e.target.value)} className="w-full h-40 p-2 border rounded" />
                 ) : (
-                    <p className="whitespace-pre-wrap">{post.content}</p>
+                    <p className="whitespace-pre-wrap">{content}</p>
                 )}
             </div>
             <div className="flex justify-between items-center">
@@ -175,7 +174,7 @@ const AuthBoardDetail = () =>{
                 <ReportPage
                     isOpen={isReportOpen}
                     onClose={() => setIsReportOpen(false)}
-                    author={post.writer}
+                    author={authorName}
                     postTitle={title}
                 />
             )}
