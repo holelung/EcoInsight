@@ -291,7 +291,9 @@
         WHERE
             MEMBER_ROLE = 'ROLE_COMMON'
     </select>
-    <select id="selectAccountCountBySearch">
+    <select id="selectAccountCountBySearch" 
+            parameterType="map"
+            resultType="long">
         SELECT
             COUNT(*)
         FROM 
@@ -359,4 +361,137 @@
         WHERE
             MEMBER_NO = #{memberNo}
     </delete>
+
+    <!-- 포인트 관리 계정정보 조회 -->
+    <select id="selectPointList" 
+            parameterType="map"
+            resultType="com.semi.ecoinsight.admin.model.dto.MemberInfoDTO">
+         SELECT
+            MEMBER_NO memberNo,
+            MEMBER_ID memberId,
+            MEMBER_NAME memberName,
+            GRADE_NO gradeNo,
+            GRADE_NAME gradeName,
+            EMAIL email,
+            MEMBER_PH memberPh,
+            MEMBER_ENROLL_DATE memberEnrollDate,
+            MEMBER_UPDATE_DATE memberUpdateDate,
+            IS_ACTIVE isActive,
+            (
+                SELECT
+                    SUM(CHANGE_POINT)
+                FROM
+                    TB_POINT P
+                WHERE
+                    P.MEMBER_NO = M.MEMBER_NO
+            )AS totalPoint
+        FROM
+            TB_MEMBER M
+        LEFT JOIN
+            TB_GRADE USING(GRADE_NO)
+        WHERE
+            MEMBER_ROLE = 'ROLE_COMMON'
+        ORDER BY
+        <choose>
+            <when test="sortOrder == 'Newest'">
+                MEMBER_ENROLL_DATE DESC
+            </when>
+            <otherwise>
+                MEMBER_ENROLL_DATE ASC
+            </otherwise>
+        </choose>
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <select id="selectPointListBySearch" 
+            parameterType="map"
+            resultType="com.semi.ecoinsight.admin.model.dto.MemberInfoDTO">
+        SELECT
+            MEMBER_NO memberNo,
+            MEMBER_ID memberId,
+            MEMBER_NAME memberName,
+            GRADE_NO gradeNo,
+            GRADE_NAME gradeName,
+            EMAIL email,
+            MEMBER_PH memberPh,
+            MEMBER_ENROLL_DATE memberEnrollDate,
+            MEMBER_UPDATE_DATE memberUpdateDate,
+            IS_ACTIVE isActive,
+            (
+                SELECT
+                    SUM(CHANGE_POINT)
+                FROM
+                    TB_POINT P
+                WHERE
+                    P.MEMBER_NO = M.MEMBER_NO
+            )AS totalPoint
+        FROM
+            TB_MEMBER M
+        LEFT JOIN
+            TB_GRADE USING(GRADE_NO)
+        WHERE
+            MEMBER_ROLE = 'ROLE_COMMON'
+        AND
+        <choose>
+            <when test="searchType == 'name'"> 
+                MEMBER_NAME LIKE '%'||#{search}||'%' 
+            </when>
+            <when test="searchType == 'id'"> 
+                MEMBER_ID LIKE '%'||#{search}||'%' 
+            </when>
+            <otherwise> 
+                EMAIL LIKE '%'||#{search}||'%'  
+            </otherwise>
+        </choose>
+        ORDER BY
+        <choose>
+            <when test="sortOrder == 'Newest'">
+                MEMBER_ENROLL_DATE DESC
+            </when>
+            <otherwise>
+                MEMBER_ENROLL_DATE ASC
+            </otherwise>
+        </choose>
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <!-- 종합 포인트 -->
+    <select id="selectTotalPoint"
+            parameterType="long"
+            resultType="long">
+        SELECT
+            SUM(CHANGE_POINT)
+        FROM
+            TB_POINT
+        WHERE
+            MEMBER_NO = #{memberNo}
+    </select>
+
+    <insert id="insertPoint"
+            parameterType="com.semi.ecoinsight.admin.model.dto.PointDTO">
+        INSERT
+        INTO
+            TB_POINT(
+                MEMBER_NO,
+                CHANGE_POINT
+            )
+        VALUES(
+            #{memberNo},
+            #{changePoint}
+        )
+    </insert>
+    
+    <select id="selectPointHistoryByMemberNo"
+            parameterType="long"
+            resultType="com.semi.ecoinsight.admin.model.dto.PointDTO">
+        SELECT
+            POINT_NO pointNo,
+            CHANGE_POINT changePoint,
+            CREATED_DATE createdDate
+        FROM
+            TB_POINT
+        WHERE
+            MEMBER_NO = #{memberNo}
+    </select>
+
 </mapper>
