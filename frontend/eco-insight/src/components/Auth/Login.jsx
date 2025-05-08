@@ -39,7 +39,13 @@ const Login = () => {
 
     axios.post("http://localhost/auth/login", { memberId, memberPw })
       .then(response => {
-
+        if (response.status === 200) {
+          if (response.data.loginInfo.isActive === 'N') {
+            alert("비활성화된 계정이거나 정지된 계정입니다.");
+          }
+          login(response.data.loginInfo, response.data.tokens);
+          navigate("/");
+        }
       }).catch(error => {
         console.log(error);
         setMsg("아이디 또는 비밀번호가 잘못되었습니다.");
@@ -55,7 +61,7 @@ const Login = () => {
         if (response.data.loginInfo.isActive === 'N') {
           alert("비활성화된 계정이거나 정지된 계정입니다.");
         }
-        login(response.data.loginInfo, response.data.tokens);
+        login(response.data.loginInfo, response.data.tokens, true);
         navigate("/");
       }
     })
