@@ -1,14 +1,16 @@
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import logo from "../../assets/EcoInsigthLogo2.png";
 import MenuItem from "../Button/MenuItem";
+import { useContext } from "react";
+import { AuthContext } from "../Context/AuthContext";
 
 const AdminLayout = () => {
+  const { auth, logout } = useContext(AuthContext);
   const navi = useNavigate();
   const location = useLocation();
 
   const clickLogout = () => {
-    localStorage.clear();
-    navi("/");
+    logout();
   };
 
   return (

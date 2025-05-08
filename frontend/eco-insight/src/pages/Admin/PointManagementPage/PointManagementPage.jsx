@@ -173,7 +173,7 @@ const PointManagementPage = () => {
       <table className="w-full border-collapse bg-white rounded-xl overflow-hidden text-sm shadow">
         <thead className="bg-gray-100 text-left">
           <tr>
-            <th className="p-3">유저 이름</th>
+            <th className="p-3">유저 이름(세부정보)</th>
             <th>아이디</th>
             <th>전화번호</th>
             <th>Email</th>
@@ -186,7 +186,7 @@ const PointManagementPage = () => {
             <Fragment key={item.MemberNo}>
               <tr className="border-t hover:bg-gray-50">
                 <td
-                  className="px-4 py-3"
+                  className="px-4 py-3 cursor-pointer hover:bg-lime-200"
                   onClick={() =>
                     navi(`/admin/point-detail/${item.memberNo}`, {
                       state: item,
