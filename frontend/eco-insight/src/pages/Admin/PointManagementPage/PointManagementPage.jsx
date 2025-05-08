@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useContext, useEffect, useMemo, useState } from "react";
 import SummaryCard from "../../../components/DashBoard/SummaryCard";
 import {memberList} from "../data";
 
@@ -6,45 +6,87 @@ import Pagination from "../../../components/Pagination/Pagination";
 import Select from "../../../components/Input/Select/Select";
 import SelectRowNumber from "../../../components/Input/Select/SelectRowNumber";
 import Search from "../../../components/Input/Search/Search";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { AuthContext } from "../../../components/Context/AuthContext";
 
 
 
 const PointManagementPage = () => {
-  const [members, setMembers] = useState(memberList);
-  const [pointValue, setPointValue] = useState(0);
+  const { auth } = useContext(AuthContext);
+  const navi = useNavigate();
+  const [list, setList] = useState([]);
   const [search, setSearch] = useState("");
+  const [searchType, setSearchType] = useState("name");
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortOrder, setSortOrder] = useState("Newest");
   const [selectedUserId, setSelectedUserId] = useState(null);
-  
+  const [point, setPoint] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [listState, setListState] = useState(false);
 
-  // 검색 DB로갈 경우 필요없음
-  const filteredMembers = useMemo(() => {
-    return members
-      .filter((u) =>
-        [u.memberName, u.memberId, u.memberPh].some((field) =>
-          field.toLowerCase().includes(search.toLowerCase())
-        )
-      )
-      .sort((a, b) => {
-        if (sortOrder === "Newest") return b.memberNo - a.memberNo;
-        if (sortOrder === "Oldest") return a.memberNo - b.memberNo;
-        return 0;
-      });
-  }, [members, search, sortOrder]);
 
-  const currentMembers = useMemo(() => {
-    const startIndex = currentPage * rowsPerPage;
-    return filteredMembers.slice(startIndex, startIndex + rowsPerPage);
-  },[filteredMembers, currentPage, rowsPerPage]); 
-  const totalPages = Math.ceil(filteredMembers.length / rowsPerPage);
+  useEffect(() => {
+    if (auth.tokens.accessToken) {
+      axios
+        .get("http://localhost/admin/point", {
+          params: {
+            page: currentPage,
+            size: rowsPerPage,
+            search: search,
+            searchType: searchType,
+            sortOrder: sortOrder,
+          },
+          headers: {
+            Authorization: `Bearer ${auth.tokens.accessToken}`,
+          },
+        })
+        .then((response) => {
+          console.info(response.data);
+          setList([...response.data.memberList]);
+          setTotalPages(Math.ceil(response.data.totalCount / rowsPerPage));
+        });
+    }
+  }, [currentPage, rowsPerPage, sortOrder, listState, auth.tokens.accessToken]);
 
-  const handleApplyPoint = (memberName) => {
-    alert(`${memberName} 님에게 ${pointValue} 포인트가 적용됩니다.`);
-    setPointValue(0);
-    setSelectedUserId(null);
+
+
+
+  const handleAddPoint = (memberName, memberNo) => {
+    insertPoint(memberName, memberNo, point)
   };
+  
+  const handleMinusPoint = (memberName, memberNo) => {
+    insertPoint(memberName, memberNo, point*-1)
+  };
+
+  const insertPoint = (memberName, memberNo, changePoint) => {
+    axios
+      .post(
+        "http://localhost/admin/point",
+        {
+          memberNo: memberNo,
+          changePoint: changePoint,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${auth.tokens.accessToken}`,
+          },
+        }
+      )
+      .then((response) => {
+        if (response.status === 200) {
+          alert(`${memberName} 회원에게 ${changePoint}가 지급되었습니다.`);
+          setPoint(0);
+          setSelectedUserId(null);
+          setListState(!listState);
+        }
+      }).catch((error) => {
+        alert(error.response.data["error-message"]);
+        console.error(error, "오류발생");
+      });
+  }
 
   const handleSelectUserTable = (userId) => {
     if (selectedUserId == userId) {
@@ -52,6 +94,10 @@ const PointManagementPage = () => {
     } else {
       setSelectedUserId(userId);
     }
+  };
+
+  const handleSearch = () => {
+    setListState(!listState);
   };
 
   return (
@@ -83,12 +129,24 @@ const PointManagementPage = () => {
 
       {/* 검색창 + 정렬 */}
       <div className="flex justify-between items-center">
-        <Search
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          searchResult={setMembers}
-          type={"memberPointList"}
-        />
+        <div className="flex items-center gap-0.5">
+          <Select
+            selectValue={searchType}
+            onChange={(e) => {
+              setSearchType(e.target.value);
+            }}
+          >
+            <option value="name">이름</option>
+            <option value="id">아이디</option>
+            <option value="email">이메일</option>
+          </Select>
+          <Search
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            onClick={() => handleSearch()}
+            type={"memberPointList"}
+          />
+        </div>
         <div className="flex items-center gap-4">
           <Select
             selectValue={rowsPerPage}
@@ -115,7 +173,7 @@ const PointManagementPage = () => {
       <table className="w-full border-collapse bg-white rounded-xl overflow-hidden text-sm shadow">
         <thead className="bg-gray-100 text-left">
           <tr>
-            <th className="p-3">유저 이름</th>
+            <th className="p-3">유저 이름(세부정보)</th>
             <th>아이디</th>
             <th>전화번호</th>
             <th>Email</th>
@@ -124,46 +182,67 @@ const PointManagementPage = () => {
           </tr>
         </thead>
         <tbody>
-          {currentMembers.map((user) => (
-            <Fragment key={user.MemberNo}>
+          {list.map((item) => (
+            <Fragment key={item.MemberNo}>
               <tr className="border-t hover:bg-gray-50">
-                <td className="px-4 py-3">{user.memberName}</td>
-                <td>{user.memberId}</td>
-                <td>{user.memberPh}</td>
-                <td>{user.email}</td>
-                <td>{user.enrollDate}</td>
+                <td
+                  className="px-4 py-3 cursor-pointer hover:bg-lime-200"
+                  onClick={() =>
+                    navi(`/admin/point-detail/${item.memberNo}`, {
+                      state: item,
+                    })
+                  }
+                >
+                  {item.memberName}
+                </td>
+                <td>{item.memberId}</td>
+                <td>{item.memberPh}</td>
+                <td>{item.email}</td>
+                <td>{item.memberEnrollDate}</td>
                 <td>
                   <span
                     className={`px-2 py-1 rounded text-sm cursor-pointer ${
-                      user.point > 0
+                      item.totalPoint > 0
                         ? "bg-green-100 text-green-600"
                         : "bg-red-100 text-red-600"
                     }`}
-                    onClick={() => handleSelectUserTable(user.memberId)}
+                    onClick={() => handleSelectUserTable(item.memberId)}
                   >
-                    {user.point > 0 ? `${user.point}p` : "noPoint"}
+                    {item.totalPoint > 0
+                      ? `${item.totalPoint.toLocaleString()}p`
+                      : "noPoint"}
                   </span>
                 </td>
               </tr>
-              {selectedUserId === user.memberId && (
+              {selectedUserId === item.memberId && (
                 <tr className="bg-gray-50">
                   <td colSpan={6} className="px-4 py-3">
                     <div className="flex gap-2 items-center justify-end">
                       <span className="text-sm font-medium">
-                        {user.memberName} 님에게 포인트 지급:
+                        {item.memberName} :
                       </span>
                       <input
                         type="text"
-                        value={pointValue}
-                        onChange={(e) => setPointValue(e.target.value)}
+                        value={point}
+                        onChange={(e) => setPoint(e.target.value)}
                         className="border px-3 py-2 w-32 rounded"
                         placeholder="포인트 입력"
                       />
                       <button
                         className="bg-black text-white px-4 py-2 rounded"
-                        onClick={() => handleApplyPoint(user.memberName)}
+                        onClick={() =>
+                          handleAddPoint(item.memberName, item.memberNo)
+                        }
                       >
-                        적용
+                        증가
+                      </button>
+                      <button
+                        className="bg-black text-white px-4 py-2 rounded"
+                        onClick={() =>
+                          handleMinusPoint(item.memberName, item.memberNo)
+                        }
+                      >
+                        차감
                       </button>
                     </div>
                   </td>
