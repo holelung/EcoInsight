@@ -199,5 +199,16 @@ public class AdminController {
         return ResponseEntity.ok(adminService.selectPointDetail(memberNo));
     }
     
+    @GetMapping("/authboard")
+    public ResponseEntity<Map<String,Object>> getAuthboard(
+        @RequestParam(name = "page", defaultValue="0") int page,
+        @RequestParam(name = "size") int size,
+        @RequestParam(name = "search", required = false) String search,
+        @RequestParam(name = "searchType", required = false) String searchType,
+        @RequestParam(name = "sortOrder", defaultValue = "Newest") String sortOrder) {
+        
+        return ResponseEntity.ok(adminService.selectAuthBoardList(page, size, search, searchType, sortOrder));
+    }
+    
 
 }
