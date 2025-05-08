@@ -18,7 +18,6 @@ export default function EditProfile() {
   const [loading,    setLoading]      = useState(true);
   const [error,      setError]        = useState(null);
 
-  // ── 1) 마운트 시 내 정보 조회 ─────────────────
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/login', { replace: true });
@@ -27,13 +26,13 @@ export default function EditProfile() {
     if (!tokens.accessToken) return;
 
     setLoading(true);
-    axios.get('http://localhost:8080/mypage/profile', {
+    axios.get('http://localhost/mypage/editprofile', {
       headers: { Authorization: `Bearer ${tokens.accessToken}` }
     })
     .then(({ data }) => {
-      // API가 { memberPh, email } 형태로 반환한다고 가정
+
       setPhone(data.memberPh || '');
-      // 로그인 직후 email은 context에도 있으니, context 우선
+
       setEmail(loginInfo.email || data.email || '');
     })
     .catch(err => {
@@ -57,7 +56,7 @@ export default function EditProfile() {
   const handleSendEmailCode = async () => {
     try {
       setIsEmailCodeSent(true);
-      await axios.post('http://localhost:8080/auth/change-email', 
+      await axios.post('http://localhost/auth/change-email', 
         { email },
         { headers: { Authorization: `Bearer ${tokens.accessToken}` }}
       );
