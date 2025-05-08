@@ -23,4 +23,13 @@
 
     </insert>
 
+    <insert>
+        INSERT INTO TB_VIEW_COUNT(
+            BOARD_NO,
+            CATEGORY_ID
+        ) VALUES (
+            #{boardNo},
+            #{categoryId}
+        )
+    </insert>
 </mapper>

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.board.model.dao.BoardMapper;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
+import com.semi.ecoinsight.board.model.service.BoardService;
+import com.semi.ecoinsight.board.model.service.BoardServiceImpl;
 import com.semi.ecoinsight.board.model.vo.Attachment;
 import com.semi.ecoinsight.board.model.vo.Board;
 import com.semi.ecoinsight.community.model.dao.CommunityMapper;
@@ -28,7 +30,8 @@ public class CommunityServiceImpl implements CommunityService{
 	private final SanitizingService sanitizingService;
 	private final CommunityMapper communityMapper;
 	private final BoardMapper boardMapper;
-	
+	private final BoardService boardService;
+
 	@Override
 	public void insertCommunityBoard(WriteFormDTO form) {
 		// XSS 방어(유효성)
@@ -95,6 +98,16 @@ public class CommunityServiceImpl implements CommunityService{
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("board", board);
 		
+		String[] category = {"C0001", "C0002", "C0003"};
+		String[] categories = {"free", "qna", "tips"};
+		//C0001 = free
+		//C0002 = qna
+		//C0003 = tips
+		for(int i=0;i<3;i++){
+			if(category[i].equals(categoryId)){
+				boardService.insertViewCount(boardNo, categoryId);
+			}
+		}
 		 	
 		return resultMap;
 	}

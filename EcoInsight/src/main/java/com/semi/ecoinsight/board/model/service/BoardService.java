@@ -12,4 +12,10 @@ public interface BoardService {
     void uploadImage();
 
     RowBounds setRowBounds(int pageNo, int size);
+
+    void insertViewCount(Long boardNo, String categoryId);
+    // auth
+    // free
+    // qna
+    // tips
 }
