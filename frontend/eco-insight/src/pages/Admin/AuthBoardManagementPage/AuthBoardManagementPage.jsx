@@ -245,7 +245,6 @@ const AuthBoardManagementPage = () => {
         boardNo={modalBoardNo}
         listState={listState}
         setListState={setListState}
-        auth={auth.tokens.accessToken}
       />
     </div>
   );
