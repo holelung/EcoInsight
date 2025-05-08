@@ -94,7 +94,6 @@ public class MyPageServiceImpl implements MyPageService {
 	}
 
 	@Override
-    @Transactional(readOnly = true)
     public List<MyPostsDTO> selectMyPosts() {
         CustomUserDetails user = (CustomUserDetails)
             SecurityContextHolder.getContext()

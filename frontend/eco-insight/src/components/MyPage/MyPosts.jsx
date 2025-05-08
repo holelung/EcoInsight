@@ -1,133 +1,149 @@
 import { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../Context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { AuthContext } from '../Context/AuthContext';
 import Pagination from '../Pagination/Pagination';
 
-export default function Myposts() {
-  const navi = useNavigate();
+export default function MyPosts() {
+  const navigate = useNavigate();
   const { auth } = useContext(AuthContext);
-  const { isAuthenticated, tokens } = auth;
 
   const PAGE_SIZE = 8;
-  const [posts, setPosts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [selectedCategory, setSelectedCategory] = useState('전체');
-  const [searchKeyword, setSearchKeyword] = useState('');
-  const [error, setError] = useState(null);
+  const [posts, setPosts]       = useState([]);
+  const [currentPage, setPage]  = useState(0);
+  const [category, setCategory] = useState('전체');
+  const [keyword, setKeyword]   = useState('');
+  const [error, setError]       = useState(null);
+  const [loading, setLoading]   = useState(true);
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      navi('/login', { replace: true });
+    // 미인증 시 로그인 페이지로
+    if (!auth) {
+      navigate('/login', { replace: true });
       return;
     }
 
+
+    setLoading(true);
     axios
-      .get('http://localhost/mypage/myposts', {
-        headers: { Authorization: `Bearer ${tokens.accessToken}` }
+      .get('http://localhost:80/mypage/myposts', {
+        headers: { Authorization: `Bearer ${auth.tokens.accessToken}` }
       })
-      .then(res => {
-        const formatted = res.data.posts.map(item => ({
-          id:       item.boardNo,
-          title:    item.boardTitle,
-          category: item.categoryName,
-          date:     item.createdDate,
-          views:    item.viewCount
-        }));
-        setPosts(formatted);
+      .then(({ data }) => {
+
+        setPosts(
+          data.posts.map(item => ({
+            id:       item.boardNo,
+            title:    item.boardTitle,
+            category: item.categoryName,    
+            date:     item.createdDate,
+            views:    item.viewCount
+          }))
+        );
       })
       .catch(err => {
         console.error('내 게시글 조회 실패:', err);
         setError('내 게시글을 불러오는 데 실패했습니다.');
-      });
-  }, [isAuthenticated, tokens.accessToken, navi]);
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
+  // 인증 전 로딩 UI
+  if (!auth) {
+    return <div className="p-8 text-center">로그인 정보 확인 중…</div>;
+  }
+  // 데이터 요청 중 로딩 UI
+  if (loading) {
+    return <div className="p-8 text-center">내 게시글을 불러오는 중…</div>;
+  }
+  // 에러 UI
   if (error) {
     return <div className="p-8 text-center text-red-500">{error}</div>;
   }
 
-  // 1) 카테고리 목록
-  const categories = ['전체', ...new Set(posts.map(p => p.category))];
+  // 필터링
+  const cats     = ['전체', ...new Set(posts.map(p => p.category))];
+  const filtered = posts.filter(p =>
+    (category === '전체' || p.category === category) &&
+    p.title.includes(keyword)
+  );
 
-  // 2) 필터링
-  const filtered = posts.filter(post => {
-    const matchCategory = selectedCategory === '전체' || post.category === selectedCategory;
-    const matchSearch   = post.title.includes(searchKeyword);
-    return matchCategory && matchSearch;
-  });
-
-  // 3) 페이지네이션 로직
+  // 페이징
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
   const startIdx   = currentPage * PAGE_SIZE;
-  const displayed  = filtered.slice(startIdx, startIdx + PAGE_SIZE);  // ← 여기 선언 필수!
+  const displayed  = filtered.slice(startIdx, startIdx + PAGE_SIZE);
 
-  const handleRowClick = id => {
-    navi(`/communities/community-detail?boardNo=${id}`);
+  // 행 클릭 시 상세로
+  const onRowClick = post => {
+    // 예: /post/커뮤니티ID/게시글번호
+    navigate(`/post/${encodeURIComponent(post.category)}/${post.id}`);
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 text-gray-900">
-      <div className="w-11/12 max-w-5xl bg-white shadow-md rounded-md p-8">
-        <h2 className="text-2xl font-semibold mb-4">내 게시글</h2>
+    <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center items-start p-8">
+      <div className="w-full max-w-5xl bg-white rounded shadow p-6">
+        <h2 className="text-2xl font-semibold mb-4">내가 작성한 게시글</h2>
 
-        {/* 필터바 */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+        {/* 필터 바 */}
+        <div className="flex justify-between items-center mb-6 space-x-4">
           <select
-            value={selectedCategory}
-            onChange={e => { setSelectedCategory(e.target.value); setCurrentPage(0); }}
-            className="px-3 py-2 border rounded"
+            value={category}
+            onChange={e => { setCategory(e.target.value); setPage(0); }}
+            className="border px-3 py-2 rounded"
           >
-            {categories.map(cat => <option key={cat} value={cat}>{cat}</option>)}
+            {cats.map(c => (
+              <option key={c} value={c}>{c}</option>
+            ))}
           </select>
           <input
             type="text"
-            placeholder="제목으로 검색"
-            value={searchKeyword}
-            onChange={e => { setSearchKeyword(e.target.value); setCurrentPage(0); }}
-            className="px-3 py-2 border rounded w-full sm:w-1/3"
+            placeholder="제목 검색"
+            value={keyword}
+            onChange={e => { setKeyword(e.target.value); setPage(0); }}
+            className="border px-3 py-2 rounded flex-1"
           />
         </div>
 
-        {/* 테이블 */}
-        <table className="w-full border-collapse text-sm md:text-base">
+        {/* 게시글 테이블 */}
+        <table className="w-full text-center border-collapse">
           <thead>
-            <tr className="text-gray-700">
-              <th className="py-3 px-4 border-b">No</th>
-              <th className="py-3 px-4 border-b">게시물명</th>
-              <th className="py-3 px-4 border-b">카테고리</th>
-              <th className="py-3 px-4 border-b">등록일</th>
-              <th className="py-3 px-4 border-b">조회수</th>
+            <tr>
+              <th className="border px-4 py-2">No</th>
+              <th className="border px-4 py-2">제목</th>
+              <th className="border px-4 py-2">카테고리</th>
+              <th className="border px-4 py-2">등록일</th>
+              <th className="border px-4 py-2">조회수</th>
             </tr>
           </thead>
           <tbody>
-            {displayed.map((post, idx) => (
+            {displayed.map((p, i) => (
               <tr
-                key={post.id}
-                onClick={() => handleRowClick(post.id)}
-                className="cursor-pointer hover:bg-gray-100 transition-colors"
+                key={p.id}
+                onClick={() => onRowClick(p)}
+                className="cursor-pointer hover:bg-gray-100"
               >
-                <td className="py-2 px-4 border-b text-center">{startIdx + idx + 1}</td>
-                <td className="py-2 px-4 border-b">{post.title}</td>
-                <td className="py-2 px-4 border-b text-center">{post.category}</td>
-                <td className="py-2 px-4 border-b text-center">{post.date}</td>
-                <td className="py-2 px-4 border-b text-center">{post.views}</td>
+                <td className="border px-4 py-2">{startIdx + i + 1}</td>
+                <td className="border px-4 py-2">{p.title}</td>
+                <td className="border px-4 py-2">{p.category}</td>
+                <td className="border px-4 py-2">{p.date}</td>
+                <td className="border px-4 py-2">{p.views}</td>
               </tr>
             ))}
             {displayed.length === 0 && (
               <tr>
-                <td colSpan="5" className="py-4 text-center text-gray-500">
-                  조건에 맞는 게시글이 없습니다.
+                <td colSpan="5" className="py-4 text-gray-500">
+                  작성된 게시글이 없습니다.
                 </td>
               </tr>
             )}
           </tbody>
         </table>
 
-        {/* 페이지네이션 컴포넌트 */}
+        {/* 페이지네이션 */}
         <Pagination
           currentPage={currentPage}
           totalPages={totalPages}
-          onPageChange={setCurrentPage}
+          onPageChange={setPage}
         />
       </div>
     </div>

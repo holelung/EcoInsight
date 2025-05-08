@@ -1,5 +1,7 @@
 package com.semi.ecoinsight.mypage.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.semi.ecoinsight.mypage.model.dto.ChangePasswordDTO;
 import com.semi.ecoinsight.mypage.model.dto.EditProfileDTO;
 import com.semi.ecoinsight.mypage.model.dto.MyPageDTO;
+import com.semi.ecoinsight.mypage.model.dto.MyPostsDTO;
 import com.semi.ecoinsight.mypage.model.dto.WithdrawalDTO;
 import com.semi.ecoinsight.mypage.model.service.MyPageService;
 
@@ -37,6 +40,13 @@ public class MyPageController {
         @RequestBody ChangePasswordDTO dto) {
         myPageService.changePassword(dto);
         return ResponseEntity.noContent().build();
+    }
+	
+	@GetMapping("/myposts")
+    public ResponseEntity<List<MyPostsDTO>> getMyPosts() {
+		System.out.print("1");
+        List<MyPostsDTO> list = myPageService.selectMyPosts();
+        return ResponseEntity.ok(list);
     }
 	
 //	@PostMapping

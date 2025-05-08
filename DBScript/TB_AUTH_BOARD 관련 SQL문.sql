@@ -159,8 +159,12 @@ SELECT * FROM TB_AUTH_BOARD ;
 
 SELECT * FROM TB_COMMUNITY_BOARD ;
 
+
+SELECT * FROM TB_NOTICE ;
 ----------------------------------
 -- XML -> 프로필수정 SQL문
+
+COMMIT;
 
 SELECT 
 		MEMBER_NO memberNo, 
@@ -171,7 +175,7 @@ SELECT
 		EMAIL email
 FROM TB_MEMBER;
 
+SELECT * FROM TB_MEMBER ;
 
-
-
+SELECT * FROM TB_COMMUNITY_BOARD ;
 

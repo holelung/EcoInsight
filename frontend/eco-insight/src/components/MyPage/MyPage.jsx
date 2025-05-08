@@ -1,26 +1,36 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../Context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useContext, useEffect, useState } from 'react';
+import { AuthContext }           from '../Context/AuthContext';
+import { useNavigate }           from 'react-router-dom';
+import axios                     from 'axios';
 
-function MyPage() {
-  const navi = useNavigate();
+export default function MyPage() {
+  const navigate = useNavigate();
   const { auth } = useContext(AuthContext);
 
-  const [userInfo, setUserInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState({
+    name: '',
+    username: '',
+    membership: '',
+    joinDate: '',
+    point: ''
+  });
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!auth.isAuthenticated || !auth.tokens?.accessToken) {
-      navi('/login', { replace: true });
+  // 1) 로그인/토큰 검사 후 정보 조회
+  const fetchUserInfo = () => {
+    // 비인증 시 로그인 페이지로
+    if (!auth.isAuthenticated) {
+      navigate('/login', { replace: true });
       return;
     }
 
+    setLoading(true);
+    setError(null);
+
     axios
       .get('http://localhost/mypage', {
-        headers: {
-          Authorization: `Bearer ${auth.tokens.accessToken}`
-        }
+        headers: { Authorization: `Bearer ${auth.tokens.accessToken}` }
       })
       .then(({ data }) => {
         setUserInfo({
@@ -28,41 +38,65 @@ function MyPage() {
           username:   data.memberId,
           membership: data.grade,
           joinDate:   new Date(data.enrollDate)
-                        .toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }),
-          point:      `${Number(data.point || 0).toLocaleString()}point`
+                         .toLocaleDateString('ko-KR', {
+                           year: 'numeric',
+                           month: '2-digit',
+                           day: '2-digit'
+                         }),
+          point:      `${Number(data.point || 0).toLocaleString()} point`
         });
       })
       .catch((err) => {
         console.error('정보 조회 실패:', err);
         setError('정보를 불러오는 데 실패했습니다.');
+      })
+      .finally(() => {
+        setLoading(false);
       });
-  }, [auth, navi]);
+  };
 
-  if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
+  // 마운트 및 auth/tokens 변경 시 fetchUserInfo 호출
+  useEffect(() => {
+    fetchUserInfo();
+  }, []);
 
-  const handleViewEditInfo = () => navi('/mypage/editprofile');
-  const handleBoardList    = () => navi('/mypage/myposts');
-  const handleChangePwd    = () => navi('/mypage/changepassword');
-  const handleWithdrawal   = () => navi('/mypage/withdrawal/check');
+  if (loading) {
+    return <div className="p-8 text-center">로딩 중...</div>;
+  }
+  if (error) {
+    return <div className="p-8 text-center text-red-500">{error}</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 text-gray-900">
-      {/* 상단 */}
+      {/* 상단 버튼들 */}
       <div className="max-w-6xl mx-auto text-center py-8 px-4">
         <h1 className="text-3xl font-bold mb-6">
-          {userInfo?.name}님의 마이페이지
+          {userInfo.name}님의 마이페이지
         </h1>
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
-          <button onClick={handleViewEditInfo} className="px-4 py-2 bg-lime-400 text-white rounded-lg shadow hover:bg-green-600 transition-colors">
+          <button
+            onClick={() => navigate('/mypage/editprofile')}
+            className="px-4 py-2 bg-lime-400 text-white rounded-lg shadow hover:bg-green-600 transition-colors"
+          >
             내정보 조회/수정
           </button>
-          <button onClick={handleBoardList} className="px-4 py-2 bg-lime-400 text-white rounded-lg shadow hover:bg-green-600 transition-colors">
+          <button
+            onClick={() => navigate('/mypage/myposts')}
+            className="px-4 py-2 bg-lime-400 text-white rounded-lg shadow hover:bg-green-600 transition-colors"
+          >
             내가 작성한 게시글 조회
           </button>
-          <button onClick={handleChangePwd} className="px-4 py-2 bg-lime-400 text-white rounded-lg shadow hover:bg-green-600 transition-colors">
+          <button
+            onClick={() => navigate('/mypage/changepassword')}
+            className="px-4 py-2 bg-lime-400 text-white rounded-lg shadow hover:bg-green-600 transition-colors"
+          >
             비밀번호 변경
           </button>
-          <button onClick={handleWithdrawal} className="px-4 py-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition-colors">
+          <button
+            onClick={() => navigate('/mypage/withdrawal/check')}
+            className="px-4 py-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition-colors"
+          >
             회원탈퇴
           </button>
         </div>
@@ -75,7 +109,9 @@ function MyPage() {
             <div className="flex justify-between items-start mb-4">
               <div>
                 <p className="text-gray-500 text-sm">이름</p>
-                <p className="text-xl font-semibold text-gray-800">{userInfo?.name || '-'}</p>
+                <p className="text-xl font-semibold text-gray-800">
+                  {userInfo.name}
+                </p>
               </div>
               <div className="w-12 h-12 bg-gray-200 rounded-full" />
             </div>
@@ -83,28 +119,38 @@ function MyPage() {
               <div className="flex justify-between">
                 <div>
                   <p className="text-gray-500 text-sm">아이디</p>
-                  <p className="text-base text-gray-700">{userInfo?.username || '-'}</p>
+                  <p className="text-base text-gray-700">
+                    {userInfo.username}
+                  </p>
                 </div>
                 <div>
                   <p className="text-gray-500 text-sm">가입일</p>
-                  <p className="text-base text-gray-700">{userInfo?.joinDate || '-'}</p>
+                  <p className="text-base text-gray-700">
+                    {userInfo.joinDate}
+                  </p>
                 </div>
               </div>
               <div className="flex justify-between">
                 <div>
                   <p className="text-gray-500 text-sm">등급</p>
-                  <p className="text-base text-gray-700">{userInfo?.membership || '-'}</p>
+                  <p className="text-base text-gray-700">
+                    {userInfo.membership}
+                  </p>
                 </div>
                 <div>
                   <p className="text-gray-500 text-sm">적립포인트</p>
-                  <p className="text-base text-gray-700">{userInfo?.point || '-'}</p>
+                  <p className="text-base text-gray-700">{userInfo.point}</p>
                 </div>
               </div>
             </div>
           </div>
-          {/* 대시보드 카드 반복 */}
+
+          {/* 대시보드 카드(예시) */}
           {Array.from({ length: 5 }).map((_, idx) => (
-            <div key={idx} className="h-85 bg-white rounded-2xl shadow p-6 flex flex-col items-center justify-center">
+            <div
+              key={idx}
+              className="h-85 bg-white rounded-2xl shadow p-6 flex flex-col items-center justify-center"
+            >
               <div className="flex space-x-4 mb-4">
                 <div className="w-16 h-16 bg-pink-200 rounded-full" />
                 <div className="w-16 h-16 bg-blue-200 rounded" />
@@ -121,5 +167,3 @@ function MyPage() {
     </div>
   );
 }
-
-export default MyPage;
