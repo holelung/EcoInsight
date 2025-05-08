@@ -4,33 +4,37 @@ import ReportPage from "../ReportPage";
 import AuthBoardComment from "../../Comment/AuthBoardComment/AuthBoardComment";
 import { AuthContext } from "../../Context/AuthContext";
 import axios from "axios";
+import Separate from "../../Seperate/Seperate";
 
 const AuthBoardDetail = () => {
   const { auth } = useContext(AuthContext);
   const { no } = useParams(); 
   const navi = useNavigate();
   const [post, setPost] = useState({}); // 게시글 상태
-  const [likes, setLikes] = useState(0);
-  const [hasLiked, setHasLiked] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isAuthor, setIsAuthor] = useState(false);
+  const [pageState, setPageState] = useState(false);
 
 
   // 게시글 상세 조회
   useEffect(() => {
-      axios.get("http://localhost/auth-boards/detail", {
-          params: {
-              boardNo:no,
-          }
-      }).then((response) => {
+    axios
+      .get("http://localhost/auth-boards/detail", {
+        params: {
+          boardNo: no,
+        },
+      })
+      .then((response) => {
         setPost(response.data);
         setIsAuthor(
-          auth.isAuthenticated && auth.loginInfo.memberNo === response.data.memberNo
+          auth.isAuthenticated &&
+            auth.loginInfo.memberNo === response.data.memberNo
         );
-      }).catch((error) => {
-          console.log(error);
       })
-  },[])
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [pageState, ]);
 
   const handleEdit = () => {
     const boardData = {
@@ -71,25 +75,49 @@ const AuthBoardDetail = () => {
   };
 
   const handleLike = () => {
-      if (hasLiked) {
-          setLikes(prev => prev - 1); // 취소하면 -1
+    if (!auth.isAuthenticated) {
+      const loginConfirm = window.confirm("로그인이 필요한 기능입니다!");
+      if (!loginConfirm) {
+        return;
       } else {
-          setLikes(prev => prev + 1); // 처음 누르면 +1
+        return navi("/login");
       }
-      setHasLiked(!hasLiked); // 상태 반전
+    }
+
+    axios.post(`http://localhost/auth-boards/like`, {
+      boardNo: post.boardNo,
+      memberNo: post.memberNo,
+    }, {
+        headers: {
+          Authorization: `Bearer ${auth.tokens.accessToken}`,
+        }
+      }
+    ).then((response) => {
+      if (response.status === 200) {
+        alert(response.data);
+        
+        setPageState(!pageState);
+      }
+    }).catch((error) => {
+      alert(error.response.data["error-message"]);
+      console.error(error);
+    })
+
   };
   
   return (
     <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md space-y-6">
-      <div className="text-2xl font-bold">
-        <h1>{post.boardTitle}</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">{post.boardTitle}</h1>
       </div>
       <div className="text-sm flex justify-between">
         <span>
           작성자 :
-          <span className="text-black-800 font-bold">{post.memberName}</span>
+          <span className="text-black-800 font-bold"> {post.memberName}</span>
         </span>
-        <span>{post.createdDate}</span>
+        <div className="flex gap-1.5">
+          작성일 : {post.createdDate}<Separate /> 조회수 : {post.viewCount}
+        </div>
       </div>
       <div className="p-4 bg-gray-50 border rounded-md">
         <p
@@ -101,9 +129,7 @@ const AuthBoardDetail = () => {
         <div className="flex justify-between items-center">
           <button
             onClick={()=>handleLike()}
-            className={`px-4 py-1 border border-gray-300 rounded transition cursor-pointer ${
-              hasLiked ? "font-bold text-blue-500" : ""
-            }`}
+            className={`px-4 py-1 border border-gray-300 rounded transition cursor-pointer`}
           >
             👍 좋아요 {post.likeCount}
           </button>

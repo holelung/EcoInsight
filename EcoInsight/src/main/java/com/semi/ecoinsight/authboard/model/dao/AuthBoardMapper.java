@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
 import com.semi.ecoinsight.board.model.vo.Board;
+import com.semi.ecoinsight.board.model.vo.Like;
 
 @Mapper
 public interface AuthBoardMapper {
@@ -20,6 +21,13 @@ public interface AuthBoardMapper {
 
 	// 세부 조회
 	BoardDTO selectAuthBoardDetail(Long boardNo);
+	// 조회수 증가
+	void increaseViewCount(Long boardNo);
+
+	// 좋아요
+	int selectLikeCount(Like like);
+	void increaseLikeCount(Like like);
+	void decreaseLikeCount(Like like);
 	
 	// 글작성
 	void insertAuthBoard(Board board);

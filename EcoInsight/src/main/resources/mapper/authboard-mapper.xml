@@ -209,4 +209,55 @@
 		WHERE
 			BOARD_NO = #{boardNo}
 	</update>
+
+	<!-- 조회수 증가 -->
+	<update id="increaseViewCount"
+			parameterType="long">
+		UPDATE
+			TB_AUTH_BOARD
+		SET
+			VIEW_COUNT = VIEW_COUNT + 1
+		WHERE
+			BOARD_NO = #{boardNo}
+	</update>
+
+	<!-- 좋아요 처리 -->
+	<select id="selectLikeCount"
+			parameterType="com.semi.ecoinsight.board.model.vo.Like"
+			resultType="_int">
+		SELECT
+			COUNT(*)
+		FROM
+			TB_AUTH_RECOMMEND
+		WHERE
+			BOARD_NO = #{boardNo}
+		AND
+			MEMBER_NO = #{memberNo}
+	</select>
+
+
+	<insert id="increaseLikeCount"
+			parameterType="com.semi.ecoinsight.board.model.vo.Like">
+		INSERT
+		INTO
+			TB_AUTH_RECOMMEND(
+				BOARD_NO,
+				MEMBER_NO
+			)
+		VALUES(
+			#{boardNo},
+			#{memberNo}
+		)
+	</insert>
+
+	<delete id="decreaseLikeCount"
+			parameterType="com.semi.ecoinsight.board.model.vo.Like">
+		DELETE
+		FROM
+			TB_AUTH_RECOMMEND
+		WHERE
+			BOARD_NO = #{boardNo}
+		AND
+			MEMBER_NO = #{memberNo}
+	</delete>
 </mapper>

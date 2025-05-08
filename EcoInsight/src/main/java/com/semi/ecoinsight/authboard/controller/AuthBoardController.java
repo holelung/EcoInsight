@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.authboard.model.service.AuthBoardService;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
+import com.semi.ecoinsight.board.model.dto.LikeDTO;
 
 import lombok.RequiredArgsConstructor;
 
@@ -61,10 +62,14 @@ public class AuthBoardController {
 	}
 	
     @DeleteMapping
-    public ResponseEntity<?> deleteAuthBoard(@RequestParam(name = "boardNo") Long boardNo) {
-        authBoardService.deleteAuthBoard(boardNo);
-        return ResponseEntity.status(HttpStatus.OK).body("글이 삭제되었습니다.");
-    }
-
+	public ResponseEntity<?> deleteAuthBoard(@RequestParam(name = "boardNo") Long boardNo) {
+		authBoardService.deleteAuthBoard(boardNo);
+		return ResponseEntity.status(HttpStatus.OK).body("글이 삭제되었습니다.");
+	}
 	
+	@PostMapping("/like")
+	public ResponseEntity<?> handleLikeCount(@RequestBody LikeDTO like) {
+		authBoardService.handleLikeCount(like);
+		return ResponseEntity.status(HttpStatus.OK).body("좋아요 처리완료!");
+	}
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
+import com.semi.ecoinsight.board.model.dto.LikeDTO;
 
 public interface AuthBoardService {
 
@@ -16,4 +17,6 @@ public interface AuthBoardService {
 	void insertAuthBoard(WriteFormDTO form);
 	void deleteAuthBoard(Long boardNo);
 	void updateAuthBoard(WriteFormDTO form);
+	
+	void handleLikeCount(LikeDTO like);
 }
