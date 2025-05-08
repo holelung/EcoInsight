@@ -1,6 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.semi.ecoinsight.authboard.model.dao.AuthBoardMapper">
+
+	<!-- 글 전체조회 -->
+	<select id="selectAuthBoardList"
+		parameterType="long"
+		resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
+		SELECT 
+        	BOARD_NO AS boardNo, 
+        	MEMBER_NO AS memberNo, 
+        	CATEGORY_ID AS categoryId, 
+        	BOARD_TITLE AS boardTitle, 
+        	BOARD_CONTENT AS boardContent, 
+        	CREATED_DATE AS createdDate 
+    	FROM 
+    	    TB_AUTH_BOARD 
+    	WHERE 
+    	    IS_DELETED = 'N'
+    	ORDER BY 
+    	    CREATED_DATE DESC
+	</select>
+
+	<select id="selectAuthBoardCount"
+			resultType="long">
+		SELECT
+			COUNT(*)
+		FROM
+			TB_AUTH_BOARD
+		WHERE
+			IS_DELETED = 'N'
+	</select>
+
+
+	<!-- 글 상세조회 -->
+	<select id="selectAuthBoardDetail"
+			parameterType="long"
+			resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
+		SELECT 
+        	BOARD_NO AS boardNo, 
+        	MEMBER_NO AS memberNo, 
+        	CATEGORY_ID AS categoryId, 
+        	BOARD_TITLE AS boardTitle, 
+        	BOARD_CONTENT AS boardContent, 
+			IS_CERTIFIED AS isCertified,
+        	CREATED_DATE AS createdDate
+    	FROM 
+    	    TB_AUTH_BOARD 
+    	WHERE 
+    	    IS_DELETED = 'N'
+    	ORDER BY 
+    	    CREATED_DATE DESC
+		OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+	</select>
+
+
+
 	<insert id="insertAuthBoard"
 			parameterType="com.semi.ecoinsight.board.model.vo.Board">
 		INSERT
@@ -22,27 +76,10 @@
 				#{boardContent}
 			)
 	</insert>
-	
-	<select id="selectAuthBoardList"
-			parameterType="long"
-			resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
-		SELECT 
-        	BOARD_NO AS boardNo, 
-        	MEMBER_NO AS memberNo, 
-        	CATEGORY_ID AS categoryId, 
-        	BOARD_TITLE AS boardTitle, 
-        	BOARD_CONTENT AS boardContent, 
-        	CREATED_DATE AS createdDate 
-    	FROM 
-    	    TB_AUTH_BOARD 
-    	WHERE 
-    	    IS_DELETED = 'N'
-    	ORDER BY 
-    	    CREATED_DATE DESC
-	</select>
-	
-	<!--게시글 번호 -->
-	<select id="getAuthBoardNo" parameterType="long" resultType="long">
+
+
+	<!--게시글 번호 조회 -->
+	<select id="selectAuthBoardNo" parameterType="long" resultType="long">
         SELECT
             BOARD_NO AS boardNo
         FROM
@@ -53,7 +90,8 @@
             CREATED_DATE DESC
         FETCH FIRST 1 ROWS ONLY
     </select>
-	
+
+	<!-- 글 수정 -->
 	<update id="updateAuthBoard" parameterType="com.semi.ecoinsight.board.model.vo.Board">
 		UPDATE
 			TB_AUTH_BOARD

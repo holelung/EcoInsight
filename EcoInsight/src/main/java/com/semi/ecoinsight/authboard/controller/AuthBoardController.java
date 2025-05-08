@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
@@ -29,8 +30,15 @@ public class AuthBoardController {
 	private final AuthBoardService authBoardService;
 	
 	@GetMapping
-	public ResponseEntity<?> getAuthBoardList() {
-		return null;
+	public ResponseEntity<?> getAuthBoardList(
+			@RequestParam(name = "page", defaultValue="0") int page,
+            @RequestParam(name = "size") int size,
+            @RequestParam(name = "search", required = false) String search,
+            @RequestParam(name = "searchType", required = false) String searchType,
+            @RequestParam(name = "sortOrder", defaultValue = "Newest") String sortOrder,
+			@RequestParam(name = "categoryId", defaultValue = "Newest") String categoryId) {
+
+		return ResponseEntity.ok(authBoardService.selectAuthBoardList(page, size, search, searchType, sortOrder, categoryId));
 	}
 
 	@GetMapping("/detail")

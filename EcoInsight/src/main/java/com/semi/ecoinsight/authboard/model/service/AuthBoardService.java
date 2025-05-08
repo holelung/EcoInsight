@@ -8,7 +8,8 @@ import com.semi.ecoinsight.board.model.dto.BoardDTO;
 
 public interface AuthBoardService {
 
-	List<BoardDTO> selectAuthBoardList(Map<String,Object> pageInfo);
+	Map<String,Object> selectAuthBoardList(int pageNo, int size, String search, String searchType,
+            String sortOrder, String categoryId);
 
 	BoardDTO selectAuthBoardDetail(Long boardNo);
 	

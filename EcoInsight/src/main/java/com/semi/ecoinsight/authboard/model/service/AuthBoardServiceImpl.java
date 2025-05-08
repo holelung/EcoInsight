@@ -1,5 +1,6 @@
 package com.semi.ecoinsight.authboard.model.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import com.semi.ecoinsight.board.model.dao.BoardMapper;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
 import com.semi.ecoinsight.board.model.vo.Attachment;
 import com.semi.ecoinsight.board.model.vo.Board;
+import com.semi.ecoinsight.util.pagination.PaginationService;
 import com.semi.ecoinsight.util.sanitize.SanitizingService;
 
 import lombok.RequiredArgsConstructor;
@@ -22,17 +24,37 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AuthBoardServiceImpl implements AuthBoardService {
 	private final SanitizingService sanitizingService;
+	private final PaginationService pagination;
 	private final AuthBoardMapper authBoardMapper;
 	private final BoardMapper boardMapper;
 	
 	@Override
-	public List<BoardDTO> selectAuthBoardList(Map<String,Object> pageInfo) {
-		return authBoardMapper.selectAuthBoardList();
+	public Map<String,Object> selectAuthBoardList(int pageNo, int size, String search, String searchType, String sortOrder, String categoryId) {
+		int startIndex = pagination.getStartIndex(pageNo, size);
+        Map<String, String> pageInfo = new HashMap<>();
+        pageInfo.put("startIndex", Integer.toString(startIndex));
+        pageInfo.put("size", Integer.toString(size));
+        pageInfo.put("sortOrder", sortOrder);
+
+        Map<String, Object> resultData = new HashMap<String, Object>();
+
+        if (search.isEmpty()) {
+            resultData.put("totalCount", authBoardMapper.selectAuthBoardCount());
+            // 10개만 나옴
+            resultData.put("boardList", authBoardMapper.selectAuthBoardList(pageInfo));
+            return resultData;
+        }
+        pageInfo.put("search", search);
+        pageInfo.put("searchType", searchType);
+
+        resultData.put("totalCount", authBoardMapper.selectAuthBoardCountBySearch(pageInfo));
+        resultData.put("boardList", authBoardMapper.selectAuthBoardListBySearch(pageInfo));
+        return resultData;
 	}
 
 	@Override
 	public BoardDTO selectAuthBoardDetail(Long boardNo) {
-		return authBoardMapper.selectAuthBoardById(boardNo);
+		return authBoardMapper.selectAuthBoardDetail(boardNo);
 	}
 
 
@@ -49,7 +71,7 @@ public class AuthBoardServiceImpl implements AuthBoardService {
         
         authBoardMapper.insertAuthBoard(board);
         
-        Long authBoardNo = authBoardMapper.getAuthBoardNo(form.getMemberNo());
+        Long authBoardNo = authBoardMapper.selectAuthBoardNo(form.getMemberNo());
         if (form.getImageUrls() != null) {
             List<Attachment> Attachments = form.getImageUrls().stream()
             .map(url -> Attachment.builder()

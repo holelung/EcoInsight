@@ -9,7 +9,6 @@ const NoticeBoard = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [category, setCategory] = useState("all");
-  const [listCount, setListCount] = useState();
   const [totalPages, setTotalPages] = useState();
   
   useEffect(() => {
