@@ -28,7 +28,7 @@ const AuthBoardDetail = () => {
         setPost(response.data);
         setIsAuthor(
           auth.isAuthenticated &&
-            auth.loginInfo.memberNo === response.data.memberNo
+            auth.loginInfo.memberNo == response.data.memberNo
         );
       })
       .catch((error) => {
@@ -48,7 +48,7 @@ const AuthBoardDetail = () => {
     };
     navi(`/auth-board/modify/${post.boardNo}`, { state: boardData });
   };
-  
+
   const handleDelete = () => {
     const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
     if (confirmDelete) {
@@ -116,7 +116,8 @@ const AuthBoardDetail = () => {
           <span className="text-black-800 font-bold"> {post.memberName}</span>
         </span>
         <div className="flex gap-1.5">
-          작성일 : {post.createdDate}<Separate /> 조회수 : {post.viewCount}
+          작성일 : {post.createdDate}
+          <Separate /> 조회수 : {post.viewCount}
         </div>
       </div>
       <div className="p-4 bg-gray-50 border rounded-md">
@@ -128,33 +129,35 @@ const AuthBoardDetail = () => {
       <div className="flex justify-between items-center">
         <div className="flex justify-between items-center">
           <button
-            onClick={()=>handleLike()}
+            onClick={() => handleLike()}
             className={`px-4 py-1 border border-gray-300 rounded transition cursor-pointer`}
           >
             👍 좋아요 {post.likeCount}
           </button>
         </div>
         <div className="flex justify-end gap-2">
-          <button
-            onClick={() => handleEdit(true)}
-            className="px-4 py-2 border rounded hover:bg-green-100 cursor-pointer"
-          >
-            수정하기
-          </button>
+          {isAuthor && (
+            <>
+              <button
+                onClick={() => handleEdit(true)}
+                className="px-4 py-2 border rounded hover:bg-green-100 cursor-pointer"
+              >
+                수정하기
+              </button>
+              <button
+                onClick={() => handleDelete()}
+                className="px-4 py-2 border border-red-500 text-red-600 rounded hover:bg-red-100 cursor-pointer"
+              >
+                삭제하기
+              </button>
+            </>
+          )}
           <button
             onClick={() => setIsReportOpen(true)}
             className="px-4 py-2 border border-red-500 text-red-600 rounded hover:bg-red-100 cursor-pointer"
           >
             신고
           </button>
-          {isAuthor && (
-            <button
-              onClick={()=>handleDelete()}
-              className="px-4 py-2 border border-red-500 text-red-600 rounded hover:bg-red-100 cursor-pointer"
-            >
-              삭제하기
-            </button>
-          )}
         </div>
       </div>
       {/* 신고 모달 */}

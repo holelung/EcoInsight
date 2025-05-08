@@ -54,13 +54,15 @@ public class AuthBoardController {
 		authBoardService.insertAuthBoard(form);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
-	
+
+	// 글 수정
 	@PutMapping
 	public ResponseEntity<?> updateAuthBoard(@RequestBody WriteFormDTO form) {
 		authBoardService.updateAuthBoard(form);
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
+	// 글 삭제
     @DeleteMapping
 	public ResponseEntity<?> deleteAuthBoard(@RequestParam(name = "boardNo") Long boardNo) {
 		authBoardService.deleteAuthBoard(boardNo);

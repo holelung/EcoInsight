@@ -74,7 +74,7 @@ public class AuthBoardServiceImpl implements AuthBoardService {
 
         try{
             authBoardMapper.increaseViewCount(boardNo);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new BoardInsertException("조회수 증가 실패");
         }
 		return authBoardMapper.selectAuthBoardDetail(boardNo);
@@ -93,7 +93,7 @@ public class AuthBoardServiceImpl implements AuthBoardService {
                 .build();
         try {
             authBoardMapper.insertAuthBoard(board);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new BoardInsertException("게시글 생성에 실패했습니다.");
         }
         
@@ -109,7 +109,7 @@ public class AuthBoardServiceImpl implements AuthBoardService {
             for (Attachment a : Attachments) {
                 try {                
                     boardMapper.uploadImage(a);
-                } catch (Exception e) {
+                } catch (RuntimeException e) {
                     throw new ImageInsertException("이미지 업로드에 실패했습니다.");
                 }
             }
@@ -134,7 +134,7 @@ public class AuthBoardServiceImpl implements AuthBoardService {
                 .build();
         try {
             authBoardMapper.updateAuthBoard(board);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new BoardInsertException("게시글 수정에 실패했습니다.");
         }
 
@@ -149,7 +149,7 @@ public class AuthBoardServiceImpl implements AuthBoardService {
             for (Attachment a : Attachments) {
                 try {
                     boardMapper.uploadImage(a);
-                } catch (Exception e) {
+                } catch (RuntimeException e) {
                     throw new ImageInsertException("추가 이미지 업로드에 실패했습니다.");
                 }
             }
@@ -171,20 +171,20 @@ public class AuthBoardServiceImpl implements AuthBoardService {
 
         try{
             isLike = authBoardMapper.selectLikeCount(likeData);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new CustomSqlException("다시 시도해주세요");
         }
 
         if (isLike != 0) {
             try{
                 authBoardMapper.decreaseLikeCount(likeData);
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 throw new CustomSqlException("다시 시도해주세요");
             }
         } else {
             try {
                 authBoardMapper.increaseLikeCount(likeData);
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 throw new CustomSqlException("다시 시도해주세요");
             }
         }

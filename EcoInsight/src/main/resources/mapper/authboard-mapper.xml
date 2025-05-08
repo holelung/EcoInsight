@@ -196,6 +196,7 @@
 		SET
 			BOARD_TITLE = #{boardTitle},
 			BOARD_CONTENT = #{boardContent},
+			CATEGORY_ID = #{categoryId},
 			MODIFIED_DATE = SYSDATE
 		WHERE
 			BOARD_NO = #{boardNo}
