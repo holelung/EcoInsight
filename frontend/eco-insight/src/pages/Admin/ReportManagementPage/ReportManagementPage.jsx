@@ -1,22 +1,31 @@
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useMemo, useState, useEffect } from "react";
 import SummaryCard from "../../../components/DashBoard/SummaryCard";
-import { reportList, memberList } from "../data";
-
 import Pagination from "../../../components/Pagination/Pagination";
 import Select from "../../../components/Input/Select/Select";
 import SelectRowNumber from "../../../components/Input/Select/SelectRowNumber";
 import Search from "../../../components/Input/Search/Search";
 import ReportDetailModal from "./ReportDetailModal";
+import axios from "axios";
 
 const ReportManagementPage = () => {
-  const [list, setList] = useState(reportList);
+  const [list, setList] = useState([]);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sortOrder, setSortOrder] = useState("Newest");
-  const [selectedItemId, setSelectedItemId] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedReport, setSelectedReport] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost/reports/all")
+      .then((res) => {
+        setList(res.data);
+      })
+      .catch((err) => {
+        console.error("신고 목록 불러오기 실패:", err);
+      });
+  }, []);
 
   const handleOpenDetail = (item) => {
     setSelectedReport(item);
@@ -33,7 +42,6 @@ const ReportManagementPage = () => {
       const updatedReport = { ...selectedReport, status: updatedStatus };
       setSelectedReport(updatedReport);
 
-      // 전체 리스트 안에서도 상태를 업데이트하려면 필요
       setList((prevList) =>
         prevList.map((item) =>
           item.reportNo === updatedReport.reportNo ? updatedReport : item
@@ -42,12 +50,11 @@ const ReportManagementPage = () => {
     }
   };
 
-  // 검색 DB로갈 경우 필요없음
   const filteredReports = useMemo(() => {
     return list
       .filter((u) =>
         [u.reporter, u.reportContent, u.reportCategoryId].some((field) =>
-          field?.toLowerCase().includes(search.toLowerCase())
+          field?.toString().toLowerCase().includes(search.toLowerCase())
         )
       )
       .sort((a, b) => {
@@ -61,30 +68,11 @@ const ReportManagementPage = () => {
     const startIndex = currentPage * rowsPerPage;
     return filteredReports.slice(startIndex, startIndex + rowsPerPage);
   }, [filteredReports, currentPage, rowsPerPage]);
+
   const totalPages = Math.ceil(filteredReports.length / rowsPerPage);
-
-  const handleData = (data, status) => {
-    if (status === "Y") {
-      status = "Disable";
-    } else {
-      status = "Active";
-    }
-    alert(`${data}번 글의 상태가 ${status}로 변경되었습니다.`);
-
-    setSelectedItemId(null);
-  };
-
-  const handleSelectitemTable = (itemId) => {
-    if (selectedItemId == itemId) {
-      setSelectedItemId(null);
-    } else {
-      setSelectedItemId(itemId);
-    }
-  };
 
   return (
     <div className="p-6 space-y-6">
-      {/* 상단 요약 카드 */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <SummaryCard icon="🚨" title="오늘의 신고 건수" value="23" positive />
         <SummaryCard
@@ -96,7 +84,6 @@ const ReportManagementPage = () => {
         <SummaryCard icon="✅" title="처리한 신고 건수" value="15" positive />
       </div>
 
-      {/* 검색창 + 정렬 */}
       <div className="flex justify-between items-center">
         <Search
           value={search}
@@ -109,7 +96,7 @@ const ReportManagementPage = () => {
             selectValue={rowsPerPage}
             onChange={(e) => {
               setRowsPerPage(Number(e.target.value));
-              setCurrentPage(1);
+              setCurrentPage(0);
             }}
             labelName={"행 개수"}
           >
@@ -126,12 +113,10 @@ const ReportManagementPage = () => {
         </div>
       </div>
 
-      {/* 사용자 테이블 */}
       <table className="w-full border-collapse bg-white rounded-xl overflow-hidden text-sm shadow">
         <thead className="bg-gray-100 text-left">
           <tr>
-            <th className="p-3">신고번호</th>
-            <th>신고분류</th>
+            <th className="p-3">신고분류</th>
             <th>신고자</th>
             <th>신고대상</th>
             <th>신고내용</th>
@@ -140,13 +125,12 @@ const ReportManagementPage = () => {
           </tr>
         </thead>
         <tbody>
-          {currentList.map((item) => (
-            <Fragment key={item.reportNo}>
+          {currentList.map((item, index) => (
+            <Fragment key={`${item.reportType}-${index}`}>
               <tr className="border-t hover:bg-gray-50">
-                <td className="px-4 py-3">{item.reportNo}</td>
-                <td>[item.reportCategoryId]</td>
+                <td className="px-4 py-3">{item.reportType}</td>{" "}
                 <td>{item.reporter}</td>
-                <td>{item.boardNo}</td>
+                <td>{item.boardNo ?? item.commentNo ?? "-"}</td>
                 <td>{item.reportContent}</td>
                 <td>
                   <button
@@ -168,36 +152,11 @@ const ReportManagementPage = () => {
                   </span>
                 </td>
               </tr>
-              {selectedItemId === item.boardNo && (
-                <tr className="bg-gray-50">
-                  <td colSpan={6} className="px-4 py-3">
-                    <div className="flex gap-2 items-center justify-end">
-                      <span className="text-sm font-medium">
-                        {item.boardNo} 상태 변경
-                      </span>
-                      <input
-                        type="text"
-                        value={item.status === "Y" ? "Active" : "Disable"}
-                        className="border px-3 py-2 w-32 rounded"
-                        placeholder="상태변경"
-                        disabled
-                      />
-                      <button
-                        className="bg-black text-white px-4 py-2 rounded"
-                        onClick={() => handleData(item.boardNo, item.status)}
-                      >
-                        상태변경
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              )}
             </Fragment>
           ))}
         </tbody>
       </table>
 
-      {/* 페이지네이션 */}
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
