@@ -9,29 +9,39 @@ export const AuthProvider = ({ children }) => {
     loginInfo: {},
     tokens: {},
     isAuthenticated: false,
+    googleLoginState: false
   });
 
   useEffect(() => {
     const loginInfo = JSON.parse(localStorage.getItem("loginInfo"));
     const tokens = JSON.parse(localStorage.getItem("tokens"));
-
-    if (loginInfo && tokens) {
+    if (loginInfo && tokens && googleLoginState){
       setAuth({
         loginInfo,
         tokens,
         isAuthenticated: true,
+        googleLoginState: true,
+      });
+    }
+    else if (loginInfo && tokens) {
+      setAuth({
+        loginInfo,
+        tokens,
+        isAuthenticated: true,
+        googleLoginState: false
       });
     }
   }, []);
-
-  const login = (loginInfo, tokens) => {
+  const login = (loginInfo, tokens, googleLogin=false) => {
     setAuth({
       loginInfo,
       tokens,
       isAuthenticated: true,
+      googleLoginState: googleLogin
     });
     localStorage.setItem("loginInfo", JSON.stringify(loginInfo));
     localStorage.setItem("tokens", JSON.stringify(tokens));
+    localStorage.setItem("googleLoginState", JSON.stringify(googleLogin));
     console.log(JSON.stringify(tokens));
     console.log(JSON.stringify(loginInfo));
   };
@@ -41,9 +51,11 @@ export const AuthProvider = ({ children }) => {
       loginInfo: {},
       tokens: {},
       isAuthenticated: false,
+      googleLoginState: false,
     });
     localStorage.removeItem("loginInfo");
     localStorage.removeItem("tokens");
+    localStorage.removeItem("googleLoginState");
     navi("/");
   };
 
