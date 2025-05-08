@@ -5,6 +5,7 @@ import axios                     from 'axios';
 
 export default function MyPage() {
   const { auth } = useContext(AuthContext);
+  const { loginInfo, tokens, isAuthenticated, googleLoginState } = auth;
   const navi = useNavigate();
 
   const [userInfo, setUserInfo] = useState({
@@ -14,12 +15,12 @@ export default function MyPage() {
     joinDate: '',
     point: ''
   });
-  const [error, setError] = useState(null);
+  const [error, setError]     = useState(null);
   const [loading, setLoading] = useState(true);
 
   // 1) 로그인/토큰 검사 후 정보 조회
   useEffect(() => {
-    if (!auth.isAuthenticated) {
+    if (!isAuthenticated) {
       navi('/login', { replace: true });
       return;
     }
@@ -27,34 +28,34 @@ export default function MyPage() {
     setLoading(true);
     setError(null);
 
-    if(auth.tokens.accessToken){
-    axios
-      .get('http://localhost/mypage', {
-        headers: { Authorization: `Bearer ${auth.tokens.accessToken}` }
-      })
-      .then(({ data }) => {
-        setUserInfo({
-          name:       data.memberName,
-          username:   data.memberId,
-          membership: data.grade,
-          joinDate:   new Date(data.enrollDate)
-                         .toLocaleDateString('ko-KR', {
-                           year: 'numeric',
-                           month: '2-digit',
-                           day: '2-digit'
-                         }),
-          point:      `${Number(data.point || 0).toLocaleString()} point`
+    if (tokens.accessToken) {
+      axios
+        .get('http://localhost/mypage', {
+          headers: { Authorization: `Bearer ${tokens.accessToken}` }
+        })
+        .then(({ data }) => {
+          setUserInfo({
+            name:       data.memberName,
+            username:   data.memberId,
+            membership: data.grade,
+            joinDate:   new Date(data.enrollDate)
+                           .toLocaleDateString('ko-KR', {
+                             year: 'numeric',
+                             month: '2-digit',
+                             day: '2-digit'
+                           }),
+            point:      `${Number(data.point || 0).toLocaleString()} point`
+          });
+        })
+        .catch((err) => {
+          console.error('정보 조회 실패:', err);
+          setError('정보를 불러오는 데 실패했습니다.');
+        })
+        .finally(() => {
+          setLoading(false);
         });
-      })
-      .catch((err) => {
-        console.error('정보 조회 실패:', err);
-        setError('정보를 불러오는 데 실패했습니다.');
-      })
-      .finally(() => {
-        setLoading(false);
-      });
     }
-  }, [auth.tokens.accessToken, ]);
+  }, [isAuthenticated, tokens.accessToken, navi]);
 
   if (loading) {
     return <div className="p-8 text-center">로딩 중...</div>;
@@ -83,12 +84,15 @@ export default function MyPage() {
           >
             내가 작성한 게시글 조회
           </button>
-          <button
-            onClick={() => navi('/mypage/changepassword')}
-            className="px-4 py-2 bg-lime-400 text-white rounded-lg shadow hover:bg-green-600 transition-colors"
-          >
-            비밀번호 변경
-          </button>
+          {/* 구글 로그인 유저는 비밀번호 변경버튼 숨겨버리기~ */}
+          {!googleLoginState ? ( /* 삼항연산자 사용! */
+            <button
+              onClick={() => navi('/mypage/changepassword')}
+              className="px-4 py-2 bg-lime-400 text-white rounded-lg shadow hover:bg-green-600 transition-colors"
+            >
+              비밀번호 변경
+            </button>
+          ) : null}
           <button
             onClick={() => navi('/mypage/withdrawal/check')}
             className="px-4 py-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition-colors"
