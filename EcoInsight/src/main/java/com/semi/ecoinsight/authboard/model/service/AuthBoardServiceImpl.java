@@ -1,6 +1,7 @@
 package com.semi.ecoinsight.authboard.model.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -25,16 +26,25 @@ public class AuthBoardServiceImpl implements AuthBoardService {
 	private final BoardMapper boardMapper;
 	
 	@Override
+	public List<BoardDTO> selectAuthBoardList(Map<String,Object> pageInfo) {
+		return authBoardMapper.selectAuthBoardList();
+	}
+
+	@Override
+	public BoardDTO selectAuthBoardDetail(Long boardNo) {
+		return authBoardMapper.selectAuthBoardById(boardNo);
+	}
+
+
+	@Override
 	public void insertAuthBoard(WriteFormDTO form) {
-		// XSS 방어(유효성)
-        String sanitizingTitle = sanitizingService.sanitize(form.getTitle());
-        String sanitizingContent = sanitizingService.sanitize(form.getContent());
-        
+		
+
         Board board = Board.builder()
                 .memberNo(form.getMemberNo())
                 .categoryId(form.getCategoryId())
-                .boardTitle(sanitizingTitle)
-                .boardContent(sanitizingContent)            
+                .boardTitle(form.getTitle())
+                .boardContent(form.getContent())            
                 .build();
         
         authBoardMapper.insertAuthBoard(board);
@@ -59,23 +69,18 @@ public class AuthBoardServiceImpl implements AuthBoardService {
 		authBoardMapper.deleteAuthBoard(boardNo);
 	}
 	
-	public BoardDTO getAuthBoardDetail(Long boardNo) {
-	    return authBoardMapper.selectAuthBoardById(boardNo);
-	}
-	
-	public void updateAuthBoard(Long boardNo, WriteFormDTO form) {
-	    String sanitizingTitle = sanitizingService.sanitize(form.getTitle());
-	    String sanitizingContent = sanitizingService.sanitize(form.getContent());
-	    Board board = Board.builder()
-	            .boardNo(boardNo)
-	            .boardTitle(sanitizingTitle)
-	            .boardContent(sanitizingContent)
-	            .build();
-	    authBoardMapper.updateAuthBoard(board);
-	}
 
 	@Override
-	public List<BoardDTO> getAllAuthBoards() {
-	    return authBoardMapper.selectAuthBoardList();
+	public void updateAuthBoard(WriteFormDTO form) {
+		Board board = Board.builder()
+				.boardNo(form.getBoardNo())
+				.categoryId(form.getCategoryId())
+				.boardTitle(form.getTitle())
+				.boardContent(form.getContent())
+				.build();
+				
+		authBoardMapper.updateAuthBoard(board);
 	}
+
+
 }

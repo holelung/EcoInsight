@@ -22,31 +22,37 @@ import lombok.RequiredArgsConstructor;
 
 @Validated
 @RestController
+@RequestMapping("/auth-boards")
 @RequiredArgsConstructor
-@RequestMapping("/auth-board")
-@CrossOrigin(origins = "http://localhost:5173")
 public class AuthBoardController {
+
 	private final AuthBoardService authBoardService;
 	
-	@GetMapping("/{boardNo}")
+	@GetMapping
+	public ResponseEntity<?> getAuthBoardList() {
+		return null;
+	}
+
+	@GetMapping("/detail")
 	public ResponseEntity<?> getAuthBoardDetail(@PathVariable Long boardNo) {
-	    try {
-	        BoardDTO dto = authBoardService.getAuthBoardDetail(boardNo);
-	        return ResponseEntity.ok(dto);
-	    } catch (Exception e) {
-	        return ResponseEntity.status(404).body("게시글을 찾을 수 없습니다.");
-	    }
+		try {
+			BoardDTO dto = authBoardService.selectAuthBoardDetail(boardNo);
+			return ResponseEntity.ok(dto);
+		} catch (Exception e) {
+			return ResponseEntity.status(404).body("게시글을 찾을 수 없습니다.");
+		}
 	}
 	
-	@PutMapping("/{boardNo}")
-	public ResponseEntity<?> updateAuthBoard(@PathVariable Long boardNo, @RequestBody WriteFormDTO form) {
-	    try {
-	        authBoardService.updateAuthBoard(boardNo, form);
-	        return ResponseEntity.ok("게시글이 수정되었습니다.");
-	    } catch (Exception e) {
-	        return ResponseEntity.status(500).body("수정 실패: " + e.getMessage());
-	    }
+	@PutMapping
+	public ResponseEntity<?> updateAuthBoard(@RequestBody WriteFormDTO form) {
+		try {
+			authBoardService.updateAuthBoard(form);
+			return ResponseEntity.ok("게시글이 수정되었습니다.");
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body("수정 실패: " + e.getMessage());
+		}
 	}
+	
 	
 	@PostMapping
 	public ResponseEntity<?> uploadAuthBoard(@RequestBody @Validated WriteFormDTO form) {
@@ -64,13 +70,5 @@ public class AuthBoardController {
         return ResponseEntity.ok("게시글이 삭제되었습니다.");
     }
 
-	@GetMapping
-	public ResponseEntity<?> getAllAuthBoards() {
-    	try {
-    	    List<BoardDTO> boardList = authBoardService.getAllAuthBoards();
-    	    return ResponseEntity.ok(boardList);
-    	} catch (Exception e) {
-    	    return ResponseEntity.status(500).body("목록 조회 실패: " + e.getMessage());
-    	}
-	}
+	
 }
