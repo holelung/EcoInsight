@@ -42,6 +42,7 @@ import CommunityWritePage from "./components/Board/Community/CommunityWritePage.
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import NoticeBoardModify from "./components/Board/Notice/NoticeBoardModify.jsx";
 import ReportManagementPage from "./pages/Admin/ReportManagementPage/ReportManagementPage.jsx";
+import PointDetailPage from "./pages/Admin/PointManagementPage/PointDetailPage.jsx";
 
 function App() {
   return (
@@ -112,6 +113,7 @@ function App() {
         >
           <Route path="dashboard" element={<AdminDashBoard />} />
           <Route path="point-manage" element={<PointManagementPage />} />
+          <Route path="point-detail/:memberNo" element={<PointDetailPage />} />
           <Route path="account-manage" element={<AccountManagementPage />} />
           <Route
             path="authboard-manage"

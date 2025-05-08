@@ -16,6 +16,7 @@ import com.semi.ecoinsight.exception.util.CustomAuthenticationException;
 
 import com.semi.ecoinsight.exception.util.CustomMessagingException;
 import com.semi.ecoinsight.exception.util.InvalidUserNameAndEmailException;
+import com.semi.ecoinsight.exception.util.LargePointValueException;
 import com.semi.ecoinsight.exception.util.FileStreamException;
 import com.semi.ecoinsight.exception.util.FileTypeNotAllowedException;
 import com.semi.ecoinsight.exception.util.ImageInsertException;
@@ -91,6 +92,11 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(InvalidAccessException.class)
 	public ResponseEntity<Map<String, String>> handleInvalidAccessException(InvalidAccessException e) {
+		return makeResponseEntity(e, HttpStatus.NOT_FOUND);
+	}
+
+		@ExceptionHandler(LargePointValueException.class)
+	public ResponseEntity<Map<String, String>> LargePointValueException(LargePointValueException e) {
 		return makeResponseEntity(e, HttpStatus.NOT_FOUND);
 	}
 

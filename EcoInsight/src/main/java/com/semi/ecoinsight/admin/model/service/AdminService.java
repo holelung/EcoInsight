@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.semi.ecoinsight.admin.model.dto.BanDTO;
+import com.semi.ecoinsight.admin.model.dto.PointDTO;
 import com.semi.ecoinsight.admin.model.dto.SummaryCardDTO;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
@@ -48,6 +49,14 @@ public interface AdminService {
     
 
     // 포인트 관리
+    // 조회
+    Map<String, Object> selectPointList(int pageNo, int size, String search, String searchType, String sortOrder);
+
+    // 포인트 지급/회수
+    void insertPoint(PointDTO points);
+
+    Map<String, Object> selectPointDetail(Long memberNo);
+
 
     // summaryCard
     List<SummaryCardDTO> selectNoticeSummaryCards();

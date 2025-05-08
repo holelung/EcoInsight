@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.semi.ecoinsight.admin.model.dto.BanDTO;
+import com.semi.ecoinsight.admin.model.dto.PointDTO;
 import com.semi.ecoinsight.admin.model.dto.SummaryCardDTO;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.admin.model.service.AdminService;
@@ -173,4 +174,30 @@ public class AdminController {
         adminService.enableAccount(banInfo.getMemberNo());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
+
+    @GetMapping("/point")
+    public ResponseEntity<Map<String,Object>> getPointList(
+            @RequestParam(name = "page", defaultValue="0") int page,
+            @RequestParam(name = "size") int size,
+            @RequestParam(name = "search", required = false) String search,
+            @RequestParam(name = "searchType", required = false) String searchType,
+            @RequestParam(name = "sortOrder", defaultValue = "Newest") String sortOrder) 
+    {
+
+        return ResponseEntity.ok(adminService.selectPointList(page, size, search, searchType, sortOrder));
+    }
+    
+    @PostMapping("/point")
+    public ResponseEntity<HttpStatus> insertPoint(@RequestBody PointDTO point) {
+        adminService.insertPoint(point);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/point/detail")
+    public ResponseEntity<Map<String,Object>> getPointDetail(@RequestParam(name = "memberNo") Long memberNo) {
+        
+        return ResponseEntity.ok(adminService.selectPointDetail(memberNo));
+    }
+    
+
 }
