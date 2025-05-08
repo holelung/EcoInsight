@@ -5,105 +5,140 @@ import AuthBoardComment from "../../Comment/AuthBoardComment/AuthBoardComment";
 import { AuthContext } from "../../Context/AuthContext";
 import axios from "axios";
 
-function AuthBoardDetail() {
+const AuthBoardDetail = () =>{
+    const navigate = useNavigate();
+    const { boardNo, category } = useParams();
     const { auth } = useContext(AuthContext);
-    const navi = useNavigate();
-    const location = useLocation();
-    const { state } = location;
-    const { no } = useParams(); // 'no' 파라미터 값 가져오기
-    const [post, setPost] = useState(null); // 게시글 상태
+  
     const [isEditing, setIsEditing] = useState(false);
     const [likes, setLikes] = useState(0);
-    const [hasLiked, setHasLiked] = useState(false);
     const [title, setTitle] = useState("");
-    const [writer, setWriter] = useState("");
     const [content, setContent] = useState("");
+    const [editedTitle, setEditedTitle] = useState("");
+    const [editedContent, setEditedContent] = useState("");
     const [isReportOpen, setIsReportOpen] = useState(false);
-    const isAuthor = auth.isAuthenticated && auth.loginInfo.username === post.writer;
+    const [authorName, setAuthorName] = useState(""); // 화면용 이름
+    const [authorId, setAuthorId] = useState(""); // 비교용 ID
+    const [createdDate, setCreatedDate] = useState("");
 
-    // 게시글 상세 조회
+    const fetchPostDetail = () => {
+        axios.get("http://localhost/auth-board/board-detail",{
+            params: { boardNo, categoryId },
+        })
+        .then((response) => {
+            const data = response.data.board;
+            setTitle(data.boardTitle);
+            setContent(data.boardContent);
+            setLikes(data.likeCount);
+            setCreatedDate(data.createdDate);
+            setEditedTitle(data.boardTitle);
+            setEditedContent(data.boardContent);
+            setAuthorName(data.memberName); // 보여줄 이름
+            setAuthorId(data.memberId); // id 비교
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+    };
+    
+
     useEffect(() => {
-        const fetchPost = async () => {
-            try {
-                const response = await axios.get(`http://localhost:5173/auth-board/${no}`);
-                const data = response.data;
-                setPost(data);
-                setLikes(data.likes);
-                setWriter(data.writer);
-                setTitle(data.title);
-                setContent(data.content);
-            } catch (error) {
-                console.error("게시글을 불러오는 데 실패했습니다.", error);
-                alert("게시글을 불러오는 데 실패했습니다.");
-            }
-        };
+        fetchPostDetail();
+    }, [boardNo, category]);
 
-        fetchPost();
-    }, [no]);
+    useEffect(() => {
+    }, [likes]);
 
-    if (!post) {
-        return (
-            <div className="text-center mt-20 text-gray-500">
-                유효하지 않은 접근입니다. <br />
-                <button
-                    onClick={() => navi(-1)}
-                    className="mt-4 px-4 py-2 border rounded hover:bg-gray-100"
-                >
-                    뒤로가기
-                </button>
-            </div>
-        );
-    }
+    useEffect(() => {
 
-    const handleSave = async () => {
-        try {
-            await axios.put(`http://localhost:5173/auth-board/${post.no}`, {
-                title,
-                content,
-            });
-            alert("수정되었습니다.");
-            setIsEditing(false);
-        } catch (error) {
-            console.error("수정 실패", error);
-            alert("수정에 실패했습니다.");
+    }, [auth, authorId]);
+
+    const handleLike = () => {
+        if (!auth.isAuthenticated){
+            alert("로그인 후 이용 가능합니다.");
+            return;
         }
+
+        axios.post("http://localhost/auth-board/like",
+            {
+                boardNo: boardNo,
+                memberNo: auth.loginInfo?.memberNo,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${auth.tokens.accessToken}`,
+                },
+            }
+        )
+        .then((response) => {
+            setLikes(response.data);
+        })
+        .catch((error) => {
+            console.log("좋아요 처리실패 ", error);
+        });
     };
 
-    const handleDelete = async () => {
+    const handleEditSubmit = () => {
+        axios.post("http://localhost/auth-board/auth-edit", {
+            boardNo,
+            category,
+            title: editedTitle,
+            content: editedContent,
+        })
+        .then(() => {
+            setTitle(editedTitle);
+            setContent(editedContent);
+            setIsEditing(false);
+        })
+        .catch((error) => {
+            alert("수정에 실패했습니다.");
+        });
+    };
+
+    const handleDelete = () => {
         const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
         if (!confirmDelete) return;
 
-        try {
-            await axios.delete(`http://localhost:5173/auth-board/${post.no}`);
+        axios.delete("http://localhost/auth-board/auth-delete", {
+            params: {
+                boardNo: Number(boardNo),
+                memberNo: Number(auth.loginInfo?.memberNo),
+            },
+            headers: {
+                Authorization: `Bearer ${auth.tokens.accessToken}`,
+            }
+        })
+        .then(() => {
             alert("삭제되었습니다.");
-            navi("/auth-board");
-        } catch (error) {
-            console.error("삭제 실패", error);
-            alert("삭제에 실패했습니다.");
-        }
+            navigate(-1);
+        })
+        .catch((error) => {
+            console.error("삭제 실패");
+        });
     };
 
-    const handleLike = () => {
-        if (hasLiked) {
-            setLikes(prev => prev - 1); // 취소하면 -1
-        } else {
-            setLikes(prev => prev + 1); // 처음 누르면 +1
-        }
-        setHasLiked(!hasLiked); // 상태 반전
-    };
-    
+    const isAuthor =
+    !!auth.loginInfo?.username &&
+    !!authorId &&
+    String(auth.loginInfo.username) === String(authorId);
+
     return (
         <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md space-y-6">
             <div className="text-2xl font-bold">
                 {isEditing ? (
-                    <input value={title} onChange={(e) => setTitle(e.target.value)} className="w-full px-4 py-2 border rounded" />
+                    <input 
+                    value={editedTitle} 
+                    onChange={(e) => setTitle(e.target.value)} 
+                    className="w-full px-4 py-2 border rounded" />
                 ) : (
-                    <h1>{post.title}</h1>
+                    <h1>{title}</h1>
                 )}
             </div>
             <div className="text-sm flex justify-between">
                 <span>
-                    작성자 : <span value={writer} className="text-black-800 font-bold">{post.writer}</span>
+                    작성자 : <span value={authorName} 
+                    className="text-black-800 font-bold">
+                        {post.writer}</span>
                 </span>
                 <span>{post.createdDate}</span>
             </div>
@@ -150,6 +185,6 @@ function AuthBoardDetail() {
             </button>
         </div>
     );
-}
+};
 
 export default AuthBoardDetail;

@@ -10,9 +10,8 @@ export default function AuthBoardWritePage() {
     const [category, setCategory] = useState("");
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    const [boardType, setBoardType] = useState("");
     const { auth } = useContext(AuthContext);
-
+    const boardType = "auth";
     const handleOnChange = (e) => { setOption(e.target.value); };
 
     useEffect(() => {
@@ -23,36 +22,65 @@ export default function AuthBoardWritePage() {
     }, [auth, navi]);
 
     const handleUpload = () => {
+        console.log(content);
         if (!title.trim() || !content.trim() || !category) {
             alert("제목, 카테고리, 내용을 모두 입력해주세요!");
             return;
         }
-        if (!imageFilesRef[0]){
-            alert("이미지 첨부는 필수 입니다.");
-            return;
-        }
 
-        const postData = {
-            categoryId: category,
-            title,
-            content,
-            imageUrls: imageFilesRef.current || []
-        };
-        axios.post("http://localhost/auth-board", postData, {
+        const imgRegex = /<img [^>]*src="([^"]+)"[^>]*>/g;
+        let newContent = content;
+
+        const formData = new FormData();
+        formData.append("boardType", boardType);
+
+        imageFilesRef.current.forEach((file) => {
+            formData.append("files", file); 
+        });
+        axios.post("http://localhost/boards/upload", formData, {
             headers: {
                 Authorization: `Bearer ${auth.tokens.accessToken}`,
-                "Content-Type": "application/json",
             },
         })
         .then((response) => {
-            console.log(response.status);
-            alert("게시글 업로드 완료");
+            const uploadPaths = response.data;
+            
+            let index = 0;
 
-            navi(`/auth-board/authBoardNo=${response.data.boardNo}`);
+            newContent = newContent.replace(imgRegex, (_, oldSrc) =>{
+                const newSrc = `${uploadPaths[index++]}`;
+                return `<img src="${newSrc}"`;
+            });
+
+            axios.post("http://localhost/auth-board/upload-authboard",
+                {
+                    memberNo: auth.loginInfo.memberNo,
+                    categoryId: category,
+                    title: title,
+                    content: newContent,
+                    boardType: boardType,
+                    ...(uploadPaths &&
+                        uploadPaths.length > 0 && {imageUrls: uploadPaths }),
+                    
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${auth.tokens.accessToken}`,
+                    "Content-Type": "application/json",
+                },
+            })
+            .then((response) => {
+                alert("게시글 업로드 완료");
+
+                navi(`/auth-board/authBoardNo=${response.data.boardNo}`);
+            })
+            .catch((error) => {
+                console.log(error);
+                alert("게시글 업로드 실패");
+            });
         })
         .catch((error) => {
-            console.log(error);
-            alert("게시글 업로드 실패");
+            console.log("이미지 업로드 실패", error);
         });
     };
 
@@ -92,7 +120,6 @@ export default function AuthBoardWritePage() {
             setContent={setContent}
             boardType={boardType}
             imageFilesRef={imageFilesRef}/>
-
         {/* 업로드 버튼 */}
         <div className="mt-4 flex justify-end">
             <button
