@@ -53,12 +53,11 @@
 	</update>
 	
 	
-	<update id="updatePassword"
-          parameterType="com.semi.ecoinsight.mypage.model.dto.ChangePasswordDTO">
+	<update id="updatePasswordByMemberId" parameterType="map">
     UPDATE TB_MEMBER
-      SET MEMBER_PW = #{newPassword}
-    WHERE MEMBER_NO = #{memberNo}
-  </update>
+       SET MEMBER_PW = #{newPassword}
+     WHERE MEMBER_ID = #{memberId}
+  	</update>
 	
 	
 	<update id="withdrawalMember" parameterType="long">

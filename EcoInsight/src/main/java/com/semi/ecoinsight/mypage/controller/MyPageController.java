@@ -35,12 +35,13 @@ public class MyPageController {
 		return ResponseEntity.ok(dto);
 	}
 	
-	@PutMapping("/password")
-    public ResponseEntity<Void> changePassword(
-        @RequestBody ChangePasswordDTO dto) {
-        myPageService.changePassword(dto);
-        return ResponseEntity.noContent().build();
-    }
+	 @PutMapping("/changepassword")
+	    public ResponseEntity<Void> changePassword(
+	        @Valid @RequestBody ChangePasswordDTO dto
+	    ) {
+	        myPageService.changePassword(dto);
+	        return ResponseEntity.noContent().build();
+	    }
 	
 	@GetMapping("/myposts")
     public ResponseEntity<List<MyPostsDTO>> getMyPosts() {

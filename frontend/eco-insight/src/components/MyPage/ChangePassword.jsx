@@ -6,9 +6,10 @@ import axios from 'axios';
 export default function ChangePassword() {
   const navi = useNavigate();
   const { auth } = useContext(AuthContext);
-  const [userId, setUserId] = useState('');
-  const [newPw, setNewPw] = useState('');
+  const [userId,    setUserId]    = useState('');
+  const [newPw,     setNewPw]     = useState('');
   const [confirmPw, setConfirmPw] = useState('');
+
 
   useEffect(() => {
     if (!auth.isAuthenticated) {
@@ -16,9 +17,10 @@ export default function ChangePassword() {
     }
   }, [auth.isAuthenticated, navi]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+
     if (!userId || !newPw || !confirmPw) {
-      alert('모든 필드를 입력해주세요.');
+      alert('모든 입력창에 입력해주세요!');
       return;
     }
     if (newPw !== confirmPw) {
@@ -26,23 +28,28 @@ export default function ChangePassword() {
       return;
     }
 
-    axios
-      .put('http://localhost/members/password', {
-        memberId:        userId,
-        newPassword:     newPw,
-        confirmPassword: confirmPw
-      }, {
-        headers: { Authorization: `Bearer ${auth.tokens.accessToken}` }
-      })
-      .then(() => {
-        alert('비밀번호가 정상적으로 변경되었습니다.');
-        navi('/mypage', { replace: true });
-      })
-      .catch(error => {
-        console.error('비밀번호 변경 실패:', error);
-        const msg = error.response?.data?.message || '비밀번호 변경에 실패했습니다.';
-        alert(msg);
-      });
+    try {
+      await axios.put(
+        'http://localhost/mypage/changepassword',
+        {
+          memberId:        userId,
+          newPassword:     newPw,
+          confirmPassword: confirmPw
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${auth.tokens.accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      alert('비밀번호가 정상적으로 변경되었습니다.');
+      navi('/mypage', { replace: true });
+    } catch (error) {
+      console.error('비밀번호 변경 실패:', error);
+      const msg = error.response?.data?.message || '비밀번호 변경에 실패했습니다.';
+      alert(msg);
+    }
   };
 
   return (
@@ -50,6 +57,7 @@ export default function ChangePassword() {
       <main className="flex-grow flex items-center justify-center px-4 py-12">
         <div className="bg-white w-full max-w-2xl p-8 rounded-2xl shadow-md">
           <div className="space-y-6">
+            {/* 아이디 */}
             <div>
               <label className="block mb-1 text-gray-700">아이디</label>
               <input
@@ -60,6 +68,7 @@ export default function ChangePassword() {
                 className="w-full h-12 px-4 border border-gray-300 rounded-lg focus:outline-none"
               />
             </div>
+            {/* 새로운 비밀번호 */}
             <div>
               <label className="block mb-1 text-gray-700">새로운 비밀번호</label>
               <input
@@ -70,6 +79,7 @@ export default function ChangePassword() {
                 className="w-full h-12 px-4 border border-gray-300 rounded-lg focus:outline-none"
               />
             </div>
+            {/* 비밀번호 확인 */}
             <div>
               <label className="block mb-1 text-gray-700">새로운 비밀번호 재입력</label>
               <input
@@ -80,6 +90,7 @@ export default function ChangePassword() {
                 className="w-full h-12 px-4 border border-gray-300 rounded-lg focus:outline-none"
               />
             </div>
+            {/* 제출 버튼 */}
             <button
               type="button"
               onClick={handleSubmit}
@@ -87,6 +98,7 @@ export default function ChangePassword() {
             >
               확인
             </button>
+            {/* 취소 버튼 */}
             <button
               type="button"
               onClick={() => navi(-1)}

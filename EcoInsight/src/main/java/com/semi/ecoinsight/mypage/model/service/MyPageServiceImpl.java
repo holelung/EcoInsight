@@ -47,30 +47,29 @@ public class MyPageServiceImpl implements MyPageService {
 	    }
 
 	 @Override
-	 @Transactional
+	    @Transactional
 	    public void changePassword(ChangePasswordDTO dto) {
+	        // 1) 현재 로그인된 사용자 정보
 	        CustomUserDetails user = (CustomUserDetails)
 	            SecurityContextHolder.getContext()
 	                                 .getAuthentication()
 	                                 .getPrincipal();
-	        
-	        dto.setMemberNo(user.getMemberNo());
 
-	        //  현재 비밀번호 조회
-	        EditProfileDTO profile =
-	            myPageMapper.getMemberByMemberNo(user.getMemberNo());
-	        if (!passwordEncoder.matches(
-	              dto.getCurrentPassword(),
-	              profile.getMemberPw())) {
-	            throw new IllegalArgumentException(
-	                "현재 비밀번호가 일치하지 않습니다.");
+	        // 2) 입력한 아이디가 본인 것인지 확인
+	        if (!user.getUsername().equals(dto.getMemberId())) {
+	            throw new IllegalArgumentException("입력한 아이디가 로그인 계정과 일치하지 않습니다.");
 	        }
 
-	        //  새 비밀번호 업데이트
-	        dto.setNewPassword(
-	            passwordEncoder.encode(dto.getNewPassword()));
-	        myPageMapper.updatePassword(dto);
+	        // 3) 새 비밀번호 일치 여부 확인
+	        if (!dto.getNewPassword().equals(dto.getConfirmPassword())) {
+	            throw new IllegalArgumentException("새 비밀번호가 서로 일치하지 않습니다.");
+	        }
+
+	        // 4) 암호화 후 DB 업데이트
+	        String encoded = passwordEncoder.encode(dto.getNewPassword());
+	        myPageMapper.updatePasswordByMemberId(dto.getMemberId(), encoded);
 	    }
+
 
 	 @Override
 	    @Transactional

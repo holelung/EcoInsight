@@ -3,6 +3,7 @@ package com.semi.ecoinsight.mypage.model.dao;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.semi.ecoinsight.mypage.model.dto.ChangePasswordDTO;
 import com.semi.ecoinsight.mypage.model.dto.EditProfileDTO;
@@ -18,7 +19,11 @@ public interface MyPageMapper {
     // List<PostDTO> selectMyPosts(int memberNo);
 
     // 비밀번호 변경 
-    void updatePassword(ChangePasswordDTO dto);
+    void changePassword(ChangePasswordDTO dto);
+    void updatePasswordByMemberId(
+            @Param("memberId") String memberId,
+            @Param("newPassword") String newPassword
+        );
     // 내 정보 수정
     void editMyProfile(EditProfileDTO dto);
     // 회원 탈퇴 (활성화 플래그 변경)
@@ -28,6 +33,7 @@ public interface MyPageMapper {
     List<MyPostsDTO> selectMyPosts(Long memberNo);
     
 	EditProfileDTO getMemberByMemberNo(Long memberNo);
+
 }
 
  
