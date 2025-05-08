@@ -2,9 +2,10 @@ package com.semi.ecoinsight.authboard.controller;
 
 import java.util.List;
 
+import org.apache.catalina.connector.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,13 +43,15 @@ public class AuthBoardController {
 	}
 
 	@GetMapping("/detail")
-	public ResponseEntity<?> getAuthBoardDetail(@PathVariable Long boardNo) {
-		try {
-			BoardDTO dto = authBoardService.selectAuthBoardDetail(boardNo);
-			return ResponseEntity.ok(dto);
-		} catch (Exception e) {
-			return ResponseEntity.status(404).body("게시글을 찾을 수 없습니다.");
-		}
+	public ResponseEntity<?> getAuthBoardDetail(@RequestParam(name = "boardNo") Long boardNo) {
+		return ResponseEntity.ok(authBoardService.selectAuthBoardDetail(boardNo));
+	}
+
+	// 글쓰기
+	@PostMapping
+	public ResponseEntity<?> uploadAuthBoard(@RequestBody @Validated WriteFormDTO form) {
+		authBoardService.insertAuthBoard(form);
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 	
 	@PutMapping
@@ -62,15 +65,7 @@ public class AuthBoardController {
 	}
 	
 	
-	@PostMapping
-	public ResponseEntity<?> uploadAuthBoard(@RequestBody @Validated WriteFormDTO form) {
-		try {
-            authBoardService.insertAuthBoard(form);
-            return ResponseEntity.ok("게시글이 성공적으로 업로드되었습니다.");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("게시글 업로드 실패: " + e.getMessage());
-        }
-	}
+
 	
     @DeleteMapping("/{boardNo}")
     public ResponseEntity<?> deleteAuthBoard(@PathVariable Long boardNo) {

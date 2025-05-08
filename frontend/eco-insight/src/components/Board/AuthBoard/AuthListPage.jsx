@@ -103,7 +103,7 @@ const AuthListPage = () => {
               <div className="px-4 py-3 text-sm">
                 <div className="flex justify-between mt-1">
                   <span>
-                    작성자 :{" "}
+                    작성자 :
                     <span className="text-black-500 font-bold">
                       {board.memberName}
                     </span>

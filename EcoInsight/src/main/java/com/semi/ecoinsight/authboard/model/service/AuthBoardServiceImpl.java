@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.authboard.model.dao.AuthBoardMapper;
@@ -13,6 +14,9 @@ import com.semi.ecoinsight.board.model.dao.BoardMapper;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
 import com.semi.ecoinsight.board.model.vo.Attachment;
 import com.semi.ecoinsight.board.model.vo.Board;
+import com.semi.ecoinsight.exception.util.BoardInsertException;
+import com.semi.ecoinsight.exception.util.ImageInsertException;
+import com.semi.ecoinsight.exception.util.InvalidAccessException;
 import com.semi.ecoinsight.util.pagination.PaginationService;
 import com.semi.ecoinsight.util.sanitize.SanitizingService;
 
@@ -53,11 +57,15 @@ public class AuthBoardServiceImpl implements AuthBoardService {
 	}
 
 	@Override
-	public BoardDTO selectAuthBoardDetail(Long boardNo) {
+    public BoardDTO selectAuthBoardDetail(Long boardNo) {
+        if (boardNo < 1l) {
+            throw new InvalidAccessException("유효한 접근이 아닙니다.");
+        }
+
 		return authBoardMapper.selectAuthBoardDetail(boardNo);
 	}
 
-
+    @Transactional
 	@Override
 	public void insertAuthBoard(WriteFormDTO form) {
 		
@@ -68,8 +76,11 @@ public class AuthBoardServiceImpl implements AuthBoardService {
                 .boardTitle(form.getTitle())
                 .boardContent(form.getContent())            
                 .build();
-        
-        authBoardMapper.insertAuthBoard(board);
+        try {
+            authBoardMapper.insertAuthBoard(board);
+        } catch (Exception e) {
+            throw new BoardInsertException("게시글 생성에 실패했습니다.");
+        }
         
         Long authBoardNo = authBoardMapper.selectAuthBoardNo(form.getMemberNo());
         if (form.getImageUrls() != null) {
@@ -81,7 +92,11 @@ public class AuthBoardServiceImpl implements AuthBoardService {
                 .build()
                 ).collect(Collectors.toList());
             for (Attachment a : Attachments) {
-                boardMapper.uploadImage(a);
+                try {                
+                    boardMapper.uploadImage(a);
+                } catch (Exception e) {
+                    throw new ImageInsertException("이미지 업로드에 실패했습니다.");
+                }
             }
         }
 	}
@@ -91,7 +106,7 @@ public class AuthBoardServiceImpl implements AuthBoardService {
 		authBoardMapper.deleteAuthBoard(boardNo);
 	}
 	
-
+    @Transactional
 	@Override
 	public void updateAuthBoard(WriteFormDTO form) {
 		Board board = Board.builder()
@@ -100,8 +115,29 @@ public class AuthBoardServiceImpl implements AuthBoardService {
 				.boardTitle(form.getTitle())
 				.boardContent(form.getContent())
 				.build();
-				
-		authBoardMapper.updateAuthBoard(board);
+		try{
+            authBoardMapper.updateAuthBoard(board);
+        } catch (Exception e) {
+            throw new BoardInsertException("게시글 수정에 실패했습니다.");
+        }
+        
+        if (form.getImageUrls() != null) {
+            List<Attachment> Attachments = form.getImageUrls().stream()
+            .map(url -> Attachment.builder()
+                .boardNo(form.getBoardNo())
+                .attachmentItem(url)
+                .boardType(form.getBoardType())
+                .build()
+                ).collect(Collectors.toList());
+            for (Attachment a : Attachments) {
+                try{
+                    boardMapper.uploadImage(a);
+                } catch (Exception e) {
+                    throw new ImageInsertException("추가 이미지 업로드에 실패했습니다.");
+                }
+            }
+        }
+        
 	}
 
 

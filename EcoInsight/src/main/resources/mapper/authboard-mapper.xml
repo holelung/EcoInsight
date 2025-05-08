@@ -4,22 +4,37 @@
 
 	<!-- 글 전체조회 -->
 	<select id="selectAuthBoardList"
-		parameterType="long"
-		resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
-		SELECT 
-        	BOARD_NO AS boardNo, 
-        	MEMBER_NO AS memberNo, 
-        	CATEGORY_ID AS categoryId, 
-        	BOARD_TITLE AS boardTitle, 
-        	BOARD_CONTENT AS boardContent, 
-        	CREATED_DATE AS createdDate 
-    	FROM 
-    	    TB_AUTH_BOARD 
-    	WHERE 
-    	    IS_DELETED = 'N'
-    	ORDER BY 
-    	    CREATED_DATE DESC
-	</select>
+            parameterType="map"
+            resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
+        SELECT
+            A.BOARD_NO boardNo,
+            A.CATEGORY_ID categoryId,
+            A.MEMBER_NO memberNo,
+            A.BOARD_TITLE boardTitle,
+            A.BOARD_CONTENT boardContent,
+            A.CREATED_DATE createdDate,
+            A.MODIFIED_DATE modifiedDate,
+            A.VIEW_COUNT viewCount,
+            MEMBER_ID memberId,
+            MEMBER_NAME memberName,
+            (
+                SELECT
+                    COUNT(*)
+                FROM
+                    TB_AUTH_RECOMMEND R
+                WHERE
+                    R.BOARD_NO = A.BOARD_NO
+            )AS likeCount
+        FROM
+            TB_AUTH_BOARD A
+        JOIN
+            TB_MEMBER M ON(M.MEMBER_NO = A.MEMBER_NO)
+		WHERE
+			A.IS_DELETED = 'N'
+        ORDER BY
+            A.CREATED_DATE DESC
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
 
 	<select id="selectAuthBoardCount"
 			resultType="long">
@@ -36,21 +51,33 @@
 	<select id="selectAuthBoardDetail"
 			parameterType="long"
 			resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
-		SELECT 
-        	BOARD_NO AS boardNo, 
-        	MEMBER_NO AS memberNo, 
-        	CATEGORY_ID AS categoryId, 
-        	BOARD_TITLE AS boardTitle, 
-        	BOARD_CONTENT AS boardContent, 
-			IS_CERTIFIED AS isCertified,
-        	CREATED_DATE AS createdDate
-    	FROM 
-    	    TB_AUTH_BOARD 
-    	WHERE 
-    	    IS_DELETED = 'N'
-    	ORDER BY 
-    	    CREATED_DATE DESC
-		OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+		SELECT
+            A.BOARD_NO boardNo,
+            A.CATEGORY_ID categoryId,
+            A.MEMBER_NO memberNo,
+            A.BOARD_TITLE boardTitle,
+            A.BOARD_CONTENT boardContent,
+            A.CREATED_DATE createdDate,
+            A.MODIFIED_DATE modifiedDate,
+            A.VIEW_COUNT viewCount,
+            MEMBER_ID memberId,
+            MEMBER_NAME memberName,
+            (
+                SELECT
+                    COUNT(*)
+                FROM
+                    TB_AUTH_RECOMMEND R
+                WHERE
+                    R.BOARD_NO = A.BOARD_NO
+            )AS likeCount
+        FROM
+            TB_AUTH_BOARD A
+        JOIN
+            TB_MEMBER M ON(M.MEMBER_NO = A.MEMBER_NO)
+		WHERE
+			A.BOARD_NO = #{boardNo}
+		AND
+			A.IS_DELETED = 'N'
 	</select>
 
 
@@ -61,7 +88,6 @@
 		INTO
 			TB_AUTH_BOARD
 			(
-				BOARD_NO,
 				MEMBER_NO,
 				CATEGORY_ID,
 				BOARD_TITLE,
@@ -69,7 +95,6 @@
 			)
 		VALUES
 			(
-				#{boardNo},
 				#{memberNo},
 				#{categoryId},
 				#{boardTitle},

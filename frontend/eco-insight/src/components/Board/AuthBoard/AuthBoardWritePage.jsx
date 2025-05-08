@@ -4,109 +4,127 @@ import Tiptap from "../TipTap/Tiptap";
 import axios from "axios";
 import { AuthContext } from "../../Context/AuthContext";
 
-export default function AuthBoardWritePage() {
-    const { type } = useParams();
-    const navi = useNavigate();
-    const imageFilesRef = useRef([]);
-    const [memberNo, setMemberNo] = useState("");
-    const [category, setCategory] = useState("");
-    const [title, setTitle] = useState("");
-    const [content, setContent] = useState("");
-    const [boardType, setBoardType] = useState("");
-    const [imageUrls, setImageUrls] = useState("");
-    const [option, setOption] = useState("");
-    const { auth } = useContext(AuthContext);
+const AuthBoardWritePage = () => {
+  const { auth } = useContext(AuthContext);
+  const navi = useNavigate();
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [categoryId, setCategoryId] = useState("A0001");
+  const imageFilesRef = useRef([]);
 
-    const handleOnChange = (e) => { setOption(e.target.value); };
+  const boardType = "auth";
 
-    useEffect(() => {
-        if (!auth.isAuthenticated) {
-            alert("로그인이 필요한 서비스입니다.");
-            navi("/login");
-        }
-    }, [auth, navi]);
-
-    const handleUpload = async () => {
-        if (!title.trim() || !content.trim() || !category) {
-            alert("제목, 카테고리, 내용을 모두 입력해주세요!");
-            return;
-        }
-
-        console.log("memberNo 확인:", auth?.loginInfo?.memberNo);
-
-        console.log("imageFilesRef:", imageFilesRef.current);
-
-        const postData = {
-            title,
-            content,
-            categoryId: category,
-            boardType: boardType || "AUTH",
-            memberNo: auth.loginInfo.memberNo,
-            imageUrls: imageFilesRef.current || []
-        };
-        console.log("전송할 데이터:", postData);
-
-        try {
-            const response = await axios.post("http://localhost/auth-board", postData, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            });
-            console.log(response.data); // 성공한 응답 데이터
-            alert("게시글 업로드 완료!");
-            navi("/auth-board");
-        } catch (error) {
-            console.error("업로드 중 오류 발생:", error);
-            console.error("응답 데이터:", error.response?.data);
-            alert("게시글 업로드에 실패했습니다.");
-        }
-    };
-
+  useEffect(() => {
     if (!auth.isAuthenticated) {
-        return null;
+      alert("로그인이 필요한 서비스입니다.");
+      navi("/login");
     }
+  }, [auth, navi]);
 
-    return (
-        <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md">
-        <div className="mb-4 text-sm text-gray-500">인증게시판</div>
+  const handleUpload = () => {
+    if (!title || !content) {
+      alert("제목과 내용을 모두 입력해주세요!");
+      return;
+    }
+    const imgRegex = /<img [^>]*src="blob:([^"]+)"/g;
+    let newContent = content;
 
-        {/* 카테고리 */}
-        <div>
-            <select
-                value={category}
-                defaultValue="category"
-                onChange={(e) => setCategory(e.target.value)}
-                className="mb-3 border px-11 py-2 rounded">
-                <option value="category">카테고리 선택</option>
-                <option value="item1">인증1</option>
-                <option value="item2">인증2</option>
-                <option value="item3">인증3</option>
-                <option value="item4">인증4</option>
-            </select>
-        </div>
-        
-        {/* 제목 입력 */}
-        <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)} placeholder="제목을 입력하세요"
-            className="w-full p-4 text-xl font-semibold border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300"
-        />
+    const formData = new FormData();
+    formData.append("boardType", boardType);
 
-        {/* 텍스트 에디터 */}
-        <Tiptap 
-            setContent={setContent}
-            boardType={boardType}
-            imageFilesRef={imageFilesRef}/>
+    imageFilesRef.current.forEach((file) => {
+      formData.append("files", file);
+    });
 
-        {/* 업로드 버튼 */}
-        <div className="mt-4 flex justify-end">
-            <button
-                onClick={handleUpload}
-                className="bg-lime-400 hover:bg-green-600 text-white px-6 py-2 rounded-md font-bold transition">
-                업로드
-            </button>
-        </div>
-    </div>
+    axios.post("http://localhost/boards/upload", formData, {
+      headers: {
+        Authorization: `Bearer ${auth.tokens.accessToken}`,
+      }
+    }).then(response => {
+      const uploadPaths = response.data;
+      let index = 0;
+      // src 변경
+      newContent = newContent.replace(imgRegex, (_, oldSrc) => {
+        const newSrc = `${uploadPaths[index++]}`;
+        return `<img src="${newSrc}"`;
+      });
+      
+      axios
+        .post(
+          "http://localhost/auth-boards",
+          {
+            memberNo: auth.loginInfo.memberNo,
+            categoryId: categoryId,
+            title: title,
+            content: newContent,
+            boardType: boardType,
+            ...(uploadPaths &&
+              uploadPaths.length > 0 && { imageUrls: uploadPaths }),
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${auth.tokens.accessToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response.status);
+          if(response.status == 201){
+            alert("게시글 업로드 완료");
+            navi(`/auth-board`);
+          }
+        })
+        .catch((error) => {
+          console.log("게시글 업로드 실패", error);
+          alert("게시글 업로드실패 😢");
+        });
+    }).catch(error => {
+      console.log("이미지 업로드 실패", error);
+    })
+  };
+
+
+  return (
+      <div className="max-w-5xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md">
+      <div className="mb-4 text-sm text-gray-500">인증게시판</div>
+
+      {/* 카테고리 */}
+      <div>
+          <select
+              selectValue={categoryId}
+              onChange={(e) => setCategoryId(e.target.value)}
+              className="mb-3 border px-11 py-2 rounded">
+              <option value="A0001">인증1</option>
+              <option value="A0002">인증2</option>
+              <option value="A0003">인증3</option>
+          </select>
+      </div>
+      
+      {/* 제목 입력 */}
+      <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)} placeholder="제목을 입력하세요"
+          className="w-full p-4 text-xl font-semibold border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300"
+      />
+
+      {/* 텍스트 에디터 */}
+      <Tiptap 
+          setContent={setContent}
+          boardType={boardType}
+          imageFilesRef={imageFilesRef}/>
+
+      {/* 업로드 버튼 */}
+      <div className="mt-4 flex justify-end">
+          <button
+              onClick={handleUpload}
+              className="bg-lime-400 hover:bg-green-600 text-white px-6 py-2 rounded-md font-bold transition">
+              업로드
+          </button>
+      </div>
+  </div>
 );
 }
+
+export default AuthBoardWritePage;
