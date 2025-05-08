@@ -28,4 +28,9 @@ public class BoardDTO {
     private Date modifiedDate;
     private Long viewCount;
     private String isDeleted;
+    // 조회용
+    private String memberId;
+    private String memberName;
+    // 좋아요 수
+    private Long likeCount;
 }

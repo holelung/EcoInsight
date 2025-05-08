@@ -4,39 +4,67 @@
 
 	<sql id="communityBoardColumn">
 		SELECT 
-			 , C_BOARD_NO cBoardNo
+			   BOARD_NO boardNo
 			 , MEMBER_NO memberNo
 			 , CATEGORY_ID categoryId
-			 , CREATE_DATE createDate
+			 , CREATED_DATE createdDate
+	    	 , BOARD_TITLE boardTitle
+	    	 , MEMBER_NAME memberName
+			 , VIEW_COUNT viewCount 
 	</sql>
 
 
-	<insert id="insertCommunityBoard" parameterType="com.semi.ecoinsight.community.model.vo.Community">
+	<!--글 쓰기-->
+	<insert id="insertCommunityBoard" parameterType="com.semi.ecoinsight.board.model.vo.Board">
 		INSERT 
 		  INTO
 		       TB_COMMUNITY_BOARD
 		        (
 			     MEMBER_NO 
 			   , CATEGORY_ID 
-			   , C_BOARD_TITLE 
-			   , C_BOARD_CONTENT 
-			   , CREATED_DATE
-			   , VIEW_COUNT 				
-			   , IS_DELETED 
-			    )
+			   , BOARD_TITLE 
+			   , BOARD_CONTENT 			
+			     )
 	    VALUES 
 	    	  (
 				 #{memberNo}
 			   , #{categoryId}
-			   , #{cBoardTitle}	
-			   , #{cBoardContent}
-			   , SYSDATE
-			   , 0
-			   , 'N'
+			   , #{boardTitle}	
+			   , #{boardContent}
 			  )  
 	</insert>
-	<select id="findAllCommunity" resultType="com.semi.ecoinsight.community.model.dto.CommunityDTO">
-		<include refid="communityBoardColumn"/>		
+	
+	<!--게시글 번호 -->
+	<select id="getCommunityNo" parameterType="long" resultType="long">
+        SELECT
+            BOARD_NO AS boardNo
+        FROM
+            TB_COMMUNITY_BOARD
+        WHERE
+            MEMBER_NO = #{memberNo}
+        ORDER BY
+            CREATED_DATE DESC
+        FETCH FIRST 1 ROWS ONLY
+    </select>
+    
+	<!--게시글 목록 조회-->
+	<select id="findAllCommunity" resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
+			SELECT 
+				   BOARD_NO boardNo
+				 , MEMBER_NO memberNo
+				 , CATEGORY_ID categoryId
+				 , CREATED_DATE createdDate
+				 , BOARD_TITLE boardTitle
+				 , MEMBER_NAME memberName	
+				 , VIEW_COUNT viewCount 
+	    	, (
+			  SELECT 
+					  COUNT(*)
+				FROM
+				      TB_COMMUNITY_RECOMMEND R
+			   WHERE
+		          	  R.BOARD_NO = TB_COMMUNITY_BOARD.BOARD_NO 			
+			) AS likeCount
 			FROM 
 				  TB_COMMUNITY_BOARD
 			JOIN
@@ -47,59 +75,204 @@
 			  	  CATEGORY_ID = #{categoryId}	    
 			ORDER
 			  BY
-			  	  C_BOARD_NO DESC      
+			  	  CREATED_DATE DESC      
 	</select>
 	
-	<update id="updateComuunity" parameterType="com.semi.ecoinsight.community.model.vo.Community">
+	<!-- 게시글 검색 -->
+	<select id="findCommunity" resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
+		SELECT 
+				   BOARD_NO boardNo
+				 , MEMBER_NO memberNo
+				 , CATEGORY_ID categoryId
+				 , CREATED_DATE createdDate
+				 , BOARD_TITLE boardTitle
+				 , MEMBER_NAME memberName	
+				 , VIEW_COUNT viewCount 
+	    	, (
+			  SELECT 
+					  COUNT(*)
+				FROM
+				      TB_COMMUNITY_RECOMMEND R
+			   WHERE
+		          	  R.BOARD_NO = TB_COMMUNITY_BOARD.BOARD_NO 			
+			) AS likeCount
+		FROM 
+			 TB_COMMUNITY_BOARD
+		JOIN
+			 TB_MEMBER USING(MEMBER_NO)	 
+	   WHERE
+			 IS_DELETED = 'N'
+		 AND	 
+			 CATEGORY_ID = #{categoryId}	 
+		 AND
+		 	 BOARD_TITLE LIKE '%'||#{search}||'%'
+		 	 
+	   ORDER
+	      BY
+	      	 CREATED_DATE DESC
+	</select>
+	
+	<!-- 게시글 상세 조회-->
+	<select id="detailCommunity" parameterType="com.semi.ecoinsight.board.model.dto.BoardDTO">
+	<include refid="communityBoardColumn"/>
+			 , BOARD_CONTENT boardContent
+			 , MEMBER_ID memberId
+		FROM		
+			  TB_COMMUNITY_BOARD
+		JOIN 
+			  TB_MEMBER USING(MEMBER_NO)
+	   WHERE
+	   		  BOARD_NO = #{boardNo}
+	   	 AND
+	   	 	  CATEGORY_ID = #{categoryId}	  
+	</select>
+	
+	
+	<!--게시글 수정-->
+	<update id="updateCommunity" parameterType="com.semi.ecoinsight.board.model.vo.Board">
 		UPDATE 
 			    TB_COMMUNITY_BOARD
 		   SET 
-		          C_BOARD_TITLE = #{cBoardTitle}
-		        , C_BOARD_CONTENT = #{cBoardContent}
+		          BOARD_TITLE = #{boardTitle}
+		        , BOARD_CONTENT = #{boardContent}
+		        , MODIFIED_DATE = SYSDATE
 		 WHERE 
-		          C_BOARD_NO = #{cBoardNo}
+		          BOARD_NO = #{boardNo}
 	</update>
 	
-	<delete id="deleteCommunity" parameterType="Long">
-		DELETE 
-	      FROM
-	            TB_COMMUINTY_BOARD
-	     WHERE
-	     		C_BOARD_NO = #{cBoardNo}       
-	</delete>
+	<!--게시글 작성자 조회-->
+	<select id="getWriterMemberNo" parameterType="long" resultType="long">
+	    SELECT 
+	    	   MEMBER_NO
+	      FROM 
+	           TB_COMMUNITY_BOARD
+	     WHERE 
+	    	   BOARD_NO = #{boardNo}
+	</select>
 	
-	<update id="insertCommunityCountView" parameterType="Long">
+	
+	<!--게시글 삭제-->
+	<update id="deleteCommunity" parameterType="long">
+		UPDATE
+	           TB_COMMUNITY_BOARD
+	       SET
+	           IS_DELETED ='Y'  		
+	     WHERE
+	       	   BOARD_NO = #{boardNo} 	       
+	</update>
+	
+	<!--조회수 올리기-->
+	<update id="getCommunityCountView" parameterType="long">
 		UPDATE
 		        TB_COMMUNITY_BOARD
 		   SET
 		   	    VIEW_COUNT = VIEW_COUNT + 1
 		 WHERE
-		 	    C_BOARD_NO = #{CBoardNo}
+		 	    BOARD_NO = #{boardNo}
 	</update>
 	
-	<insert id="insertLikeCount" parameterType="map">
+	<!-- 좋아요 확인 여부-->
+	<select id="checkedLike" parameterType="map" resultType="long">
+		SELECT 
+			   COUNT(*)
+		  FROM
+		  	   TB_COMMUNITY_RECOMMEND
+		 WHERE
+		       BOARD_NO = #{boardNo}
+		   AND
+		   	   MEMBER_NO = #{memberNo}    
+	</select>
+	
+	
+	<!--좋아요 올리기-->
+	<insert id="insertLikeCount" parameterType="map" >
 		INSERT
 		  INTO
-		       COMMUNITY_RECOMMEND
+		       TB_COMMUNITY_RECOMMEND
 		       (
-				, C_BOARD_NO cBoardNo
-				, MEMBER_NO memberNo
+				  BOARD_NO 
+				, MEMBER_NO 
 			   )
 	    VALUES
 	          (
-				 #{cBoardNo}
+				 #{boardNo}
 			   , #{memberNo}
 			  ) 	   
 	</insert>
 	
+	<!-- 좋아요 취소-->
 	<delete id="deleteLikeCount" parameterType="map">
 	   DELETE 
 	     FROM 
-	          COMMUNITY_RECOMMEND
+	          TB_COMMUNITY_RECOMMEND
   		WHERE 
-  		      C_BOARD_NO = #{cBoardNo}
+  		      BOARD_NO = #{boardNo}
     	  AND 
     	      MEMBER_NO = #{memberNo}
 	</delete> 
+	
+	<!--좋아요 조회-->
+	<select id="getLikeCount" parameterType="long">
+		SELECT 
+			   COUNT(*)
+		  FROM 
+			   TB_COMMUNITY_RECOMMEND 
+		 WHERE 
+			   BOARD_NO = #{boardNo} 
+	</select>
+	
+	<!--댓글 쓰기-->
+	<insert id="insertCommunityComment" parameterType="com.semi.ecoinsight.comment.model.vo.Comment">
+		INSERT
+		  INTO
+		  	   TB_COMMUNITY_COMMENT
+		  	   (
+			    BOARD_NO
+			  , MEMBER_NO
+			  , COMMENT_CONTENT
+			  , PARENT_COMMENT_NO	
+			    )
+		VALUES 
+	    	 (
+			    #{boardNo}
+			  , #{memberNo}	
+			  , #{commentContent}
+			  , #{parentCommentNo}
+			 )  	   
+	</insert>
+	
+	<!--댓글 조회-->
+	<select id="commentCount" resultType="com.semi.ecoinsight.comment.model.dto.CommentDTO" >
+		SELECT
+			   COUNT(*)
+		  FROM
+		  	   TB_COMMUNITY_COMMENT
+		 WHERE
+		 	   BOARD_NO = #{baordNo}
+		   AND
+		   	   IS_DELETD = 'N' 	   
+	</select>
+	
+	<!--댓글 수정하기-->
+	<update id="updateComment" parameterType="long">
+		UPDATE 
+			   TB_COMMUNITY_COMMENT
+		   SET	   								
+			   COMMENT_CONTENT = #{commentContent}
+			 , PARENT_COMMENT_NO = #{parentCommentNo}
+		     , MODIFIED_DATE = SYSDATE		
+		 WHERE
+		 	   COMMENT_NO = #{commentNo}
+	</update>
+	
+	<!--댓글 삭제하기-->
+	<update id="deleteComment" parameterType="long">
+		UPDATE
+	           TB_COMMUNITY_COMMENT
+	       SET
+	           IS_DELETED ='Y'  		
+	     WHERE
+	       	   COMMENT_NO = #{commentNo}
+	</update>
 		
 </mapper>

@@ -14,14 +14,13 @@ const FindIdPage = () => {
   const [msg, setMsg] = useState('');
   const handleSendCode = () => {
     //  이메일로 인증번호 요청 API 호출
-    setIsCodeSent(true);
-    console.log(name, email);
     axios.post("http://localhost/auth/find-id", {
       memberName : name, 
       email : email
     })
          .then(response => {
             if(response.status === 201){
+              setIsCodeSent(true);
               alert('인증번호가 발송되었습니다.');
               setMsg("인증번호 발송에 성공하였습니다.");
             }
@@ -39,26 +38,15 @@ const FindIdPage = () => {
       verifyCode : code})
       .then(response => {
         if(response.status === 200){
-          console.log(response);
           setMemberId(response.data);
-          console.log("memberId 출력 ---------");
-          console.log(memberId);
           setIsCodeVerified(true);
           alert('인증이 완료되었습니다.');
         }
       }).catch(error => {
         console.log(error);
+        alert('인증에 실패하였습니다.');
         setMsg("인증번호 인증에 실패하였습니다.")
       })
-  };
-
-  const handleNext = () => {
-    if (!isCodeVerified) {
-      alert('먼저 인증을 완료해주세요.');
-      return;
-    }
-    // 아이디 조회 결과 페이지로 이동
-    navigate('/find-id/result-id');
   };
 
   return (

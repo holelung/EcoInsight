@@ -46,9 +46,14 @@ public class AuthController {
     }
 
     @PostMapping("/find-password")
-    public ResponseEntity<String> findPasswordEmailCode(@RequestBody Map<String, String> email){
-        authService.findPasswordEmailCode(email);
+    public ResponseEntity<String> findPasswordEmailVerifyCodeSend(@RequestBody Map<String, String> email){
+        authService.findPasswordEmailVerifyCodeSend(email);
         return ResponseEntity.status(HttpStatus.CREATED).body("인증 코드 이메일 발송 성공");
+    }
+    @PostMapping("/verifycode-password")
+    public ResponseEntity<String> findPasswordEmailCode(@RequestBody Map<String, String> email){
+        String successMsg = authService.findPasswordEmailCode(email);
+        return ResponseEntity.ok(successMsg);
     }
     @PostMapping("/change-email")
     public ResponseEntity<String> changeEmailCode(@RequestBody Map<String, String> email){
@@ -58,8 +63,19 @@ public class AuthController {
 
     @PostMapping("/verify-code")
     public ResponseEntity<String> checkVerifyCode(@RequestBody Map<String, String> verifyInfo){
-        log.info("-----------------------------------------------------------------------------------------{}",verifyInfo);
         String successMsg = authService.checkVerifyCode(verifyInfo);
         return ResponseEntity.ok(successMsg);
+    }
+
+    @PostMapping("/admin-login")
+    public ResponseEntity<Map<String, Object>> adminLogin(@Valid @RequestBody MemberDTO member){
+        Map<String, Object> loginResponse = authService.adminLogin(member);
+        return ResponseEntity.ok(loginResponse);
+    }
+
+    @PostMapping("/google-login")
+    public ResponseEntity<?> googleLogin(@RequestBody Map<String, String> body){
+        Map<String, Object> result = authService.googleLogin(body);
+        return ResponseEntity.ok(result);
     }
 }

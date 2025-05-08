@@ -4,6 +4,7 @@ import axios from "axios";
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../Context/AuthContext";
 
+
 const NoticeBoardWrite = () => {
   const { auth } = useContext(AuthContext);
   const navi = useNavigate();
@@ -14,12 +15,12 @@ const NoticeBoardWrite = () => {
 
   const boardType = "notice";
 
-  const handleUpload = async() => {
+  const handleUpload = () => {
     if (!title || !content) {
       alert("제목과 내용을 모두 입력해주세요!");
       return;
     }
-    const imgRegex = /<img [^>]*src="([^"]+)"[^>]*>/g;
+    const imgRegex = /<img [^>]*src="([^"]+)"/g;
     let newContent = content;
 
     const formData = new FormData();
@@ -65,8 +66,10 @@ const NoticeBoardWrite = () => {
         )
         .then((response) => {
           console.log(response.status);
-          alert("게시글 업로드 완료");
-          navi(`/admin/noticeboard-manage`);
+          if(response.status == 201){
+            alert("게시글 업로드 완료");
+            navi(`/admin/noticeboard-manage`);
+          }
         })
         .catch((error) => {
           console.log("게시글 업로드 실패", error);

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthHeader from '../../components/Common/AuthHeader/AuthHeader';
+import axios from "axios"
 
 const FindPasswordPage = () => {
   const navigate = useNavigate();
@@ -10,26 +11,42 @@ const FindPasswordPage = () => {
   const [code, setCode] = useState('');
   const [isCodeSent, setIsCodeSent] = useState(false);
   const [isCodeVerified, setIsCodeVerified] = useState(false);
+  const [msg, setMsg] = useState('');
 
   const handleSendCode = () => {
     // 이메일로 인증번호 요청 API 호출
-    setIsCodeSent(true);
-    alert('인증번호가 발송되었습니다.');
+    axios.post("http://localhost/auth/find-password", {
+      id : memberId,
+      email : email
+    }).then(response => {
+      if(response.status === 201){
+        setIsCodeSent(true);
+        alert('인증번호가 발송되었습니다.');
+        setMsg("인증번호 발송에 성공하였습니다.");
+      }
+    }).catch(error => {
+      console.log(error);
+      setMsg("인증번호 발송에 실패하였습니다.");
+    })
   };
 
   const handleVerifyCode = () => {
     // 인증번호 확인 API 호출
+    axios.post("http://localhost/auth/verifycode-password",{
+      id : memberId,
+      email : email,
+      verifyCode : code
+    }).then(response => {
+      if(response.status === 200){
+        alert('인증이 완료되었습니다.');
+        navigate('/findpassword/resetpassword');
+      }
+    }).catch(error => {
+      console.log(error);
+      alert('인증에 실패하였습니다.');
+      setMsg("인증번호 인증에 실패하였습니다.");
+    })
     setIsCodeVerified(true);
-    alert('인증이 완료되었습니다.');
-  };
-
-  const handleNext = () => {
-    if (!isCodeVerified) {
-      alert('먼저 인증을 완료해주세요.');
-      return;
-    }
-    // 비밀번호 재설정 페이지로 이동
-    navigate('/findpassword/resetpassword');
   };
 
   return (
@@ -38,7 +55,7 @@ const FindPasswordPage = () => {
       <AuthHeader />
 
       <main className="flex-grow container mx-auto px-4 py-12">
-        <h2 className="text-xl font-semibold mb-8">비밀번호 찾기</h2>
+        <h2 className="text-xl font-semibold mb-8">임시 비밀번호 발급</h2>
 
         <div className="flex flex-col md:flex-row bg-white p-8 rounded-2xl shadow-md">
           {/* 폼 영역 */}
@@ -77,7 +94,7 @@ const FindPasswordPage = () => {
                 {isCodeSent ? '다시받기' : '인증번호 받기'}
               </button>
             </div>
-
+            {msg && <p className="text-red-500 text-sm mb-4">{msg}</p>}
             {/* 인증번호 입력 + 확인 */}
             <div className="flex items-center space-x-4">
               <div className="flex-1">
@@ -98,17 +115,6 @@ const FindPasswordPage = () => {
                 }`}
               >
                 인증번호 확인
-              </button>
-            </div>
-
-            {/* 다음 버튼 */}
-            <div className="text-center">
-              <button
-                type="button"
-                onClick={handleNext}
-                className="mt-4 w-32 h-12 bg-lime-400 hover:bg-green-500 text-white rounded-lg transition"
-              >
-                다음
               </button>
             </div>
           </div>
