@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
     console.log(JSON.stringify(loginInfo));
   };
 
-  const logout = (loginInfo, tokens) => {
+  const logout = () => {
     setAuth({
       loginInfo: {},
       tokens: {},
