@@ -116,11 +116,16 @@ const NoticeBoard = () => {
         </div>
       ))}
 
-      <Pagination
+
+      {
+        /*
+        <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
-      />
+        />
+        */
+      }
     </div>
   );
 };

@@ -4,8 +4,8 @@ import { useNavigate }           from 'react-router-dom';
 import axios                     from 'axios';
 
 export default function MyPage() {
-  const navigate = useNavigate();
   const { auth } = useContext(AuthContext);
+  const navi = useNavigate();
 
   const [userInfo, setUserInfo] = useState({
     name: '',
@@ -18,16 +18,19 @@ export default function MyPage() {
   const [loading, setLoading] = useState(true);
 
   // 1) 로그인/토큰 검사 후 정보 조회
-  const fetchUserInfo = () => {
-    // 비인증 시 로그인 페이지로
+ 
+
+  // 마운트 및 auth/tokens 변경 시 fetchUserInfo 호출
+  useEffect(() => {
     if (!auth.isAuthenticated) {
-      navigate('/login', { replace: true });
+      navi('/login', { replace: true });
       return;
     }
 
     setLoading(true);
     setError(null);
 
+    if(auth.tokens.accessToken){
     axios
       .get('http://localhost/mypage', {
         headers: { Authorization: `Bearer ${auth.tokens.accessToken}` }
@@ -53,12 +56,8 @@ export default function MyPage() {
       .finally(() => {
         setLoading(false);
       });
-  };
-
-  // 마운트 및 auth/tokens 변경 시 fetchUserInfo 호출
-  useEffect(() => {
-    fetchUserInfo();
-  }, []);
+    }
+  }, [auth.tokens.accessToken, ]);
 
   if (loading) {
     return <div className="p-8 text-center">로딩 중...</div>;
@@ -76,25 +75,25 @@ export default function MyPage() {
         </h1>
         <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
           <button
-            onClick={() => navigate('/mypage/editprofile')}
+            onClick={() => navi('/mypage/editprofile')}
             className="px-4 py-2 bg-lime-400 text-white rounded-lg shadow hover:bg-green-600 transition-colors"
           >
             내정보 조회/수정
           </button>
           <button
-            onClick={() => navigate('/mypage/myposts')}
+            onClick={() => navi('/mypage/myposts')}
             className="px-4 py-2 bg-lime-400 text-white rounded-lg shadow hover:bg-green-600 transition-colors"
           >
             내가 작성한 게시글 조회
           </button>
           <button
-            onClick={() => navigate('/mypage/changepassword')}
+            onClick={() => navi('/mypage/changepassword')}
             className="px-4 py-2 bg-lime-400 text-white rounded-lg shadow hover:bg-green-600 transition-colors"
           >
             비밀번호 변경
           </button>
           <button
-            onClick={() => navigate('/mypage/withdrawal/check')}
+            onClick={() => navi('/mypage/withdrawal/check')}
             className="px-4 py-2 bg-red-500 text-white rounded-lg shadow hover:bg-red-600 transition-colors"
           >
             회원탈퇴
