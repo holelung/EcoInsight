@@ -14,7 +14,8 @@ public interface MyPageService {
 	MyPageDTO selectMyPageInfo();
 	
 	// 개인정보 수정
-	void editProfile(EditProfileDTO member);
+	EditProfileDTO getEditProfileInfo();
+    void editProfile(EditProfileDTO dto);
     
     // 회원탈퇴
     void withdrawal(String currentPassword);

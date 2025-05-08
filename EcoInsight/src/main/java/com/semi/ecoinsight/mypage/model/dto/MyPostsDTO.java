@@ -10,5 +10,6 @@ public class MyPostsDTO {
     private String  boardTitle;
     private String  categoryName;
     private String  createdDate;  
+    private String    categoryId;
     private Integer viewCount;
 }

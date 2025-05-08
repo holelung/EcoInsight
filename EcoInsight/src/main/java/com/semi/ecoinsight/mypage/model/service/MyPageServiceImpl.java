@@ -86,11 +86,34 @@ public class MyPageServiceImpl implements MyPageService {
 	        myPageMapper.withdrawalMember(memberNo);
 	    }
 
-	@Override
-	public void editProfile(EditProfileDTO member) {
-		// TODO Auto-generated method stub
-		
-	}
+	 @Override
+	    public EditProfileDTO getEditProfileInfo() {
+	        CustomUserDetails user = (CustomUserDetails)
+	            SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+	        EditProfileDTO dto = myPageMapper.getMemberByMemberNo(user.getMemberNo());
+	        // 폼에 비밀번호 표시하지 않도록 빈 문자열 세팅
+	        dto.setMemberPw("");
+	        return dto;
+	    }
+
+	    @Override
+	    @Transactional
+	    public void editProfile(EditProfileDTO dto) {
+	        CustomUserDetails user = (CustomUserDetails)
+	            SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+	        EditProfileDTO profile = myPageMapper.getMemberByMemberNo(user.getMemberNo());
+
+	        if (!passwordEncoder.matches(
+	                dto.getCurrentPassword(),
+	                profile.getMemberPw()
+	        )) {
+	            throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+	        }
+
+	        dto.setMemberNo(user.getMemberNo());
+	        myPageMapper.editMyProfile(dto);
+	    }
 
 	@Override
     public List<MyPostsDTO> selectMyPosts() {

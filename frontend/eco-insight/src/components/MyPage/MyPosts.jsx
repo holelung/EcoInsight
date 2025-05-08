@@ -1,8 +1,8 @@
+// src/frontend/src/components/MyPage/MyPosts.jsx
 import { useContext, useEffect, useState } from 'react';
-import { AuthContext } from '../Context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-
+import { AuthContext }           from '../Context/AuthContext';
+import { useNavigate }           from 'react-router-dom';
+import axios                     from 'axios';
 
 export default function MyPosts() {
   const navi = useNavigate();
@@ -11,60 +11,50 @@ export default function MyPosts() {
   const PAGE_SIZE = 8;
   const [posts, setPosts]       = useState([]);
   const [currentPage, setPage]  = useState(0);
-  const [category, setCategory] = useState('전체');
+  const [categoryFilter, setCategoryFilter] = useState('전체');
   const [keyword, setKeyword]   = useState('');
   const [error, setError]       = useState(null);
   const [loading, setLoading]   = useState(false);
 
   useEffect(() => {
-    // 1) 인증 체크
     if (!auth.isAuthenticated) {
       navi('/login', { replace: true });
       return;
     }
-    // 2) 토큰 준비 전 대기
     if (!auth.tokens.accessToken) return;
 
     setLoading(true);
-    setError(null);
-
-    // 3) 올바른 포트(8080)로 요청
     axios.get('http://localhost/mypage/myposts', {
       headers: { Authorization: `Bearer ${auth.tokens.accessToken}` }
     })
-      .then(({ data }) => {
-        setPosts(
-          data.map(item => ({
-            id:       item.boardNo,
-            title:    item.boardTitle,
-            category: item.categoryName,
-            date:     item.createdDate,
-            views:    item.viewCount
-          }))
-        );
-      })
-      .catch(err => {
-        console.error('내 게시글 조회 실패:', err);
-        setError('내 게시글을 불러오는 데 실패했습니다.');
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    .then(({ data }) => {
+      // data: Array<MyPostsDTO>
+      setPosts(data.map(item => ({
+        id:         item.boardNo,
+        categoryId: item.categoryId,     // <-- 서버 DTO 에 categoryId 필드가 필요합니다
+        category:   item.categoryName, 
+        title:      item.boardTitle,
+        date:       item.createdDate,
+        views:      item.viewCount
+      })));
+    })
+    .catch(err => {
+      console.error('내 게시글 조회 실패:', err);
+      setError('내 게시글을 불러오는 데 실패했습니다.');
+    })
+    .finally(() => setLoading(false));
   }, [
     auth.isAuthenticated,
     auth.tokens.accessToken,
-    navi
+    navi 
   ]);
 
-  // 인증 대기
   if (!auth.isAuthenticated) {
     return <div className="p-8 text-center">로그인 정보 확인 중…</div>;
   }
-  // 로딩 중
   if (loading) {
     return <div className="p-8 text-center">내 게시글을 불러오는 중…</div>;
   }
-  // 에러 발생
   if (error) {
     return <div className="p-8 text-center text-red-500">{error}</div>;
   }
@@ -72,7 +62,7 @@ export default function MyPosts() {
   // 필터링 & 페이징
   const cats     = ['전체', ...new Set(posts.map(p => p.category))];
   const filtered = posts.filter(p =>
-    (category === '전체' || p.category === category) &&
+    (categoryFilter === '전체' || p.category === categoryFilter) &&
     p.title.includes(keyword)
   );
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
@@ -87,8 +77,8 @@ export default function MyPosts() {
         {/* 필터 바 */}
         <div className="flex justify-between items-center mb-6 space-x-4">
           <select
-            value={category}
-            onChange={e => { setCategory(e.target.value); setPage(0); }}
+            value={categoryFilter}
+            onChange={e => { setCategoryFilter(e.target.value); setPage(0); }}
             className="border px-3 py-2 rounded"
           >
             {cats.map(c => <option key={c} value={c}>{c}</option>)}
@@ -117,8 +107,11 @@ export default function MyPosts() {
             {displayed.map((p, i) => (
               <tr
                 key={p.id}
-                onClick={() => navi(`/post/${encodeURIComponent(p.category)}/${p.id}`)}
                 className="cursor-pointer hover:bg-gray-100"
+                onClick={() => 
+                  // 여기에 categoryId, boardNo 모두 전달
+                  navi(`/post/${p.categoryId}/${p.id}`)
+                }
               >
                 <td className="border px-4 py-2">{startIdx + i + 1}</td>
                 <td className="border px-4 py-2">{p.title}</td>
@@ -136,6 +129,7 @@ export default function MyPosts() {
             )}
           </tbody>
         </table>
+ 
 
       </div>
     </div>
