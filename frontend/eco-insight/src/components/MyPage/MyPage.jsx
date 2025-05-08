@@ -18,9 +18,6 @@ export default function MyPage() {
   const [loading, setLoading] = useState(true);
 
   // 1) 로그인/토큰 검사 후 정보 조회
- 
-
-  // 마운트 및 auth/tokens 변경 시 fetchUserInfo 호출
   useEffect(() => {
     if (!auth.isAuthenticated) {
       navi('/login', { replace: true });
