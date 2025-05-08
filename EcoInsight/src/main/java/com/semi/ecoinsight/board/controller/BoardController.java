@@ -20,14 +20,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
-@RestController()
-@RequestMapping("/boards")
+@RestController
+@RequestMapping("boards")
 @RequiredArgsConstructor
 public class BoardController {
     
     private final BoardService boardService;
     
-    @PostMapping("upload")
+    @PostMapping("/upload")
     public ResponseEntity<?> imageUrlChange(
         @RequestParam(name="files", required=false) List<MultipartFile> files, @RequestParam(name="boardType", required=false) String boardType) {
         if (files == null) {

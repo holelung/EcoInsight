@@ -23,19 +23,25 @@ import lombok.RequiredArgsConstructor;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth-board")
-@CrossOrigin(origins = "http://localhost:5173")
+@RequestMapping("auth-board")
 public class AuthBoardController {
 	private final AuthBoardService authBoardService;
 	
+	@PostMapping("/upload-authboard")
+	public ResponseEntity<?> uploadAuthBoard(@RequestBody @Validated WriteFormDTO form) {
+		Long boardNo = authBoardService.uploadAuthBoard(form);
+		return ResponseEntity.ok(boardNo);
+	}
+	
+
 	@GetMapping("/{boardNo}")
 	public ResponseEntity<?> getAuthBoardDetail(@PathVariable Long boardNo) {
-	    try {
-	        BoardDTO dto = authBoardService.getAuthBoardDetail(boardNo);
-	        return ResponseEntity.ok(dto);
-	    } catch (Exception e) {
-	        return ResponseEntity.status(404).body("게시글을 찾을 수 없습니다.");
-	    }
+		try {
+			BoardDTO dto = authBoardService.getAuthBoardDetail(boardNo);
+			return ResponseEntity.ok(dto);
+		} catch (Exception e) {
+			return ResponseEntity.status(404).body("게시글을 찾을 수 없습니다.");
+		}
 	}
 	
 	@PutMapping("/{boardNo}")
@@ -46,16 +52,6 @@ public class AuthBoardController {
 	    } catch (Exception e) {
 	        return ResponseEntity.status(500).body("수정 실패: " + e.getMessage());
 	    }
-	}
-	
-	@PostMapping
-	public ResponseEntity<?> uploadAuthBoard(@RequestBody @Validated WriteFormDTO form) {
-		try {
-            authBoardService.insertAuthBoard(form);
-            return ResponseEntity.ok("게시글이 성공적으로 업로드되었습니다.");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("게시글 업로드 실패: " + e.getMessage());
-        }
 	}
 	
     @DeleteMapping("/{boardNo}")

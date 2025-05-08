@@ -10,7 +10,7 @@ import com.semi.ecoinsight.board.model.vo.Board;
 @Mapper
 public interface AuthBoardMapper {
 	
-	void insertAuthBoard(Board board);
+	void uploadAuthBoard(Board board);
 	
 	List<BoardDTO> selectAuthBoardList();
 	
