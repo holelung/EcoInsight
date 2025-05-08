@@ -54,11 +54,10 @@ public class SecurityConfigure {
 							"/auth/verifycode-password",
 							"/auth/admin-login",
 							"/auth/google-login").permitAll();
-					requests.requestMatchers(HttpMethod.GET,  "/communities/**").permitAll();
-					requests.requestMatchers(HttpMethod.POST,"/change-email").authenticated();
-					requests.requestMatchers(HttpMethod.POST, "/communities/like").authenticated();
-					requests.requestMatchers(HttpMethod.PUT, "/members/password").authenticated();
-					requests.requestMatchers(HttpMethod.DELETE, "/communities/community-delete").authenticated();
+					requests.requestMatchers(HttpMethod.GET).permitAll();
+					requests.requestMatchers(HttpMethod.POST, "/communities/**").authenticated();
+					requests.requestMatchers(HttpMethod.PUT).authenticated();
+					requests.requestMatchers(HttpMethod.DELETE).authenticated();
 					requests.anyRequest().authenticated();
 				})
 				.sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

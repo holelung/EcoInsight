@@ -39,111 +39,122 @@ import NoticeBoardDetail from "./components/Board/Notice/NoticeBoardDetail.jsx";
 import NoticeBoardWrite from "./components/Board/Notice/NoticeBoardWrite.jsx";
 import NoticeWrite from "./pages/Admin/NoticeBoardManagementPage/NoticeWrite.jsx";
 import CommunityWritePage from "./components/Board/Community/CommunityWritePage.jsx";
-import { GoogleOAuthProvider } from '@react-oauth/google';
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import NoticeBoardModify from "./components/Board/Notice/NoticeBoardModify.jsx";
+import CommunityBoardModify from "./components/Board/Community/CommunityBoardModify.jsx";
 
 function App() {
   return (
     <GoogleOAuthProvider clientId="617855234940-dp6iq2v93alink0ttpmgadohvbhj0fo5.apps.googleusercontent.com">
-    <AuthProvider>
-      <Routes>
-        {/* 사용자 레이아웃 */}
-        <Route element={<UserLayout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/community/:type" element={<CommunityListPage />} />
-          <Route path="/auth-board/cert" element={<AuthListPage />} />
-          <Route path="/auth-board/cert/:no" element={<AuthBoardDetail />} />
+      <AuthProvider>
+        <Routes>
+          {/* 사용자 레이아웃 */}
+          <Route element={<UserLayout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/community/:type" element={<CommunityListPage />} />
+            <Route path="/auth-board/cert" element={<AuthListPage />} />
+            <Route path="/auth-board/cert/:no" element={<AuthBoardDetail />} />
+            <Route
+              path="/auth-board/cert:type"
+              element={<AuthBoardWritePage />}
+            />
+            <Route path="/write/:type" element={<CommunityWritePage />} />
+            <Route
+              path="/post/:categoryId/:boardNo"
+              element={<CommunityBoardDetail />}
+            />
+            <Route path="/dashboard" element={<MainDashBoard />} />
+            <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
+            <Route path="/privateAskPage" element={<PrivateAskPage />} />
+            <Route path="/notice" element={<NoticeBoard />} />
+            <Route path="/notice/detail/:id" element={<NoticeBoardDetail />} />
+            <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
+            <Route path="/privateAskPage" element={<PrivateAskPage />} />
+          </Route>
           <Route
-            path="/auth-board/cert:type"
-            element={<AuthBoardWritePage />}
+            path="/community/modify/:boardNo"
+            element={<CommunityBoardModify />}
           />
-          <Route path="/write/:type" element={<CommunityWritePage />} />
-          <Route
-            path="/post/:categoryId/:boardNo"
-            element={<CommunityBoardDetail />}
-          />
-          <Route path="/dashboard" element={<MainDashBoard />} />
-          <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
-          <Route path="/privateAskPage" element={<PrivateAskPage />} />
-          <Route path="/notice" element={<NoticeBoard />} />
-          <Route path="/notice/detail/:id" element={<NoticeBoardDetail />} />
-          <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
-          <Route path="/privateAskPage" element={<PrivateAskPage />} />
-        </Route>
 
-        {/* 로그인 유저 전용 */}
-        <Route
-          element={
-            <UserRoute>
-              {" "}
-              <UserLayout />{" "}
-            </UserRoute>
-          }
-        >
-          <Route path="/mypage" element={<MyPage />} />
-          <Route path="/mypage/myposts" element={<Myposts />} />
-          <Route path="/mypage/editprofile" element={<EditProfile />} />
-          <Route path="/mypage/changepassword" element={<ChangePassword />} />
+          {/* 로그인 유저 전용 */}
           <Route
-            path="/mypage/withdrawal/check"
-            element={<CheckWithdrawal />}
-          />
-          <Route path="/mypage/withdrawal/form" element={<WithdrawalForm />} />
-          <Route path="/mypage/withdrawal/ok" element={<OkWithdrawal />} />
-        </Route>
+            element={
+              <UserRoute>
+                {" "}
+                <UserLayout />{" "}
+              </UserRoute>
+            }
+          >
+            <Route path="/mypage" element={<MyPage />} />
+            <Route path="/mypage/myposts" element={<Myposts />} />
+            <Route path="/mypage/editprofile" element={<EditProfile />} />
+            <Route path="/mypage/changepassword" element={<ChangePassword />} />
+            <Route
+              path="/mypage/withdrawal/check"
+              element={<CheckWithdrawal />}
+            />
+            <Route
+              path="/mypage/withdrawal/form"
+              element={<WithdrawalForm />}
+            />
+            <Route path="/mypage/withdrawal/ok" element={<OkWithdrawal />} />
+          </Route>
 
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/findid" element={<FindId />} />
-        <Route path="/findpassword" element={<FindPasswordPage />} />
-        <Route path="/findPassword/resetpassword" element={<ResetPassword />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/findid" element={<FindId />} />
+          <Route path="/findpassword" element={<FindPasswordPage />} />
+          <Route
+            path="/findPassword/resetpassword"
+            element={<ResetPassword />}
+          />
 
-        {/* 관리자 전용 */}
-        <Route path="/admin/login" element={<AdminLogin />} />
+          {/* 관리자 전용 */}
+          <Route path="/admin/login" element={<AdminLogin />} />
 
-        <Route
-          path="/admin"
-          element={
-            <AdminRoute>
-              <AdminLayout />
-            </AdminRoute>
-          }
-        >
-          <Route path="dashboard" element={<AdminDashBoard />} />
-          <Route path="point-manage" element={<PointManagementPage />} />
-          <Route path="account-manage" element={<AccountManagementPage />} />
           <Route
-            path="authboard-manage"
-            element={<AuthBoardManagementPage />}
-          />
-          <Route
-            path="communityboard-manage"
-            element={<CommunityBoardManagementPage />}
-          />
-          <Route
-            path="noticeboard-manage"
-            element={<NoticeBoardManagementPage />}
-          />
-          <Route path="notice-write" element={<NoticeBoardWrite />} />
-          <Route
-            path="authboard-manage"
-            element={<AuthBoardManagementPage />}
-          />
-          <Route
-            path="communityboard-manage"
-            element={<CommunityBoardManagementPage />}
-          />
-          <Route
-            path="noticeboard-manage"
-            element={<NoticeBoardManagementPage />}
-          />
-          <Route
-            path="notice/modify/:boardNo"
-            element={<NoticeBoardModify />}
-          />
-        </Route>
-      </Routes>
-    </AuthProvider>
+            path="/admin"
+            element={
+              <AdminRoute>
+                <AdminLayout />
+              </AdminRoute>
+            }
+          >
+            <Route path="dashboard" element={<AdminDashBoard />} />
+            <Route path="point-manage" element={<PointManagementPage />} />
+            <Route path="account-manage" element={<AccountManagementPage />} />
+            <Route
+              path="authboard-manage"
+              element={<AuthBoardManagementPage />}
+            />
+            <Route
+              path="communityboard-manage"
+              element={<CommunityBoardManagementPage />}
+            />
+            <Route
+              path="noticeboard-manage"
+              element={<NoticeBoardManagementPage />}
+            />
+            <Route path="notice-write" element={<NoticeBoardWrite />} />
+            <Route
+              path="authboard-manage"
+              element={<AuthBoardManagementPage />}
+            />
+            <Route
+              path="communityboard-manage"
+              element={<CommunityBoardManagementPage />}
+            />
+            <Route
+              path="noticeboard-manage"
+              element={<NoticeBoardManagementPage />}
+            />
+            <Route
+              path="notice/modify/:boardNo"
+              element={<NoticeBoardModify />}
+            />
+          </Route>
+        </Routes>
+      </AuthProvider>
     </GoogleOAuthProvider>
   );
 }
