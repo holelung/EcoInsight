@@ -269,7 +269,7 @@ const extensions = [
 
 const content = `\n\n\n\n`;
 
-const Tiptap = ({ prevContent, setContent, boardType, imageFilesRef }) => {
+const Tiptap = ({ prevContent, setContent, imageFilesRef }) => {
   const editor = useEditor({
     extensions,
     content:prevContent === "" ? content : prevContent,
@@ -286,7 +286,6 @@ const Tiptap = ({ prevContent, setContent, boardType, imageFilesRef }) => {
     <div className="p-4 bg-white rounded-lg shadow-md">
       <MenuBar
         editor={editor}
-        boardType={boardType}
         imageFilesRef={imageFilesRef}
       />
       <EditorContent

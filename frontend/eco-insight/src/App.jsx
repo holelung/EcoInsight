@@ -41,11 +41,18 @@ import NoticeWrite from "./pages/Admin/NoticeBoardManagementPage/NoticeWrite.jsx
 import CommunityWritePage from "./components/Board/Community/CommunityWritePage.jsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import NoticeBoardModify from "./components/Board/Notice/NoticeBoardModify.jsx";
+<<<<<<< HEAD
 import CommunityBoardModify from "./components/Board/Community/CommunityBoardModify.jsx";
+=======
+import ReportManagementPage from "./pages/Admin/ReportManagementPage/ReportManagementPage.jsx";
+import PointDetailPage from "./pages/Admin/PointManagementPage/PointDetailPage.jsx";
+import AuthBoardModify from "./components/Board/AuthBoard/AuthBoardModify.jsx";
+>>>>>>> a9fd0da51ebfece24ff4916a6695c0af63354f2d
 
 function App() {
   return (
     <GoogleOAuthProvider clientId="617855234940-dp6iq2v93alink0ttpmgadohvbhj0fo5.apps.googleusercontent.com">
+<<<<<<< HEAD
       <AuthProvider>
         <Routes>
           {/* 사용자 레이아웃 */}
@@ -75,6 +82,31 @@ function App() {
             path="/community/modify/:boardNo"
             element={<CommunityBoardModify />}
           />
+=======
+    <AuthProvider>
+      <Routes>
+        {/* 사용자 레이아웃 */}
+        <Route element={<UserLayout />}>
+            <Route path="/" element={<HomePage />} />
+            {/* 커뮤니티 */}
+            <Route path="/community/:type" element={<CommunityListPage />} />
+            <Route path="/write/:type" element={<CommunityWritePage />} />
+            <Route path="/post/:categoryId/:boardNo" element={<CommunityBoardDetail />} />
+            {/* 인증게시판 */}
+            <Route path="/auth-board" element={<AuthListPage />} />
+            <Route path="/auth-board/:no" element={<AuthBoardDetail />} />
+            <Route path="/auth-board/write" element={<AuthBoardWritePage />} />
+            <Route path="/auth-board/modify/:boardNo" element={<AuthBoardModify /> } />
+            {/* 공지사항 */}
+            <Route path="/notice" element={<NoticeBoard />} />
+            <Route path="/notice/detail/:id" element={<NoticeBoardDetail />} />
+            {/* 대시보드 */}
+            <Route path="/dashboard" element={<MainDashBoard />} />
+            {/* 문의하기 */}
+            <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
+            <Route path="/privateAskPage" element={<PrivateAskPage />} />
+        </Route>
+>>>>>>> a9fd0da51ebfece24ff4916a6695c0af63354f2d
 
           {/* 로그인 유저 전용 */}
           <Route
@@ -112,6 +144,7 @@ function App() {
           {/* 관리자 전용 */}
           <Route path="/admin/login" element={<AdminLogin />} />
 
+<<<<<<< HEAD
           <Route
             path="/admin"
             element={
@@ -155,6 +188,54 @@ function App() {
           </Route>
         </Routes>
       </AuthProvider>
+=======
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminLayout />
+            </AdminRoute>
+          }
+        >
+          <Route path="dashboard" element={<AdminDashBoard />} />
+          <Route path="point-manage" element={<PointManagementPage />} />
+          <Route path="point-detail/:memberNo" element={<PointDetailPage />} />
+          <Route path="account-manage" element={<AccountManagementPage />} />
+          <Route
+            path="authboard-manage"
+            element={<AuthBoardManagementPage />}
+          />
+          <Route
+            path="communityboard-manage"
+            element={<CommunityBoardManagementPage />}
+          />
+          <Route
+            path="noticeboard-manage"
+            element={<NoticeBoardManagementPage />}
+          />
+          <Route path="report-manage" element={<ReportManagementPage />} />
+          {/*<Route path="notice-write" element={<NoticeWrite />} />*/}
+          <Route path="notice-write" element={<NoticeBoardWrite />} />
+          <Route
+            path="authboard-manage"
+            element={<AuthBoardManagementPage />}
+          />
+          <Route
+            path="communityboard-manage"
+            element={<CommunityBoardManagementPage />}
+          />
+          <Route
+            path="noticeboard-manage"
+            element={<NoticeBoardManagementPage />}
+          />
+          <Route
+            path="notice/modify/:boardNo"
+            element={<NoticeBoardModify />}
+          />
+        </Route>
+      </Routes>
+    </AuthProvider>
+>>>>>>> a9fd0da51ebfece24ff4916a6695c0af63354f2d
     </GoogleOAuthProvider>
   );
 }

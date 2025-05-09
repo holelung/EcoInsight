@@ -10,7 +10,7 @@ const Header = () => {
   const [subNav, setSubNav] = useState(false);
 
   const clickBoardItem = () => {
-    navi("/auth-board/cert");
+    navi("/auth-board");
     setSubNav(!subNav);
   };
 
@@ -83,7 +83,7 @@ const Header = () => {
               <ul className="flex space-x-4 text-gray-600">
                 <li
                   className="cursor-pointer hover:text-green-600"
-                  onClick={() => navi("/auth-board/cert")}
+                  onClick={() => navi("/auth-board")}
                 >
                   인증게시판
                 </li>

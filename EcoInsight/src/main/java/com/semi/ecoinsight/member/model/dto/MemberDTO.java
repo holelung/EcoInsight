@@ -20,9 +20,9 @@ public class MemberDTO {
     private String memberName;
     private String email;
     private String memberPh;
-    private Date memberEnrollDate;
     private String memberRole;
     private String gradeNo;
-    private char isActive;
+    private Date memberEnrollDate;
     private Date memberUpdateDate;
+    private char isActive;
 };

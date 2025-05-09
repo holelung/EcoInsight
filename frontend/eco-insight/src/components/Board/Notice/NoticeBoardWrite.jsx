@@ -20,7 +20,7 @@ const NoticeBoardWrite = () => {
       alert("제목과 내용을 모두 입력해주세요!");
       return;
     }
-    const imgRegex = /<img [^>]*src="([^"]+)"/g;
+    const imgRegex = /<img [^>]*src="blob:([^"]+)"/g;
     let newContent = content;
 
     const formData = new FormData();

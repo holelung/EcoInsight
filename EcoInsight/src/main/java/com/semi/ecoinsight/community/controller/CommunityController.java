@@ -20,11 +20,12 @@ import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
 import com.semi.ecoinsight.comment.model.dto.CommentDTO;
 import com.semi.ecoinsight.community.model.service.CommunityService;
-
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import oracle.jdbc.proxy.annotation.Post;
+
+
+
 
 @Slf4j
 @RequestMapping("/communities")

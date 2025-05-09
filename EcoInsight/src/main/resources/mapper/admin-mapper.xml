@@ -204,5 +204,425 @@
             BOARD_NO = #{boardNo}
     </update>
 
+    <!-- 계정 관리 -->
     
+    <!-- 계정 정보 Select -->
+    <select id="selectAccountList" parameterType="map">
+        SELECT
+            MEMBER_NO memberNo,
+            MEMBER_ID memberId,
+            MEMBER_NAME memberName,
+            EMAIL email,
+            MEMBER_PH memberPh,
+            MEMBER_ENROLL_DATE memberEnrollDate,
+            MEMBER_UPDATE_DATE memberUpdateDate,
+            IS_ACTIVE isActive,
+            BAN_ID banId,
+            BAN_PERIOD banPeriod,
+            BAN_START_DATE banStartDate,
+            BAN_END_DATE banEndDate
+        FROM
+            TB_MEMBER
+        LEFT JOIN
+            TB_BANLIST USING(MEMBER_NO)
+        WHERE
+            MEMBER_ROLE = 'ROLE_COMMON'
+        ORDER BY
+        <choose>
+            <when test="sortOrder == 'Newest'">
+                MEMBER_ENROLL_DATE DESC
+            </when>
+            <otherwise>
+                MEMBER_ENROLL_DATE ASC
+            </otherwise>
+        </choose>
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <select id="selectAccountListBySearch" parameterType="map">
+        SELECT
+            MEMBER_NO memberNo,
+            MEMBER_ID memberId,
+            MEMBER_NAME memberName,
+            EMAIL email,
+            MEMBER_PH memberPh,
+            MEMBER_ENROLL_DATE memberEnrollDate,
+            MEMBER_UPDATE_DATE memberUpdateDate,
+            IS_ACTIVE isActive,
+            BAN_ID banId,
+            BAN_PERIOD banPeriod,
+            BAN_START_DATE banStartDate,
+            BAN_END_DATE banEndDate
+        FROM
+            TB_MEMBER
+        LEFT JOIN
+            TB_BANLIST USING(MEMBER_NO)
+        WHERE
+            MEMBER_ROLE = 'ROLE_COMMON'
+        AND
+        <choose>
+            <when test="searchType == 'name'"> 
+                MEMBER_NAME LIKE '%'||#{search}||'%' 
+            </when>
+            <when test="searchType == 'id'"> 
+                MEMBER_ID LIKE '%'||#{search}||'%' 
+            </when>
+            <otherwise> 
+                EMAIL LIKE '%'||#{search}||'%'  
+            </otherwise>
+        </choose>
+        ORDER BY
+        <choose>
+            <when test="sortOrder == 'Newest'">
+                MEMBER_ENROLL_DATE DESC
+            </when>
+            <otherwise>
+                MEMBER_ENROLL_DATE ASC
+            </otherwise>
+        </choose>
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <select id="selectAccountCount" resultType="long">
+        SELECT
+            COUNT(*)
+        FROM
+            TB_MEMBER
+        WHERE
+            MEMBER_ROLE = 'ROLE_COMMON'
+    </select>
+    <select id="selectAccountCountBySearch" 
+            parameterType="map"
+            resultType="long">
+        SELECT
+            COUNT(*)
+        FROM 
+            TB_MEMBER
+        WHERE
+            MEMBER_ROLE = 'ROLE_COMMON'
+        AND
+        <choose>
+            <when test="searchType == 'name'"> 
+                MEMBER_NAME LIKE '%'||#{search}||'%' 
+            </when>
+            <when test="searchType == 'id'"> 
+                MEMBER_ID LIKE '%'||#{search}||'%' 
+            </when>
+            <otherwise> 
+                EMAIL LIKE '%'||#{search}||'%'  
+            </otherwise>
+        </choose>        
+    </select>
+
+    <update id="disableAccount">
+        UPDATE
+            TB_MEMBER
+        SET
+            IS_ACTIVE = 'N',
+            MEMBER_UPDATE_DATE = SYSDATE
+        WHERE
+            MEMBER_NO = #{memberNo}
+    </update>
+
+    <update id="enableAccount">
+        UPDATE
+            TB_MEMBER
+        SET
+            IS_ACTIVE = 'Y',
+            MEMBER_UPDATE_DATE = SYSDATE
+        WHERE
+            MEMBER_NO = #{memberNo}        
+    </update>
+
+    <insert id="insertBanList" parameterType="com.semi.ecoinsight.admin.model.dto.BanDTO">
+        INSERT
+        INTO
+            TB_BANLIST(
+                MEMBER_NO,
+                BAN_ID,
+                BAN_PERIOD,
+                BAN_START_DATE,
+                BAN_END_DATE
+            )
+        VALUES
+        (
+            #{memberNo},
+            #{banId},
+            #{banPeriod},
+            SYSDATE,
+            SYSDATE + #{banPeriod}
+        )
+    </insert>
+
+    <delete id="deleteBanList">
+        DELETE
+        FROM
+            TB_BANLIST
+        WHERE
+            MEMBER_NO = #{memberNo}
+    </delete>
+
+    <!-- 포인트 관리 계정정보 조회 -->
+    <select id="selectPointList" 
+            parameterType="map"
+            resultType="com.semi.ecoinsight.admin.model.dto.MemberInfoDTO">
+         SELECT
+            MEMBER_NO memberNo,
+            MEMBER_ID memberId,
+            MEMBER_NAME memberName,
+            GRADE_NO gradeNo,
+            GRADE_NAME gradeName,
+            EMAIL email,
+            MEMBER_PH memberPh,
+            MEMBER_ENROLL_DATE memberEnrollDate,
+            MEMBER_UPDATE_DATE memberUpdateDate,
+            IS_ACTIVE isActive,
+            (
+                SELECT
+                    SUM(CHANGE_POINT)
+                FROM
+                    TB_POINT P
+                WHERE
+                    P.MEMBER_NO = M.MEMBER_NO
+            )AS totalPoint
+        FROM
+            TB_MEMBER M
+        LEFT JOIN
+            TB_GRADE USING(GRADE_NO)
+        WHERE
+            MEMBER_ROLE = 'ROLE_COMMON'
+        ORDER BY
+        <choose>
+            <when test="sortOrder == 'Newest'">
+                MEMBER_ENROLL_DATE DESC
+            </when>
+            <otherwise>
+                MEMBER_ENROLL_DATE ASC
+            </otherwise>
+        </choose>
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <select id="selectPointListBySearch" 
+            parameterType="map"
+            resultType="com.semi.ecoinsight.admin.model.dto.MemberInfoDTO">
+        SELECT
+            MEMBER_NO memberNo,
+            MEMBER_ID memberId,
+            MEMBER_NAME memberName,
+            GRADE_NO gradeNo,
+            GRADE_NAME gradeName,
+            EMAIL email,
+            MEMBER_PH memberPh,
+            MEMBER_ENROLL_DATE memberEnrollDate,
+            MEMBER_UPDATE_DATE memberUpdateDate,
+            IS_ACTIVE isActive,
+            (
+                SELECT
+                    SUM(CHANGE_POINT)
+                FROM
+                    TB_POINT P
+                WHERE
+                    P.MEMBER_NO = M.MEMBER_NO
+            )AS totalPoint
+        FROM
+            TB_MEMBER M
+        LEFT JOIN
+            TB_GRADE USING(GRADE_NO)
+        WHERE
+            MEMBER_ROLE = 'ROLE_COMMON'
+        AND
+        <choose>
+            <when test="searchType == 'name'"> 
+                MEMBER_NAME LIKE '%'||#{search}||'%' 
+            </when>
+            <when test="searchType == 'id'"> 
+                MEMBER_ID LIKE '%'||#{search}||'%' 
+            </when>
+            <otherwise> 
+                EMAIL LIKE '%'||#{search}||'%'  
+            </otherwise>
+        </choose>
+        ORDER BY
+        <choose>
+            <when test="sortOrder == 'Newest'">
+                MEMBER_ENROLL_DATE DESC
+            </when>
+            <otherwise>
+                MEMBER_ENROLL_DATE ASC
+            </otherwise>
+        </choose>
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <!-- 종합 포인트 -->
+    <select id="selectTotalPoint"
+            parameterType="long"
+            resultType="long">
+        SELECT
+            SUM(CHANGE_POINT)
+        FROM
+            TB_POINT
+        WHERE
+            MEMBER_NO = #{memberNo}
+    </select>
+
+    <insert id="insertPoint"
+            parameterType="com.semi.ecoinsight.admin.model.dto.PointDTO">
+        INSERT
+        INTO
+            TB_POINT(
+                MEMBER_NO,
+                CHANGE_POINT
+            )
+        VALUES(
+            #{memberNo},
+            #{changePoint}
+        )
+    </insert>
+    
+    <select id="selectPointHistoryByMemberNo"
+            parameterType="long"
+            resultType="com.semi.ecoinsight.admin.model.dto.PointDTO">
+        SELECT
+            POINT_NO pointNo,
+            CHANGE_POINT changePoint,
+            CREATED_DATE createdDate
+        FROM
+            TB_POINT
+        WHERE
+            MEMBER_NO = #{memberNo}
+    </select>
+
+    <!-- 인증 게시판 관리 -->
+    <select id="selectAuthBoardList"
+            parameterType="map"
+            resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
+        SELECT
+            A.BOARD_NO boardNo,
+            A.CATEGORY_ID categoryId,
+            A.MEMBER_NO memberNo,
+            A.BOARD_TITLE boardTitle,
+            A.BOARD_CONTENT boardContent,
+            A.CREATED_DATE createdDate,
+            A.MODIFIED_DATE modifiedDate,
+            A.VIEW_COUNT viewCount,
+            A.IS_CERTIFIED isCertified,
+            A.IS_DELETED isDeleted,
+            MEMBER_ID memberId,
+            MEMBER_NAME memberName,
+            (
+                SELECT
+                    COUNT(*)
+                FROM
+                    TB_AUTH_RECOMMEND R
+                WHERE
+                    R.BOARD_NO = A.BOARD_NO
+            )AS likeCount
+        FROM
+            TB_AUTH_BOARD A
+        JOIN
+            TB_MEMBER M ON(M.MEMBER_NO = A.MEMBER_NO)
+        ORDER BY
+        <choose>
+            <when test="sortOrder == 'Newest'">
+                A.CREATED_DATE DESC
+            </when>
+            <otherwise>
+                A.CREATED_DATE ASC
+            </otherwise>
+        </choose>
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <select id="selectAuthBoardListBySearch"
+            parameterType="map"
+            resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
+        SELECT
+            A.BOARD_NO boardNo,
+            A.CATEGORY_ID categoryId,
+            A.MEMBER_NO memberNo,
+            A.BOARD_TITLE boardTitle,
+            A.BOARD_CONTENT boardContent,
+            A.CREATED_DATE createdDate,
+            A.MODIFIED_DATE modifiedDate,
+            A.VIEW_COUNT viewCount,
+            A.IS_CERTIFIED isCertified,
+            A.IS_DELETED isDeleted,
+            MEMBER_ID memberId,
+            MEMBER_NAME memberName,
+            (
+                SELECT
+                    COUNT(*)
+                FROM
+                    TB_AUTH_RECOMMEND R
+                WHERE
+                    R.BOARD_NO = A.BOARD_NO
+            )AS likeCount
+        FROM
+            TB_AUTH_BOARD A
+        JOIN
+            TB_MEMBER M ON(M.MEMBER_NO = A.MEMBER_NO)
+        WHERE
+        <choose>
+            <when test="searchType == 'name'"> 
+                MEMBER_NAME LIKE '%'||#{search}||'%' 
+            </when>
+            <when test="searchType == 'title'"> 
+                BOARD_TITLE LIKE '%'||#{search}||'%' 
+            </when>
+            <otherwise> 
+                    MEMBER_NAME LIKE '%'||#{search}||'%' 
+                OR    
+                    BOARD_TITLE LIKE '%'||#{search}||'%' 
+            </otherwise>
+        </choose>
+        ORDER BY
+        <choose>
+            <when test="sortOrder == 'Newest'">
+                A.CREATED_DATE DESC
+            </when>
+            <otherwise>
+                A.CREATED_DATE ASC
+            </otherwise>
+        </choose>
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <!-- 어쓰보드 갯수 -->
+    <select id="selectAuthBoardCount"
+            resultType="long">
+        SELECT
+            COUNT(*)
+        FROM
+            TB_AUTH_BOARD
+    </select>
+
+    <!-- 검색어 기준 글 갯수 -->
+    <select id="selectAuthBoardCountBySearch"
+            parameterType="map"
+            resultType="long">
+        SELECT
+            COUNT(*)
+        FROM
+            TB_AUTH_BOARD
+        JOIN
+            TB_MEMBER USING(MEMBER_NO)
+        WHERE
+        <choose>
+            <when test="searchType == 'name'">
+                MEMBER_NAME LIKE '%'||#{search}||'%'
+            </when>
+            <when test="searchType == 'title'">
+                BOARD_TITLE LIKE '%'||#{search}||'%'
+            </when>
+            <otherwise>
+                MEMBER_NAME LIKE '%'||#{search}||'%'
+                OR
+                BOARD_TITLE LIKE '%'||#{search}||'%'
+            </otherwise>
+        </choose>
+    </select>
+
+
 </mapper>

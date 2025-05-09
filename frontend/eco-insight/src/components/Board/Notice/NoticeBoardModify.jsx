@@ -24,7 +24,7 @@ const NoticeBoardModify = () => {
     setTitle(boardData.boardTitle);
     setContent(boardData.boardContent);
     setCategoryId(boardData.categoryId);
-  }, [])
+  }, [auth.loginInfo, ])
 
 
   const handleUpload = () => {
@@ -124,7 +124,6 @@ const NoticeBoardModify = () => {
         <Tiptap
           prevContent={boardData.boardContent}
           setContent={setContent}
-          boardType={boardType}
           imageFilesRef={imageFilesRef}
         />
 

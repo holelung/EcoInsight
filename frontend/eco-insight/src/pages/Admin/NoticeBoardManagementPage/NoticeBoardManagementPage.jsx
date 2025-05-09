@@ -160,7 +160,10 @@ const NoticeBoardManagementPage = () => {
           </Select>
           <Select
             selectValue={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
+            onChange={(e) => {
+              setSortOrder(e.target.value);
+              setCurrentPage(0);
+            }}
             labelName={"정렬"}
           >
             <option value="Newest">최신순</option>

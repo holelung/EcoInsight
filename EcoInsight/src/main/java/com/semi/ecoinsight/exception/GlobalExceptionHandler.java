@@ -15,7 +15,9 @@ import com.semi.ecoinsight.exception.util.CommunityAccessException;
 import com.semi.ecoinsight.exception.util.CustomAuthenticationException;
 
 import com.semi.ecoinsight.exception.util.CustomMessagingException;
+import com.semi.ecoinsight.exception.util.CustomSqlException;
 import com.semi.ecoinsight.exception.util.InvalidUserNameAndEmailException;
+import com.semi.ecoinsight.exception.util.LargePointValueException;
 import com.semi.ecoinsight.exception.util.FileStreamException;
 import com.semi.ecoinsight.exception.util.FileTypeNotAllowedException;
 import com.semi.ecoinsight.exception.util.ImageInsertException;
@@ -85,13 +87,24 @@ public class GlobalExceptionHandler {
 	}
 	
 	@ExceptionHandler(CommunityAccessException.class)
-  public ResponseEntity<?> handleCommunityAccessException(CommunityAccessException e){
-    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage()); 
-  }
+	public ResponseEntity<?> handleCommunityAccessException(CommunityAccessException e){
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage()); 
+	}
 
 	@ExceptionHandler(InvalidAccessException.class)
 	public ResponseEntity<Map<String, String>> handleInvalidAccessException(InvalidAccessException e) {
 		return makeResponseEntity(e, HttpStatus.NOT_FOUND);
 	}
+
+	@ExceptionHandler(LargePointValueException.class)
+	public ResponseEntity<Map<String, String>> LargePointValueException(LargePointValueException e) {
+		return makeResponseEntity(e, HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(CustomSqlException.class)
+	public ResponseEntity<Map<String, String>> CustomSqlException(CustomSqlException e) {
+		return makeResponseEntity(e, HttpStatus.NOT_FOUND);
+	}
+
 
 }

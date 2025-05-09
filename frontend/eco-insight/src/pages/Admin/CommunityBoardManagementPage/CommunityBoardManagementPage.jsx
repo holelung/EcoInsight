@@ -158,7 +158,7 @@ const CommunityBoardManagementPage = () => {
             selectValue={rowsPerPage}
             onChange={(e) => {
               setRowsPerPage(Number(e.target.value));
-              setCurrentPage(1);
+              setCurrentPage(0);
             }}
             labelName={"행 개수"}
           >
@@ -166,7 +166,10 @@ const CommunityBoardManagementPage = () => {
           </Select>
           <Select
             selectValue={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
+            onChange={(e) => {
+              setSortOrder(e.target.value);
+              setCurrentPage(0);
+            }}
             labelName={"정렬"}
           >
             <option value="Newest">최신순</option>
