@@ -41,5 +41,10 @@ public class BoardController {
         }
         return ResponseEntity.ok(uploadPath);
     }
+
+    @PostMapping("mainview-count")
+    public ResponseEntity<?> mainViewCount(){
+        return ResponseEntity.ok(boardService.mainViewCount());
+    }
     
 }

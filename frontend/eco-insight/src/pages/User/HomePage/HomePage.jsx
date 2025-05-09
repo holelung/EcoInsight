@@ -3,12 +3,13 @@ import Carousel from './HomepageComponents/Carousel';
 import DashboardCard from './HomepageComponents/DashboardCard';
 import PopularPosts from './HomepageComponents/PopularPosts';
 
-const HomePage = () => {
+export default function HomePage() {
   return (
     <div className="min-h-screen bg-gray-100 py-8">
       <div className="max-w-7xl mx-auto px-4 space-y-8">
         {/* 상단 이미지 캐러셀 */}
         <Carousel />
+
         {/* 대시보드 카드 그리드 */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <DashboardCard
@@ -44,6 +45,4 @@ const HomePage = () => {
       </div>
     </div>
   );
-};
-
-export default HomePage;
+}

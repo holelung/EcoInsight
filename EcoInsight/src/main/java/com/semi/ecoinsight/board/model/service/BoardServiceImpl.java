@@ -2,7 +2,9 @@ package com.semi.ecoinsight.board.model.service;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.security.access.AccessDeniedException;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.semi.ecoinsight.auth.model.service.AuthService;
 import com.semi.ecoinsight.board.model.dao.BoardMapper;
+import com.semi.ecoinsight.board.model.vo.MainViewCount;
 import com.semi.ecoinsight.util.file.service.FileService;
 
 import lombok.RequiredArgsConstructor;
@@ -50,5 +53,14 @@ public class BoardServiceImpl implements BoardService {
         Map<String, Object> viewCountEntity = new HashMap<String, Object>();
         boardMapper.insertViewCount(viewCountEntity);
     }
-    
+
+    @Override
+    public Map<String, Object> mainViewCount(){
+        List<MainViewCount> allCounts = boardMapper.selectMainViewCount();
+        Map<String, List<MainViewCount>> grouped = allCounts.stream()
+        .collect(Collectors.groupingBy(MainViewCount::getCategoryId));
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("viewCountsByCategory", grouped);
+        return responseMap;
+    }
 }
