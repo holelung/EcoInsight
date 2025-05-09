@@ -35,7 +35,7 @@ const CommunityWritePage = () => {
       return;
     }
 
-    const imgRegex = /<img [^>]*src="([^"]+)"[^>]*>/g;
+    const imgRegex = /<img [^>]*src="blob:([^"]+)"/g;
     let newContent = content;
 
     const formData = new FormData();
