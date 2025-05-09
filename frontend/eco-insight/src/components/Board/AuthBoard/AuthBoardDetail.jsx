@@ -86,7 +86,7 @@ const AuthBoardDetail = () => {
 
     axios.post(`http://localhost/auth-boards/like`, {
       boardNo: post.boardNo,
-      memberNo: post.memberNo,
+      memberNo: auth.loginInfo.memberNo,
     }, {
         headers: {
           Authorization: `Bearer ${auth.tokens.accessToken}`,

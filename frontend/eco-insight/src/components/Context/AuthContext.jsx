@@ -8,6 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [auth, setAuth] = useState({
     loginInfo: {},
     tokens: {},
+    isLoading: true,
     isAuthenticated: false,
     googleLoginState: false
   });
@@ -19,6 +20,7 @@ export const AuthProvider = ({ children }) => {
       setAuth({
         loginInfo,
         tokens,
+        isLoading: false,
         isAuthenticated: true,
         googleLoginState: true,
       });
@@ -27,11 +29,13 @@ export const AuthProvider = ({ children }) => {
       setAuth({
         loginInfo,
         tokens,
+        isLoading: false,
         isAuthenticated: true,
         googleLoginState: false
       });
     }
   }, []);
+
   const login = (loginInfo, tokens, googleLogin=false) => {
     setAuth({
       loginInfo,

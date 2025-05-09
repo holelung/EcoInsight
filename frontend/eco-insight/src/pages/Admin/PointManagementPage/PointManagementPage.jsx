@@ -48,7 +48,7 @@ const PointManagementPage = () => {
           setTotalPages(Math.ceil(response.data.totalCount / rowsPerPage));
         });
     }
-  }, [currentPage, rowsPerPage, sortOrder, listState, auth.tokens.accessToken]);
+  }, [currentPage, rowsPerPage, sortOrder, listState, auth.tokens.accessToken, ]);
 
 
 
