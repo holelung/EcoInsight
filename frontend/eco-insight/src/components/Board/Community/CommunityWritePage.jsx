@@ -17,7 +17,7 @@ const CommunityWritePage = () => {
   const boardType = "community";
 
   useEffect(() => {
-    if (!auth?.isAuthenticated) {
+    if (!auth.isLoading && !auth.isAuthenticated) {
       alert("로그인이 필요합니다.");
       navi("/login");
     }
