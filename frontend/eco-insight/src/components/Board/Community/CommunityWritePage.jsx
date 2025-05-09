@@ -1,4 +1,4 @@
-import { useState, useRef, useContext } from "react";
+import { useState, useRef, useContext, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Tiptap from "../TipTap/Tiptap";
@@ -16,17 +16,30 @@ const CommunityWritePage = () => {
 
   const boardType = "community";
 
-  const boardNames = {
-    free: "자유게시판",
-    qna: "질문 게시판",
-    tips: "팁 게시판",
-  };
+  useEffect(() => {
+    if (!auth?.isAuthenticated) {
+      alert("로그인이 필요합니다.");
+      navi("/login");
+    }
+  }, [auth, navi]);
 
   const categoryPath = {
     free: "C0001",
     qna: "C0002",
     tips: "C0003",
   };
+  useEffect(() => {
+    if (type && categoryPath[type]) {
+      setCategoryId(categoryPath[type]);
+    }
+  }, [type]);
+
+  const boardNames = {
+    free: "자유게시판",
+    qna: "질문 게시판",
+    tips: "팁 게시판",
+  };
+
   const boardName = boardNames[type] || "게시판";
 
   const handleUpload = async () => {
@@ -97,8 +110,6 @@ const CommunityWritePage = () => {
 
   return (
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md">
-      <div className="mb-4 text-sm text-gray-500">{boardName}</div>
-
       <input
         value={title}
         onChange={(e) => setTitle(e.target.value)}
