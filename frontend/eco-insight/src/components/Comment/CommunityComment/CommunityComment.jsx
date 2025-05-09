@@ -2,16 +2,22 @@ import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../../Context/AuthContext";
 import CommentReportPage from "../CommentReportPage";
+import Separate from "../../Seperate/Seperate";
 
 const CommunityComment = ({ boardNo }) => {
   const { auth } = useContext(AuthContext);
-  const memberNo = auth.loginInfo?.memberNo;
+  const memberNo = auth.loginInfo.memberNo;
 
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const [replyContent, setReplyContent] = useState("");
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [reportTarget, setReportTarget] = useState({ author: "", content: "" });
   const [commentCount, setCommentCount] = useState(0);
+  const [getParentCommentNo, setgetParentCommentNo] = useState(0);
+
+  const [editingCommentNo, setEditingCommentNo] = useState(null);
+  const [editedContent, setEditedContent] = useState("");
 
   const fetchComments = () => {
     axios
@@ -26,9 +32,6 @@ const CommunityComment = ({ boardNo }) => {
     axios
       .get("http://localhost/communities/count", {
         params: { boardNo },
-        headers: {
-          Authorization: `Bearer ${auth.tokens.accessToken}`,
-        },
       })
       .then((response) => setCommentCount(response.data))
       .catch((err) => console.error("댓글 수 조회 실패:", err));
@@ -46,8 +49,9 @@ const CommunityComment = ({ boardNo }) => {
       .post(
         "http://localhost/communities/comments",
         {
-          boardNo,
-          memberNo,
+          boardNo: boardNo,
+          memberNo: memberNo,
+          getParentCommentNo: 0,
           commentContent: newComment.trim(),
         },
         {
@@ -66,10 +70,30 @@ const CommunityComment = ({ boardNo }) => {
       });
   };
 
-  useEffect(() => {
-    fetchComments();
-    fetchCommentCount();
-  }, [boardNo]);
+  const handleEditSubmit = (commentNo) => {
+    if (!editedContent.trim()) return;
+
+    axios
+      .put(
+        "http://localhost/communities/comment-update",
+        {
+          commentNo: commentNo,
+          memberNo: memberNo,
+          commentContent: editedContent.trim(),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${auth.tokens.accessToken}`,
+          },
+        }
+      )
+      .then(() => {
+        setEditingCommentNo(null);
+        setEditedContent("");
+        fetchComments();
+      })
+      .catch((err) => console.error("댓글 수정 실패:", err));
+  };
 
   const handleDeleteComment = (commentNo) => {
     if (!auth.isAuthenticated) {
@@ -96,6 +120,12 @@ const CommunityComment = ({ boardNo }) => {
       })
       .catch((err) => console.error("댓글 삭제 실패:", err));
   };
+
+  useEffect(() => {
+    fetchComments();
+    fetchCommentCount();
+  }, [boardNo]);
+
   return (
     <div className="mt-6">
       <h2 className="text-xl font-semibold mb-4">댓글({commentCount})</h2>
@@ -111,19 +141,63 @@ const CommunityComment = ({ boardNo }) => {
               className="p-4 bg-white border border-gray-200 rounded-md space-y-2"
             >
               <div className="flex justify-between items-center">
-                <span>{comment.commentContent}</span>
+                {editingCommentNo === comment.commentNo ? (
+                  <input
+                    value={editedContent}
+                    onChange={(e) => setEditedContent(e.target.value)}
+                    className="w-full px-2 py-1 border border-gray-300 rounded"
+                  />
+                ) : (
+                  <span>{comment.commentContent}</span>
+                )}
+
                 <div className="flex gap-2">
                   {isAuthorComment && (
                     <>
-                      <button className="text-sm text-blue-500 hover:underline">
-                        수정하기
-                      </button>
-                      <button
-                        onClick={() => handleDeleteComment(comment.commentNo)}
-                        className="text-sm text-red-600 hover:underline"
-                      >
-                        삭제하기
-                      </button>
+                      {editingCommentNo === comment.commentNo ? (
+                        <>
+                          <button
+                            onClick={() => handleEditSubmit(comment.commentNo)}
+                            className="text-sm text-blue-500 hover:underline"
+                          >
+                            저장
+                          </button>
+                          <Separate />
+                          <button
+                            onClick={() => {
+                              setEditingCommentNo(null);
+                              setEditedContent("");
+                            }}
+                            className="text-sm text-gray-500 hover:underline"
+                          >
+                            취소
+                          </button>
+                          <Separate />
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => {
+                              setEditingCommentNo(comment.commentNo);
+                              setEditedContent(comment.commentContent);
+                            }}
+                            className="text-sm text-gray-500 hover:underline"
+                          >
+                            수정하기
+                          </button>
+                          <Separate />
+                          <button
+                            onClick={() =>
+                              handleDeleteComment(comment.commentNo)
+                            }
+                            className="text-sm text-gray-500 hover:underline"
+                          >
+                            삭제하기
+                          </button>
+
+                          <Separate />
+                        </>
+                      )}
                     </>
                   )}
                   <button
@@ -134,17 +208,20 @@ const CommunityComment = ({ boardNo }) => {
                       });
                       setIsReportOpen(true);
                     }}
-                    className="text-sm text-red-500 hover:underline"
+                    className="flex items-center gap-1 text-sm text-gray-500 hover:text-red-500 hover:underline"
                   >
                     신고
                   </button>
                 </div>
               </div>
+
+              {/* 답글 입력창 */}
             </div>
           );
         })}
       </div>
 
+      {/* 댓글 입력창 */}
       <div className="flex gap-2 mt-6">
         <input
           value={newComment}
@@ -160,6 +237,7 @@ const CommunityComment = ({ boardNo }) => {
         </button>
       </div>
 
+      {/* 신고 모달 */}
       {isReportOpen && (
         <CommentReportPage
           isOpen={isReportOpen}
