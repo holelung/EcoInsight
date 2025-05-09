@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.semi.ecoinsight.admin.model.dao.AdminMapper;
 import com.semi.ecoinsight.admin.model.dto.BanDTO;
+import com.semi.ecoinsight.admin.model.dto.CertifyDTO;
 import com.semi.ecoinsight.admin.model.dto.PointDTO;
 import com.semi.ecoinsight.admin.model.dto.SummaryCardDTO;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
@@ -415,4 +416,54 @@ public class AdminServiceImpl implements AdminService {
         return resultData;
     }
 
+    @Override
+    public void handleCertify(CertifyDTO certify) {
+
+        String temp = adminMapper.selectIsCertifiedByBoardNo(certify.getBoardNo());
+        PointDTO point = new PointDTO();
+        Long changePoint = pointChoice(certify.getCategoryId());
+        
+        point.setMemberNo(certify.getMemberNo());
+        if (temp.equals("Y")) {
+            adminMapper.uncertifiedAuthBoard(certify);
+            point.setChangePoint(changePoint * -1);
+            adminMapper.insertPoint(point);
+        } else {
+            adminMapper.certifiedAuthBoard(certify);
+            point.setChangePoint(changePoint);
+            adminMapper.insertPoint(point);
+        }
+    }
+
+    @Override
+    public void deleteAuthBoard(Long boardNo) {
+        
+        if (boardNo < 1l) {
+            throw new InvalidAccessException("잘못된 접근");
+        }
+        adminMapper.deleteAuthBoard(boardNo);
+    }
+
+    @Override
+    public void restoreAuthBoard(Long boardNo) {
+        if (boardNo < 1l) {
+            throw new InvalidAccessException("잘못된 접근");
+        }
+        adminMapper.restoreAuthBoard(boardNo);
+        
+    }
+
+    private Long pointChoice(String categoryId) {
+        switch (categoryId) {
+            case "A0001":
+                return 1000l;
+            case "A0002":
+                return 2000l;
+            case "A0003":
+                return 3000l;
+            default:
+                throw new InvalidAccessException("잘못된 접근입니다.");
+                
+        }
+    }
 }
