@@ -15,6 +15,7 @@ import com.semi.ecoinsight.exception.util.CommunityAccessException;
 import com.semi.ecoinsight.exception.util.CustomAuthenticationException;
 
 import com.semi.ecoinsight.exception.util.CustomMessagingException;
+import com.semi.ecoinsight.exception.util.CustomSqlException;
 import com.semi.ecoinsight.exception.util.InvalidUserNameAndEmailException;
 import com.semi.ecoinsight.exception.util.LargePointValueException;
 import com.semi.ecoinsight.exception.util.FileStreamException;
@@ -95,9 +96,15 @@ public class GlobalExceptionHandler {
 		return makeResponseEntity(e, HttpStatus.NOT_FOUND);
 	}
 
-		@ExceptionHandler(LargePointValueException.class)
+	@ExceptionHandler(LargePointValueException.class)
 	public ResponseEntity<Map<String, String>> LargePointValueException(LargePointValueException e) {
 		return makeResponseEntity(e, HttpStatus.NOT_FOUND);
 	}
+
+	@ExceptionHandler(CustomSqlException.class)
+	public ResponseEntity<Map<String, String>> CustomSqlException(CustomSqlException e) {
+		return makeResponseEntity(e, HttpStatus.NOT_FOUND);
+	}
+
 
 }

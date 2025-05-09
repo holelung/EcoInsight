@@ -9,7 +9,6 @@ const NoticeBoard = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [category, setCategory] = useState("all");
-  const [listCount, setListCount] = useState();
   const [totalPages, setTotalPages] = useState();
   
   useEffect(() => {
@@ -42,10 +41,6 @@ const NoticeBoard = () => {
     console.log(totalPages);
   };
 
-  const currentList = useMemo(() => {
-    const startIndex = currentPage * rowsPerPage;
-    return list.slice(startIndex, startIndex + rowsPerPage);
-  }, [list, currentPage, rowsPerPage]);
 
   return (
     <div className="max-w-4xl mx-auto p-4">
