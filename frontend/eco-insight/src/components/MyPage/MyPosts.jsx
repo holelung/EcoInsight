@@ -3,16 +3,19 @@ import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../Context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Pagination from '../Pagination/Pagination'; // ✅ 페이지네이션 컴포넌트 import
 
 export default function MyPosts() {
   const navi = useNavigate();
   const { auth } = useContext(AuthContext);
 
+  const PAGE_SIZE = 6;
   const [posts, setPosts] = useState([]);
   const [categoryFilter, setCategoryFilter] = useState('전체');
   const [keyword, setKeyword] = useState('');
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0); // ✅ 현재 페이지 상태
 
   useEffect(() => {
     if (!auth.isAuthenticated) {
@@ -27,12 +30,12 @@ export default function MyPosts() {
     })
     .then(({ data }) => {
       setPosts(data.map(item => ({
-        id:         item.boardNo,
+        id: item.boardNo,
         categoryId: item.categoryId,
-        category:   item.categoryName,
-        title:      item.boardTitle,
-        date:       item.createdDate,
-        views:      item.viewCount
+        category: item.categoryName,
+        title: item.boardTitle,
+        date: item.createdDate,
+        views: item.viewCount
       })));
     })
     .catch(err => {
@@ -42,21 +45,19 @@ export default function MyPosts() {
     .finally(() => setLoading(false));
   }, [auth.isAuthenticated, auth.tokens.accessToken, navi]);
 
-  if (!auth.isAuthenticated) {
-    return <div className="p-8 text-center">로그인 정보 확인 중…</div>;
-  }
-  if (loading) {
-    return <div className="p-8 text-center">내 게시글을 불러오는 중…</div>;
-  }
-  if (error) {
-    return <div className="p-8 text-center text-red-500">{error}</div>;
-  }
+  if (!auth.isAuthenticated) return <div className="p-8 text-center">로그인 정보 확인 중…</div>;
+  if (loading) return <div className="p-8 text-center">내 게시글을 불러오는 중…</div>;
+  if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
 
   const categories = ['전체', ...new Set(posts.map(p => p.category))];
   const filtered = posts.filter(p =>
     (categoryFilter === '전체' || p.category === categoryFilter) &&
     p.title.includes(keyword)
   );
+
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const startIdx = currentPage * PAGE_SIZE;
+  const displayed = filtered.slice(startIdx, startIdx + PAGE_SIZE);
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center items-start p-8">
@@ -67,7 +68,7 @@ export default function MyPosts() {
         <div className="flex justify-between items-center mb-6 space-x-4">
           <select
             value={categoryFilter}
-            onChange={e => setCategoryFilter(e.target.value)}
+            onChange={e => { setCategoryFilter(e.target.value); setCurrentPage(0); }}
             className="border px-3 py-2 rounded"
           >
             {categories.map(c => <option key={c} value={c}>{c}</option>)}
@@ -76,7 +77,7 @@ export default function MyPosts() {
             type="text"
             placeholder="제목 검색"
             value={keyword}
-            onChange={e => setKeyword(e.target.value)}
+            onChange={e => { setKeyword(e.target.value); setCurrentPage(0); }}
             className="border px-3 py-2 rounded flex-1"
           />
         </div>
@@ -93,26 +94,35 @@ export default function MyPosts() {
             </tr>
           </thead>
           <tbody>
-            {filtered.map((p, i) => (
+            {displayed.map((p, i) => (
               <tr
                 key={p.id}
                 className="cursor-pointer hover:bg-gray-100"
                 onClick={() => navi(`/post/${p.categoryId}/${p.id}`)}
               >
-                <td className="border px-4 py-2">{i + 1}</td>
+                <td className="border px-4 py-2">{startIdx + i + 1}</td>
                 <td className="border px-4 py-2">{p.title}</td>
                 <td className="border px-4 py-2">{p.category}</td>
                 <td className="border px-4 py-2">{p.date}</td>
                 <td className="border px-4 py-2">{p.views}</td>
               </tr>
             ))}
-            {filtered.length === 0 && (
+            {displayed.length === 0 && (
               <tr>
                 <td colSpan="5" className="py-4 text-gray-500">작성된 게시글이 없습니다.</td>
               </tr>
             )}
           </tbody>
         </table>
+
+        {/* 페이지네이션 */}
+        
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+        
       </div>
     </div>
   );
