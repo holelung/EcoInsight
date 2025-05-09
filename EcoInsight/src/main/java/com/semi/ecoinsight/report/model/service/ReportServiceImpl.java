@@ -1,5 +1,7 @@
 package com.semi.ecoinsight.report.model.service;
 
+import java.util.List;
+
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,6 +11,7 @@ import com.semi.ecoinsight.exception.util.CustomMessagingException;
 import com.semi.ecoinsight.report.model.dao.ReportMapper;
 import com.semi.ecoinsight.report.model.dto.BoardReportDTO;
 import com.semi.ecoinsight.report.model.dto.CommentReportDTO;
+import com.semi.ecoinsight.report.model.dto.ReportSummaryDTO;
 import com.semi.ecoinsight.report.model.vo.BoardReport;
 import com.semi.ecoinsight.report.model.vo.CommentReport;
 
@@ -85,5 +88,10 @@ public class ReportServiceImpl implements ReportService {
 	        .build();
 
 	    reportMapper.insertAuthCommentReport(requestData);
+	}
+	
+	@Override
+	public List<ReportSummaryDTO> getAllReports() {
+		return reportMapper.findAllReports();
 	}
 }

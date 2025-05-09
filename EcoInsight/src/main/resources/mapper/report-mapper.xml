@@ -1,57 +1,125 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.semi.ecoinsight.report.model.dao.ReportMapper">
-
-  <sql id="reportBoard">
-    BOARD_NO,
-    REPORTER,
-    REPORT_CATEGORY_ID,
-    REPORT_CONTENT
-  ) VALUES (
-    #{boardNo},
-    #{reporter},
-    #{reportCategoryId},
-    #{reportContent}
-  </sql>
-
-  <sql id="reportComment">
-    REPORTER,
-    REPORT_CATEGORY_ID,
-    COMMENT_NO,
-    COMMENT_REPORT_CONTENT
-  ) VALUES (
-    #{reporter},
-    #{reportCategoryId},
-    #{commentNo},
-    #{commentReportContent}
-  </sql>
 
   <insert id="insertCommunityBoardReport"
           parameterType="com.semi.ecoinsight.report.model.vo.BoardReport">
     INSERT INTO TB_COMMUNITY_REPORT (
-      <include refid="reportBoard"/>
+      REPORT_NO,
+      BOARD_NO,
+      REPORTER,
+      REPORT_CATEGORY_ID,
+      REPORT_CONTENT
+    ) VALUES (
+	  #{reportNo},
+      #{boardNo},
+      #{reporter},
+      #{reportCategoryId},
+      #{reportContent}
     )
   </insert>
 
   <insert id="insertAuthBoardReport"
           parameterType="com.semi.ecoinsight.report.model.vo.BoardReport">
     INSERT INTO TB_AUTH_BOARD_REPORT (
-      <include refid="reportBoard"/>
+      REPORT_NO,
+      BOARD_NO,
+      REPORTER,
+      REPORT_CATEGORY_ID,
+      REPORT_CONTENT
+    ) VALUES (
+	  #{reportNo},
+      #{boardNo},
+      #{reporter},
+      #{reportCategoryId},
+      #{reportContent}
     )
   </insert>
 
   <insert id="insertCommunityCommentReport"
           parameterType="com.semi.ecoinsight.report.model.vo.CommentReport">
-    INSERT INTO TB_COMMUNITY_CMT_REPORT (
-      <include refid="reportComment"/>
+    INSERT INTO TB_COMMUNITY_COMMENT_REPORT (
+      COMMENT_REPORT_NO,
+      REPORT_CATEGORY_ID,
+      REPORTER,
+      COMMENT_NO,
+      COMMENT_REPORT_CONTENT
+    ) VALUES (
+	  #{commentReportNo},
+      #{reportCategoryId},
+      #{reporter},
+      #{commentNo},
+      #{commentReportContent}
     )
   </insert>
 
   <insert id="insertAuthCommentReport"
           parameterType="com.semi.ecoinsight.report.model.vo.CommentReport">
-    INSERT INTO TB_AUTH_BOARD_CMT_REPORT (
-      <include refid="reportComment"/>
+    INSERT INTO TB_AUTHBOARD_COMMENT_REPORT (
+      COMMENT_REPORT_NO,
+      REPORT_CATEGORY_ID,
+      REPORTER,
+      COMMENT_NO,
+      COMMENT_REPORT_CONTENT
+    ) VALUES (
+	  #{commentReportNo},
+      #{reportCategoryId},
+      #{reporter},
+      #{commentNo},
+      #{commentReportContent}
     )
   </insert>
+
+  <select id="findAllReports" resultType="com.semi.ecoinsight.report.model.dto.ReportSummaryDTO">
+    SELECT
+        REPORT_NO,
+        REPORT_CATEGORY_ID AS reportCategoryId,
+        REPORTER,
+        BOARD_NO AS boardNo,
+        NULL AS commentNo,
+        REPORT_CONTENT AS reportContent,
+        '커뮤니티 게시글' AS reportType
+    FROM TB_COMMUNITY_REPORT
+
+    UNION ALL
+
+    SELECT
+        REPORT_NO,
+        REPORT_CATEGORY_ID,
+        REPORTER,
+        BOARD_NO AS boardNo,
+        NULL,
+        REPORT_CONTENT,
+        '인증 게시글'
+    FROM TB_AUTH_BOARD_REPORT
+
+    UNION ALL
+
+    SELECT
+        COMMENT_REPORT_NO AS REPORT_NO,
+        REPORT_CATEGORY_ID,
+        REPORTER,
+        NULL AS BOARD_NO,
+        COMMENT_NO AS commentReportNo,
+        COMMENT_REPORT_CONTENT AS reportContent,
+        '커뮤니티 댓글'
+    FROM TB_COMMUNITY_COMMENT_REPORT
+
+    UNION ALL
+
+    SELECT
+        COMMENT_REPORT_NO AS REPORT_NO,
+        REPORT_CATEGORY_ID,
+        REPORTER,
+        NULL,
+        COMMENT_NO AS commentReportNo,
+        COMMENT_REPORT_CONTENT,
+        '인증 댓글'
+    FROM TB_AUTH_BOARD_COMMENT_REPORT
+
+    ORDER BY REPORT_NO DESC
+  </select>
 
 </mapper>
