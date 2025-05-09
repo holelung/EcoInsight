@@ -10,6 +10,6 @@ class EcoInsightApplicationTests {
 
 	@Test
 	void contextLoads() {
-	}
+	} 
 
 }

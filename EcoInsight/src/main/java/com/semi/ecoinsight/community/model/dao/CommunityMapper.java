@@ -38,10 +38,14 @@ public interface CommunityMapper {
 
 	// 게시글 삭제
 	void deleteCommunity(Long boardNo);
+	// 게시글 수정
+	void updateCommunity(Board board);
+
+  
 
 
 	
 
-	// 게시글 수정	
+		
 	
 }

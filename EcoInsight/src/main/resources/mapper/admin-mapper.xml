@@ -494,4 +494,185 @@
             MEMBER_NO = #{memberNo}
     </select>
 
+    <!-- 인증 게시판 관리 -->
+    <select id="selectAuthBoardList"
+            parameterType="map"
+            resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
+        SELECT
+            A.BOARD_NO boardNo,
+            A.CATEGORY_ID categoryId,
+            A.MEMBER_NO memberNo,
+            A.BOARD_TITLE boardTitle,
+            A.BOARD_CONTENT boardContent,
+            A.CREATED_DATE createdDate,
+            A.MODIFIED_DATE modifiedDate,
+            A.VIEW_COUNT viewCount,
+            A.IS_CERTIFIED isCertified,
+            A.IS_DELETED isDeleted,
+            MEMBER_ID memberId,
+            MEMBER_NAME memberName,
+            (
+                SELECT
+                    COUNT(*)
+                FROM
+                    TB_AUTH_RECOMMEND R
+                WHERE
+                    R.BOARD_NO = A.BOARD_NO
+            )AS likeCount
+        FROM
+            TB_AUTH_BOARD A
+        JOIN
+            TB_MEMBER M ON(M.MEMBER_NO = A.MEMBER_NO)
+        ORDER BY
+        <choose>
+            <when test="sortOrder == 'Newest'">
+                A.CREATED_DATE DESC
+            </when>
+            <otherwise>
+                A.CREATED_DATE ASC
+            </otherwise>
+        </choose>
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <select id="selectAuthBoardListBySearch"
+            parameterType="map"
+            resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
+        SELECT
+            A.BOARD_NO boardNo,
+            A.CATEGORY_ID categoryId,
+            A.MEMBER_NO memberNo,
+            A.BOARD_TITLE boardTitle,
+            A.BOARD_CONTENT boardContent,
+            A.CREATED_DATE createdDate,
+            A.MODIFIED_DATE modifiedDate,
+            A.VIEW_COUNT viewCount,
+            A.IS_CERTIFIED isCertified,
+            A.IS_DELETED isDeleted,
+            MEMBER_ID memberId,
+            MEMBER_NAME memberName,
+            (
+                SELECT
+                    COUNT(*)
+                FROM
+                    TB_AUTH_RECOMMEND R
+                WHERE
+                    R.BOARD_NO = A.BOARD_NO
+            )AS likeCount
+        FROM
+            TB_AUTH_BOARD A
+        JOIN
+            TB_MEMBER M ON(M.MEMBER_NO = A.MEMBER_NO)
+        WHERE
+        <choose>
+            <when test="searchType == 'name'"> 
+                MEMBER_NAME LIKE '%'||#{search}||'%' 
+            </when>
+            <when test="searchType == 'title'"> 
+                BOARD_TITLE LIKE '%'||#{search}||'%' 
+            </when>
+            <otherwise> 
+                    MEMBER_NAME LIKE '%'||#{search}||'%' 
+                OR    
+                    BOARD_TITLE LIKE '%'||#{search}||'%' 
+            </otherwise>
+        </choose>
+        ORDER BY
+        <choose>
+            <when test="sortOrder == 'Newest'">
+                A.CREATED_DATE DESC
+            </when>
+            <otherwise>
+                A.CREATED_DATE ASC
+            </otherwise>
+        </choose>
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+    <!-- 어쓰보드 갯수 -->
+    <select id="selectAuthBoardCount"
+            resultType="long">
+        SELECT
+            COUNT(*)
+        FROM
+            TB_AUTH_BOARD
+    </select>
+
+    <!-- 검색어 기준 글 갯수 -->
+    <select id="selectAuthBoardCountBySearch"
+            parameterType="map"
+            resultType="long">
+        SELECT
+            COUNT(*)
+        FROM
+            TB_AUTH_BOARD
+        JOIN
+            TB_MEMBER USING(MEMBER_NO)
+        WHERE
+        <choose>
+            <when test="searchType == 'name'">
+                MEMBER_NAME LIKE '%'||#{search}||'%'
+            </when>
+            <when test="searchType == 'title'">
+                BOARD_TITLE LIKE '%'||#{search}||'%'
+            </when>
+            <otherwise>
+                MEMBER_NAME LIKE '%'||#{search}||'%'
+                OR
+                BOARD_TITLE LIKE '%'||#{search}||'%'
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 인증처리 -->
+    <select id="selectIsCertifiedByBoardNo"
+            parameterType="long"
+            resultType="string">
+        SELECT
+            IS_CERTIFIED
+        FROM
+            TB_AUTH_BOARD
+        WHERE
+            BOARD_NO = #{boardNo}
+    </select> 
+
+    <update id="certifiedAuthBoard"
+            parameterType="com.semi.ecoinsight.admin.model.dto.CertifyDTO">
+        UPDATE
+            TB_AUTH_BOARD
+        SET
+            IS_CERTIFIED = 'Y'
+        WHERE
+            BOARD_NO = #{boardNo}
+    </update>
+
+    <update id="uncertifiedAuthBoard"
+            parameterType="com.semi.ecoinsight.admin.model.dto.CertifyDTO">
+        UPDATE
+            TB_AUTH_BOARD
+        SET
+            IS_CERTIFIED = 'N'
+        WHERE
+            BOARD_NO = #{boardNo}
+    </update>
+
+    <update id="deleteAuthBoard"
+            parameterType="long">
+        UPDATE
+            TB_AUTH_BOARD
+        SET 
+            IS_DELETED = 'Y'
+        WHERE
+            BOARD_NO = #{boardNo}   
+    </update>
+
+    <update id="restoreAuthBoard"
+            parameterType="long">
+        UPDATE
+            TB_AUTH_BOARD
+        SET
+            IS_DELETED = 'N'
+        WHERE
+            BOARD_NO = #{boardNo}
+    </update>
 </mapper>

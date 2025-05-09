@@ -27,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter{
+	
     private final JwtUtil util;
     private final UserDetailsService userService;
 
