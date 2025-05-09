@@ -65,7 +65,7 @@ const CommunityBoardDetail = () => {
 
     axios
       .delete(`http://localhost/communities/community-delete`, {
-        params: {
+        data: {
           boardNo: Number(boardNo),
           memberNo: Number(auth.loginInfo?.memberNo),
         },

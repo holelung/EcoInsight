@@ -24,7 +24,7 @@ public interface CommunityService {
 	Long checkedLike(Map<String, String> likeMap);
 
 	// 삭제하기
-	void deleteCommunity(Map<String, Object> deleteMap);
+	void deleteCommunity(Map<String,Long> deleteMap);
 	// 수정하기
 	void updateCommunity(WriteFormDTO writeForm);
 

@@ -55,12 +55,7 @@ public class SecurityConfigure {
 							"/auth/admin-login",
 							"/auth/google-login").permitAll();
 					requests.requestMatchers(HttpMethod.GET).permitAll();
-<<<<<<< HEAD
 					requests.requestMatchers(HttpMethod.POST, "/communities/**").authenticated();
-=======
-					requests.requestMatchers(HttpMethod.POST).authenticated();
-					requests.requestMatchers(HttpMethod.POST).authenticated();
->>>>>>> a9fd0da51ebfece24ff4916a6695c0af63354f2d
 					requests.requestMatchers(HttpMethod.PUT).authenticated();
 					requests.requestMatchers(HttpMethod.DELETE).authenticated();
 					requests.anyRequest().authenticated();

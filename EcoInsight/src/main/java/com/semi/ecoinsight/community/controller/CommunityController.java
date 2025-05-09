@@ -70,17 +70,9 @@ public class CommunityController {
 	
 	
 	@DeleteMapping("/community-delete")
-	public ResponseEntity<?> deleteCommunity(@RequestParam(name="boardNo") Long boardNo,
-						 					 @RequestParam(name="memberNo") Long memberNo) {
-	    try {
-	        Map<String, Object> deleteMap = new HashMap<>();
-	        deleteMap.put("boardNo", boardNo);
-	        deleteMap.put("memberNo", memberNo);
-	        communityService.deleteCommunity(deleteMap);
-	        return ResponseEntity.ok().build();
-	    } catch (AccessDeniedException e) {
-	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());  //권한이 없을 떄
-	    }
+	public ResponseEntity<?> deleteCommunity(@RequestBody Map<String,Long> deleteMap) {
+		communityService.deleteCommunity(deleteMap);
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 	
 	@PostMapping("/comments")

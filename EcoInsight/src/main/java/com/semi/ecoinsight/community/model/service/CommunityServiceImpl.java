@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class CommunityServiceImpl implements CommunityService{
 	
-	private final SanitizingService sanitizingService;
+
 	private final CommunityMapper communityMapper;
 	private final BoardMapper boardMapper;
 	private final CommunityCommentMapper communityCommentMapper;
@@ -128,7 +128,7 @@ public class CommunityServiceImpl implements CommunityService{
 	}
 
 	@Override
-	public void deleteCommunity(Map<String, Object> deleteMap) {
+	public void deleteCommunity(Map<String, Long> deleteMap) {
 	
 		Long boardNo = Long.parseLong(deleteMap.get("boardNo").toString());
         Long memberNo = Long.parseLong(deleteMap.get("memberNo").toString());
