@@ -4,24 +4,15 @@ import { useNavigate } from "react-router-dom";
 import Pagination from "../../Pagination/Pagination";
 
 const NoticeBoard = () => {
-  
   const navi = useNavigate();
   const [list, setList] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [category, setCategory] = useState("all");
-  const [listCount, setListCount] = useState('');
-  const [totalPages, setTotalPages] = useState('');
-  /*
-  alert(`${currentPage}`); 0 
-  alert(`${rowsPerPage}`); 10 
-  alert(`${category}`);    all
-  alert(`${totalPages}`);  undifined
-  */
+  const [totalPages, setTotalPages] = useState();
+  
   useEffect(() => {
-
-
-      axios
+    axios
       .get("http://localhost/notice", {
         params: {
           page: currentPage,
@@ -38,7 +29,6 @@ const NoticeBoard = () => {
       .catch((error) => {
         console.log(error);
       });
-
   }, [currentPage, rowsPerPage, category, totalPages]);
   
 
@@ -46,16 +36,11 @@ const NoticeBoard = () => {
   let filteredList = list;
 
   const clickCategoryBtn = (item) => {
-
     setCategory(item);
     setCurrentPage(0);
     console.log(totalPages);
   };
 
-  const currentList = useMemo(() => {
-    const startIndex = currentPage * rowsPerPage;
-    return list.slice(startIndex, startIndex + rowsPerPage);
-  }, [list, currentPage, rowsPerPage]);
 
   return (
     <div className="max-w-4xl mx-auto p-4">
@@ -92,7 +77,7 @@ const NoticeBoard = () => {
         <div>조회</div>
       </div>
 
-      {filteredList && filteredList.map((post, index) => (
+      {filteredList.map((post, index) => (
         <div
           key={post.boardNo}
           className="grid grid-cols-6 border-b text-sm py-2 text-center hover:bg-gray-50"
@@ -116,16 +101,11 @@ const NoticeBoard = () => {
         </div>
       ))}
 
-
-      {
-        /*
-        <Pagination
+      <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
-        />
-        */
-      }
+      />
     </div>
   );
 };
