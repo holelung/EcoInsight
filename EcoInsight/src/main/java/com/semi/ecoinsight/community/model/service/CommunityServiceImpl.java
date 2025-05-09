@@ -191,7 +191,7 @@ public class CommunityServiceImpl implements CommunityService{
 		
 		Long memberNo = authService.getUserDetails().getMemberNo();
 		
-		if(memberNo != comment.getMemberNo()) {
+		if(!memberNo.equals(comment.getMemberNo())) {
 			throw new InvalidAccessException("잘못된 접근입니다.");
 		}
 		
@@ -225,13 +225,13 @@ public class CommunityServiceImpl implements CommunityService{
 
 	@Override
 	public void deleteComment(Map<String,Long> deleteCommentMap) {
-		Long commentNo = deleteCommentMap.get("commentNo");
-		Long memberNo = deleteCommentMap.get("memberNo");
-		Long writerNo = communityCommentMapper.deleteComment(deleteCommentMap);
+		Long commentWriter = deleteCommentMap.get("memberNo");
+		Long memberNo = authService.getUserDetails().getMemberNo();
 	
-		if (!writerNo.equals(memberNo)) {
+
+		if (!commentWriter.equals(memberNo)) {
 			throw new CommunityAccessException("삭제 권한이 없습니다.");
-	}
+		}
 
 	 communityCommentMapper.deleteComment(deleteCommentMap);
 	

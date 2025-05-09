@@ -99,6 +99,7 @@ public class CommunityController {
 
 	@GetMapping("/count")
 	public ResponseEntity<?> commentCount(@RequestParam(name="boardNo") Long boardNo){
+		log.info("count : {}", boardNo);
 		return ResponseEntity.ok(communityService.commentCount(boardNo));
 		
 	}
@@ -112,7 +113,7 @@ public class CommunityController {
 	@DeleteMapping("/comment-delete")
 	public ResponseEntity<?> deleteComment(@RequestBody Map<String,Long> deleteCommentMap){
 		communityService.deleteComment(deleteCommentMap);
-		return ResponseEntity.ok().build();
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 

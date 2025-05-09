@@ -194,7 +194,6 @@ const CommunityComment = ({ boardNo }) => {
                           >
                             삭제하기
                           </button>
-
                           <Separate />
                         </>
                       )}
