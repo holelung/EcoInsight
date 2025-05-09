@@ -105,7 +105,7 @@ public class CommunityServiceImpl implements CommunityService{
 		//C0003 = tips
 		for(int i=0;i<3;i++){
 			if(category[i].equals(categoryId)){
-				boardService.insertViewCount(boardNo, categoryId);
+				boardService.insertViewCount(boardNo, categories[i]);
 			}
 		}
 		 	
