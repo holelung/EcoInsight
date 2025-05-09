@@ -7,12 +7,7 @@ const NoticeBoardDetail = () => {
   const { auth } = useContext(AuthContext);
   const { id } = useParams();
   const navi = useNavigate();
-  const [isEditing, setIsEditing] = useState(false);
   const [notice, setNotice] = useState({});
-  const [title, setTitle] = useState("예쁜 게시글 제목 🎉");
-  const [content, setContent] = useState("게시글 본문 내용입니다.");
-  const [editedTitle, setEditedTitle] = useState(title);
-  const [editedContent, setEditedContent] = useState(content);
 
   useEffect(() => {
     axios.get("http://localhost/notice/detail", {
@@ -26,7 +21,7 @@ const NoticeBoardDetail = () => {
     })
   },[id])
 
-  const handleSaveEdit = () => {
+  const handleEdit = () => {
     const boardData = {
       boardType: "notice",
       boardNo: notice.boardNo,
@@ -68,17 +63,7 @@ const NoticeBoardDetail = () => {
     <div className="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md space-y-6">
       {/* 제목 */}
       <div className="text-2xl font-bold">
-        {isEditing ? (
-          <input
-            className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
-            value={notice.boardTitle}
-            onChange={(e) =>
-              setNotice((prev) => ({ ...prev, boardTitle: e.target.value }))
-            }
-          />
-        ) : (
-          <h1>{notice.boardTitle}</h1>
-        )}
+        <h1>{notice.boardTitle}</h1>
       </div>
 
       {/* 작성자 */}
@@ -89,20 +74,10 @@ const NoticeBoardDetail = () => {
 
       {/* 본문 */}
       <div className="p-4 bg-gray-50 border border-gray-200 rounded-md space-y-4">
-        {isEditing ? (
-          <textarea
-            className="w-full h-40 p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-300"
-            value={notice.boardContent}
-            onChange={(e) =>
-              setNotice((prev) => ({ ...prev, boardContent: e.target.value }))
-            }
-          />
-        ) : (
-          <p
-            className="whitespace-pre-wrap"
-            dangerouslySetInnerHTML={{ __html: notice.boardContent }}
-          ></p>
-        )}
+        <p
+          className="whitespace-pre-wrap"
+          dangerouslySetInnerHTML={{ __html: notice.boardContent }}
+        ></p>
       </div>
 
       {/* 수정/삭제 버튼 */}
@@ -111,7 +86,7 @@ const NoticeBoardDetail = () => {
           <>
             <>
               <button
-                onClick={handleSaveEdit}
+                onClick={handleEdit}
                 className="px-4 py-2 border border-gray-400 rounded hover:bg-gray-100"
               >
                 수정하기

@@ -1,10 +1,10 @@
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import Tiptap from "../TipTap/Tiptap";
-import axios from "axios";
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../Context/AuthContext";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import Tiptap from "../TipTap/Tiptap";
 
-const NoticeBoardModify = () => {
+const AuthBoardModify = () => {
   const { auth } = useContext(AuthContext);
   const { boardNo } = useParams();
   const navi = useNavigate();
@@ -12,20 +12,18 @@ const NoticeBoardModify = () => {
   const boardData = location.state;
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [categoryId, setCategoryId] = useState("N0001");
+  const [categoryId, setCategoryId] = useState("");
   const imageFilesRef = useRef([]);
 
-  const boardType = "notice";
-
   useEffect(() => {
-    if (auth.loginInfo.memberRole !== "ROLE_ADMIN") {
-      return navi("/notice");
+    if (auth.loginInfo.memberNo != boardData.memberNo) {
+      alert("잘못된 접근입니다.")
+      return navi("/auth-board");
     }
     setTitle(boardData.boardTitle);
     setContent(boardData.boardContent);
     setCategoryId(boardData.categoryId);
-  }, [auth.loginInfo, ])
-
+  }, [])
 
   const handleUpload = () => {
     if (!title || !content) {
@@ -36,7 +34,7 @@ const NoticeBoardModify = () => {
     let newContent = content;
 
     const formData = new FormData();
-    formData.append("boardType", boardType);
+    formData.append("boardType", boardData.boardType);
 
     imageFilesRef.current.forEach((file) => {
       formData.append("files", file);
@@ -59,14 +57,14 @@ const NoticeBoardModify = () => {
 
         axios
           .put(
-            "http://localhost/admin/notice",
+            "http://localhost/auth-boards",
             {
               memberNo: auth.loginInfo.memberNo,
               boardNo: boardNo,
               categoryId: categoryId,
               title: title,
               content: newContent,
-              boardType: boardType,
+              boardType: boardData.boardType,
               ...(uploadPaths &&
                 uploadPaths.length > 0 && { imageUrls: uploadPaths }),
             },
@@ -78,9 +76,9 @@ const NoticeBoardModify = () => {
             }
           )
           .then((response) => {
-            if (response.status == 200) {
+            if (response.status == 201) {
               alert("게시글 수정 완료");
-              navi(`/notice/detail/${boardNo}`);
+              navi(`/auth-board/${boardNo}`);
             }
           })
           .catch((error) => {
@@ -107,17 +105,15 @@ const NoticeBoardModify = () => {
         <div className="text-m mb-3 p-2 ">
           <label htmlFor="noticeType">카테고리</label>
           <select
-            name="noticeType"
-            id="noticeType"
             selectValue={categoryId}
             onChange={(e) => {
               setCategoryId(e.target.value);
             }}
             className="p-3 mx-2 font-semibold border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-300"
           >
-            <option value="N0001">공지</option>
-            <option value="N0002">업데이트</option>
-            <option value="N0003">버그수정</option>
+            <option value="A0001">인증1</option>
+            <option value="A0002">인증2</option>
+            <option value="A0003">인증3</option>
           </select>
         </div>
 
@@ -130,7 +126,7 @@ const NoticeBoardModify = () => {
         {/* 업로드 버튼 */}
         <div className="flex justify-end mt-6">
           <button
-            onClick={handleUpload}
+            onClick={()=>handleUpload()}
             className="bg-green-400 hover:bg-green-500 text-white px-6 py-2 rounded-md font-bold transition"
           >
             수정하기
@@ -139,6 +135,6 @@ const NoticeBoardModify = () => {
       </div>
     </>
   );
-};
+}
 
-export default NoticeBoardModify;
+export default AuthBoardModify;

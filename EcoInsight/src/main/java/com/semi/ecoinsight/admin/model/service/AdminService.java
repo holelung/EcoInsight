@@ -45,7 +45,8 @@ public interface AdminService {
     
     
     // 인증게시판 관리
-
+    Map<String, Object> selectAuthBoardList(int pageNo, int size, String search, String searchType, String sortOrder);
+    
     
 
     // 포인트 관리

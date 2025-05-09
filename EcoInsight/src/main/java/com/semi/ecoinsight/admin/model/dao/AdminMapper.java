@@ -59,4 +59,16 @@ public interface AdminMapper {
     void insertPoint(PointDTO point);
 
     List<PointDTO> selectPointHistoryByMemberNo(Long memberNo);
+
+    // 인증 게시판 관리
+    List<BoardDTO> selectAuthBoardList(Map<String, String> pageInfo);
+    List<BoardDTO> selectAuthBoardListBySearch(Map<String, String> pageInfo);
+    
+    Long selectAuthBoardCount();
+    Long selectAuthBoardCountBySearch(Map<String, String> pageInfo);
+    
+    void certifiedAuthBoard(Long boardNo);
+    
+    void deleteAuthBoard(Long boardNo);
+    void restoreAuthBoard(Long boardNo);
 }
