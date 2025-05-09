@@ -624,5 +624,55 @@
         </choose>
     </select>
 
+    <!-- 인증처리 -->
+    <select id="selectIsCertifiedByBoardNo"
+            parameterType="long"
+            resultType="string">
+        SELECT
+            IS_CERTIFIED
+        FROM
+            TB_AUTH_BOARD
+        WHERE
+            BOARD_NO = #{boardNo}
+    </select> 
 
+    <update id="certifiedAuthBoard"
+            parameterType="com.semi.ecoinsight.admin.model.dto.CertifyDTO">
+        UPDATE
+            TB_AUTH_BOARD
+        SET
+            IS_CERTIFIED = 'Y'
+        WHERE
+            BOARD_NO = #{boardNo}
+    </update>
+
+    <update id="uncertifiedAuthBoard"
+            parameterType="com.semi.ecoinsight.admin.model.dto.CertifyDTO">
+        UPDATE
+            TB_AUTH_BOARD
+        SET
+            IS_CERTIFIED = 'N'
+        WHERE
+            BOARD_NO = #{boardNo}
+    </update>
+
+    <update id="deleteAuthBoard"
+            parameterType="long">
+        UPDATE
+            TB_AUTH_BOARD
+        SET 
+            IS_DELETED = 'Y'
+        WHERE
+            BOARD_NO = #{boardNo}   
+    </update>
+
+    <update id="restoreAuthBoard"
+            parameterType="long">
+        UPDATE
+            TB_AUTH_BOARD
+        SET
+            IS_DELETED = 'N'
+        WHERE
+            BOARD_NO = #{boardNo}
+    </update>
 </mapper>

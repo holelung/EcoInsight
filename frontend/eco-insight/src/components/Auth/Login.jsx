@@ -53,15 +53,17 @@ const Login = () => {
   };
 
   const handleGoogleSuccess = (credentialResponse) => {
-    const decoded = jwtDecode(credentialResponse.credential);
-    console.log("구글 로그인 성공:", decoded);
-
     axios.post("http://localhost/auth/google-login", {
       token: credentialResponse.credential,
     })
-    .then((res) => {
-      login(res.data.loginInfo, res.data.tokens);
-      navigate("/");
+    .then((response) => {
+      if (response.status === 200) {
+        if (response.data.loginInfo.isActive === 'N') {
+          alert("비활성화된 계정이거나 정지된 계정입니다.");
+        }
+        login(response.data.loginInfo, response.data.tokens, true);
+        navigate("/");
+      }
     })
     .catch((err) => {
       console.error(err);
