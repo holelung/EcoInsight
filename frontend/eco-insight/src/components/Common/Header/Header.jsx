@@ -59,12 +59,22 @@ const Header = () => {
               </>
             ) : (
               <>
-                <button
-                  className="px-4 py-2 rounded-lg bg-main"
-                  onClick={() => navi("/mypage")}
-                >
-                  마이페이지
-                </button>
+                {auth.loginInfo.memberRole === "ROLE_COMMON" ? (
+                  <button
+                    className="px-4 py-2 rounded-lg bg-main"
+                    onClick={() => navi("/mypage")}
+                  >
+                    마이페이지
+                  </button>
+                ) : (
+                  <button
+                    className="px-4 py-2 rounded-lg bg-main"
+                    onClick={() => navi("/admin")}
+                  >
+                    관리자 페이지
+                  </button>
+                )}
+
                 <button
                   className="px-4 py-2 rounded-lg bg-sub text-white"
                   onClick={logout}

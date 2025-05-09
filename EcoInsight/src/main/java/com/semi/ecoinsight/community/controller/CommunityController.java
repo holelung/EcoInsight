@@ -18,11 +18,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
+import com.semi.ecoinsight.comment.model.dto.CommentDTO;
 import com.semi.ecoinsight.community.model.service.CommunityService;
-
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+
+
+
+@Slf4j
 @RequestMapping("/communities")
 @RestController
 @RequiredArgsConstructor
@@ -57,24 +62,54 @@ public class CommunityController {
 		return ResponseEntity.ok(likeCount);		
 	}
 	
+	@PutMapping("/community-update")
+	public ResponseEntity<?> updateCommunity(@RequestBody @Valid WriteFormDTO writeForm){
+		communityService.updateCommunity(writeForm);
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
 	
-
+	
 	@DeleteMapping("/community-delete")
-	public ResponseEntity<?> deleteCommunity(@RequestParam(name="boardNo") Long boardNo,
-						 					 @RequestParam(name="memberNo") Long memberNo) {
-	    try {
-	        Map<String, Object> deleteMap = new HashMap<>();
-	        deleteMap.put("boardNo", boardNo);
-	        deleteMap.put("memberNo", memberNo);
-	        communityService.deleteCommunity(deleteMap);
-	        return ResponseEntity.ok().build();
-	    } catch (AccessDeniedException e) {
-	        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());  //권한이 없을 떄
-	    }
+	public ResponseEntity<?> deleteCommunity(@RequestBody Map<String,Long> deleteMap) {
+		communityService.deleteCommunity(deleteMap);
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+	
+	@PostMapping("/comments")
+	public ResponseEntity<?> insertCommunityComment(@Valid @RequestBody CommentDTO comment){
+		
+		communityService.insertCommunityComment(comment);
+		
+		return ResponseEntity.status(HttpStatus.OK).build();
+		
+	}
+	
+	@GetMapping("/comments-List")
+	public ResponseEntity<List<CommentDTO>> findCommunityCommentList(@RequestParam(name="boardNo") Long boardNo){
+		return ResponseEntity.ok(communityService.findCommunityCommentList(boardNo));
+		
+	}
+
+	@GetMapping("/count")
+	public ResponseEntity<?> commentCount(@RequestParam(name="boardNo") Long boardNo){
+		log.info("count : {}", boardNo);
+		return ResponseEntity.ok(communityService.commentCount(boardNo));
+		
+	}
+	
+	@PutMapping("/comment-update")
+	public ResponseEntity<?> updateComment(@Valid @RequestBody CommentDTO comment){
+		communityService.updateComment(comment);
+		return ResponseEntity.status(HttpStatus.OK).build();
+	}
+		
+	@DeleteMapping("/comment-delete")
+	public ResponseEntity<?> deleteComment(@RequestBody Map<String,Long> deleteCommentMap){
+		communityService.deleteComment(deleteCommentMap);
+		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 
 
-		
 }
 
 	
