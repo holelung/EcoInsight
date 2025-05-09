@@ -43,6 +43,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import NoticeBoardModify from "./components/Board/Notice/NoticeBoardModify.jsx";
 import ReportManagementPage from "./pages/Admin/ReportManagementPage/ReportManagementPage.jsx";
 import PointDetailPage from "./pages/Admin/PointManagementPage/PointDetailPage.jsx";
+import AuthBoardModify from "./components/Board/AuthBoard/AuthBoardModify.jsx";
 
 function App() {
   return (
@@ -51,26 +52,24 @@ function App() {
       <Routes>
         {/* 사용자 레이아웃 */}
         <Route element={<UserLayout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/community/:type" element={<CommunityListPage />} />
-          <Route path="/auth-board/cert" element={<AuthListPage />} />
-          <Route path="/auth-board/cert/:no" element={<AuthBoardDetail />} />
-          <Route
-            path="/auth-board/cert:type"
-            element={<AuthBoardWritePage />}
-          />
-          <Route path="/write/:type" element={<CommunityWritePage />} />
-          <Route
-            path="/post/:categoryId/:boardNo"
-            element={<CommunityBoardDetail />}
-          />
-          <Route path="/dashboard" element={<MainDashBoard />} />
-          <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
-          <Route path="/privateAskPage" element={<PrivateAskPage />} />
-          <Route path="/notice" element={<NoticeBoard />} />
-          <Route path="/notice/detail/:id" element={<NoticeBoardDetail />} />
-          <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
-          <Route path="/privateAskPage" element={<PrivateAskPage />} />
+            <Route path="/" element={<HomePage />} />
+            {/* 커뮤니티 */}
+            <Route path="/community/:type" element={<CommunityListPage />} />
+            <Route path="/write/:type" element={<CommunityWritePage />} />
+            <Route path="/post/:categoryId/:boardNo" element={<CommunityBoardDetail />} />
+            {/* 인증게시판 */}
+            <Route path="/auth-board" element={<AuthListPage />} />
+            <Route path="/auth-board/:no" element={<AuthBoardDetail />} />
+            <Route path="/auth-board/write" element={<AuthBoardWritePage />} />
+            <Route path="/auth-board/modify/:boardNo" element={<AuthBoardModify /> } />
+            {/* 공지사항 */}
+            <Route path="/notice" element={<NoticeBoard />} />
+            <Route path="/notice/detail/:id" element={<NoticeBoardDetail />} />
+            {/* 대시보드 */}
+            <Route path="/dashboard" element={<MainDashBoard />} />
+            {/* 문의하기 */}
+            <Route path="/frequencyAskPage" element={<FrequencyAskPage />} />
+            <Route path="/privateAskPage" element={<PrivateAskPage />} />
         </Route>
 
         {/* 로그인 유저 전용 */}

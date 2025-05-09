@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -197,6 +196,17 @@ public class AdminController {
     public ResponseEntity<Map<String,Object>> getPointDetail(@RequestParam(name = "memberNo") Long memberNo) {
         
         return ResponseEntity.ok(adminService.selectPointDetail(memberNo));
+    }
+    
+    @GetMapping("/authboard")
+    public ResponseEntity<Map<String,Object>> getAuthboard(
+        @RequestParam(name = "page", defaultValue="0") int page,
+        @RequestParam(name = "size") int size,
+        @RequestParam(name = "search", required = false) String search,
+        @RequestParam(name = "searchType", required = false) String searchType,
+        @RequestParam(name = "sortOrder", defaultValue = "Newest") String sortOrder) {
+        
+        return ResponseEntity.ok(adminService.selectAuthBoardList(page, size, search, searchType, sortOrder));
     }
     
 

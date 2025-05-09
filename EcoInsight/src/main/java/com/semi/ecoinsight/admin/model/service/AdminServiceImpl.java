@@ -388,4 +388,31 @@ public class AdminServiceImpl implements AdminService {
         return resultMap;
     }
 
+    // 인증 게시판 조회~
+    @Override
+    public Map<String, Object> selectAuthBoardList(int pageNo, int size, String search, String searchType,
+            String sortOrder) {
+        
+        int startIndex = pagination.getStartIndex(pageNo, size);
+        Map<String, String> pageInfo = new HashMap<>();
+        pageInfo.put("startIndex", Integer.toString(startIndex));
+        pageInfo.put("size", Integer.toString(size));
+        pageInfo.put("sortOrder", sortOrder);
+
+        Map<String, Object> resultData = new HashMap<String, Object>();
+
+        if (search.isEmpty()) {
+            resultData.put("totalCount", adminMapper.selectAuthBoardCount());
+            // 10개만 나옴
+            resultData.put("boardList", adminMapper.selectAuthBoardList(pageInfo));
+            return resultData;
+        }
+        pageInfo.put("search", search);
+        pageInfo.put("searchType", searchType);
+
+        resultData.put("totalCount", adminMapper.selectAuthBoardCountBySearch(pageInfo));
+        resultData.put("boardList", adminMapper.selectAuthBoardListBySearch(pageInfo));
+        return resultData;
+    }
+
 }
