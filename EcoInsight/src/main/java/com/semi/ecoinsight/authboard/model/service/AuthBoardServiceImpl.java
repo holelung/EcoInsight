@@ -54,6 +54,7 @@ public class AuthBoardServiceImpl implements AuthBoardService {
             resultData.put("totalCount", authBoardMapper.selectAuthBoardCount());
             // 10개만 나옴
             resultData.put("boardList", authBoardMapper.selectAuthBoardList(pageInfo));
+            
             return resultData;
         }
         pageInfo.put("search", search);
