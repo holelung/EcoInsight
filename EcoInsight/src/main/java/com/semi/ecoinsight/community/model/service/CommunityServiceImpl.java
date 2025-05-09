@@ -129,14 +129,15 @@ public class CommunityServiceImpl implements CommunityService{
 
 	@Override
 	public void deleteCommunity(Map<String, Long> deleteMap) {
-	
-		Long boardNo = Long.parseLong(deleteMap.get("boardNo").toString());
-        Long memberNo = Long.parseLong(deleteMap.get("memberNo").toString());
 
-        Long writerNo = communityMapper.getWriterMemberNo(boardNo);
+	
+		Long boardNo = deleteMap.get("boardNo");
+    Long memberNo = deleteMap.get("memberNo");
+
+    Long writerNo = communityMapper.getWriterMemberNo(boardNo);
  
 
-        if (writerNo.longValue() != memberNo.longValue()) {
+        if (!writerNo.equals(memberNo)) {
             throw new CommunityAccessException("삭제 권한이 없습니다.");
         }
 
