@@ -14,6 +14,7 @@ import com.semi.ecoinsight.authboard.model.dao.AuthBoardMapper;
 import com.semi.ecoinsight.board.model.dao.BoardMapper;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
 import com.semi.ecoinsight.board.model.dto.LikeDTO;
+import com.semi.ecoinsight.board.model.service.BoardService;
 import com.semi.ecoinsight.board.model.vo.Attachment;
 import com.semi.ecoinsight.board.model.vo.Board;
 import com.semi.ecoinsight.board.model.vo.Like;
@@ -38,7 +39,7 @@ public class AuthBoardServiceImpl implements AuthBoardService {
 	private final PaginationService pagination;
 	private final AuthBoardMapper authBoardMapper;
 	private final BoardMapper boardMapper;
-	
+	private final BoardService boardService;
     // 글 목록 조회
 	@Override
 	public Map<String,Object> selectAuthBoardList(int pageNo, int size, String search, String searchType, String sortOrder, String categoryId) {
@@ -67,13 +68,14 @@ public class AuthBoardServiceImpl implements AuthBoardService {
     // 글 조회
     @Transactional
 	@Override
-    public BoardDTO selectAuthBoardDetail(Long boardNo) {
+    public BoardDTO selectAuthBoardDetail(Long boardNo, String categoryId) {
         if (boardNo < 1l) {
             throw new InvalidAccessException("유효한 접근이 아닙니다.");
         }
 
         try{
             authBoardMapper.increaseViewCount(boardNo);
+            boardService.insertViewCount(boardNo, categoryId);
         } catch (RuntimeException e) {
             throw new BoardInsertException("조회수 증가 실패");
         }

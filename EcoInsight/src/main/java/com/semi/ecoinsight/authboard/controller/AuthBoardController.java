@@ -44,8 +44,10 @@ public class AuthBoardController {
 	}
 
 	@GetMapping("/detail")
-	public ResponseEntity<?> getAuthBoardDetail(@RequestParam(name = "boardNo") Long boardNo) {
-		return ResponseEntity.ok(authBoardService.selectAuthBoardDetail(boardNo));
+	public ResponseEntity<?> getAuthBoardDetail(
+		@RequestParam(name = "boardNo") Long boardNo,
+		@RequestParam(name = "categoryId") String categoryId) {
+		return ResponseEntity.ok(authBoardService.selectAuthBoardDetail(boardNo, categoryId));
 	}
 
 	// 글쓰기
@@ -64,7 +66,8 @@ public class AuthBoardController {
 	
 	// 글 삭제
     @DeleteMapping
-	public ResponseEntity<?> deleteAuthBoard(@RequestParam(name = "boardNo") Long boardNo) {
+	public ResponseEntity<?> deleteAuthBoard(
+		@RequestParam(name = "boardNo") Long boardNo) {
 		authBoardService.deleteAuthBoard(boardNo);
 		return ResponseEntity.status(HttpStatus.OK).body("글이 삭제되었습니다.");
 	}
