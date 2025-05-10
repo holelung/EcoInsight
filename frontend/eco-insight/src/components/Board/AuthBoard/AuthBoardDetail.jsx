@@ -14,7 +14,6 @@ const AuthBoardDetail = () => {
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isAuthor, setIsAuthor] = useState(false);
   const [pageState, setPageState] = useState(false);
-  const [category, setCategory] = useState();
 
   // 게시글 상세 조회
   useEffect(() => {
