@@ -6,6 +6,8 @@ import java.util.Map;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.semi.ecoinsight.board.model.vo.PopularPost;
+
 public interface BoardService {
     
     String imageUrlChange(MultipartFile file, String boardType);
@@ -20,5 +22,5 @@ public interface BoardService {
     // qna
     // tips
 
-    Map<String, Object> mainViewCount();
+    Map<String, Map<String, List<PopularPost>>> mainViewCount();
 }

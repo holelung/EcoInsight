@@ -91,7 +91,7 @@ const AuthListPage = () => {
               key={board.boardNo}
               className="border rounded-xl overflow-hidden shadow hover:shadow-lg transition cursor-pointer hover:border-2 hover:border-lime-400"
               onClick={() =>
-                navi(`/auth-board/${board.boardNo}`, { state: { post: board } })
+                navi(`/auth-board/${board.categoryId}/${board.boardNo}`, { state: { post: board } })
               }
             >
               <div className="bg-blue-100 flex items-center justify-center h-40">

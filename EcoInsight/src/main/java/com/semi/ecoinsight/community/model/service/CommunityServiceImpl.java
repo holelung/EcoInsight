@@ -97,17 +97,11 @@ public class CommunityServiceImpl implements CommunityService{
 		
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("board", board);
-		
-		String[] category = {"C0001", "C0002", "C0003"};
-		String[] categories = {"free", "qna", "tips"};
+		boardService.insertViewCount(boardNo, categoryId);
+		// "C0001", "C0002", "C0003"
 		//C0001 = free
 		//C0002 = qna
 		//C0003 = tips
-		for(int i=0;i<3;i++){
-			if(category[i].equals(categoryId)){
-				boardService.insertViewCount(boardNo, categories[i]);
-			}
-		}
 		 	
 		return resultMap;
 	}

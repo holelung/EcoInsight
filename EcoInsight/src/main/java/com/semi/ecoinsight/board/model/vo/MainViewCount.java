@@ -6,7 +6,6 @@ import lombok.Value;
 @Value
 @Builder
 public class MainViewCount {
-    String categoryId;
     Long boardNo;
-    Long viewCnt;
+    String categoryId;
 }

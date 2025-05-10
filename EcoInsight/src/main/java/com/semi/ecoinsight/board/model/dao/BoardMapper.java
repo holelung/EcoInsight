@@ -8,10 +8,11 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.semi.ecoinsight.board.model.vo.Attachment;
 import com.semi.ecoinsight.board.model.vo.MainViewCount;
+import com.semi.ecoinsight.board.model.vo.PopularPost;
 
 @Mapper
 public interface BoardMapper {
     void uploadImage(Attachment attachment);
-    void insertViewCount(Map<String, Object> viewCountEntity);
-    List<MainViewCount> selectMainViewCount();
+    void insertViewCount(MainViewCount mainViewCount);
+    List<PopularPost> selectDailyPopularPosts();
 }

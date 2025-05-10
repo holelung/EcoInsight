@@ -23,7 +23,8 @@
 
     </insert>
 
-    <insert>
+    <insert id="insertViewCount"
+            parameterType="com.semi.ecoinsight.board.model.vo.MainViewCount">
         INSERT INTO TB_VIEW_COUNT(
             BOARD_NO,
             CATEGORY_ID
@@ -32,4 +33,51 @@
             #{categoryId}
         )
     </insert>
+
+    <select id="selectDailyPopularPosts"
+        resultType="com.semi.ecoinsight.board.model.vo.PopularPost">
+  <![CDATA[
+  WITH daily_views AS (
+    SELECT CATEGORY_ID, BOARD_NO, COUNT(*) VIEW_CNT
+    FROM TB_VIEW_COUNT
+    WHERE CREATED_DATE >= TRUNC(SYSDATE)
+    GROUP BY CATEGORY_ID, BOARD_NO
+  ),
+  board_union AS (
+    SELECT 'A' boardGroup,
+           ab.CATEGORY_ID, ab.BOARD_NO, ab.BOARD_TITLE,
+           ab.MEMBER_NO,   at.CATEGORY_NAME
+    FROM TB_AUTH_BOARD ab
+    JOIN TB_AUTH_TYPE at ON at.CATEGORY_ID = ab.CATEGORY_ID
+    UNION ALL
+    SELECT 'C',
+           cb.CATEGORY_ID, cb.BOARD_NO, cb.BOARD_TITLE,
+           cb.MEMBER_NO,   ct.CATEGORY_NAME
+    FROM TB_COMMUNITY_BOARD cb
+    JOIN TB_BOARD_TYPE ct ON ct.CATEGORY_ID = cb.CATEGORY_ID
+  ),
+  ranked AS (
+    SELECT bu.boardGroup, bu.CATEGORY_ID, bu.CATEGORY_NAME,
+           bu.BOARD_NO,   bu.BOARD_TITLE, m.MEMBER_NAME,
+           dv.VIEW_CNT,
+           ROW_NUMBER() OVER (PARTITION BY bu.CATEGORY_ID
+                              ORDER BY dv.VIEW_CNT DESC) RN
+    FROM daily_views dv
+    JOIN board_union bu
+      ON bu.CATEGORY_ID = dv.CATEGORY_ID
+     AND bu.BOARD_NO    = dv.BOARD_NO
+    JOIN TB_MEMBER m ON m.MEMBER_NO = bu.MEMBER_NO
+  )
+  SELECT boardGroup,
+         CATEGORY_ID   AS categoryId,
+         CATEGORY_NAME AS categoryName,
+         BOARD_NO      AS boardNo,
+         BOARD_TITLE   AS boardTitle,
+         MEMBER_NAME   AS memberName,
+         VIEW_CNT      AS viewCnt
+  FROM ranked
+  WHERE RN <= 5
+  ORDER BY boardGroup, CATEGORY_ID, VIEW_CNT DESC
+  ]]>
+</select>
 </mapper>

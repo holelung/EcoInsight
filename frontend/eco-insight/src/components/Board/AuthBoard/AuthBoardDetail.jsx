@@ -8,13 +8,13 @@ import Separate from "../../Seperate/Seperate";
 
 const AuthBoardDetail = () => {
   const { auth } = useContext(AuthContext);
-  const { no } = useParams(); 
+  const { categoryId, no } = useParams(); 
   const navi = useNavigate();
   const [post, setPost] = useState({}); // 게시글 상태
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isAuthor, setIsAuthor] = useState(false);
   const [pageState, setPageState] = useState(false);
-
+  const [category, setCategory] = useState();
 
   // 게시글 상세 조회
   useEffect(() => {
@@ -22,6 +22,7 @@ const AuthBoardDetail = () => {
       .get("http://localhost/auth-boards/detail", {
         params: {
           boardNo: no,
+          categoryId: categoryId,
         },
       })
       .then((response) => {

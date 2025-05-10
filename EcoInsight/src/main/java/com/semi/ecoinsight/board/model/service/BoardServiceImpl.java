@@ -2,6 +2,7 @@ package com.semi.ecoinsight.board.model.service;
 
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.semi.ecoinsight.auth.model.service.AuthService;
 import com.semi.ecoinsight.board.model.dao.BoardMapper;
 import com.semi.ecoinsight.board.model.vo.MainViewCount;
+import com.semi.ecoinsight.board.model.vo.PopularPost;
 import com.semi.ecoinsight.util.file.service.FileService;
 
 import lombok.RequiredArgsConstructor;
@@ -50,17 +52,24 @@ public class BoardServiceImpl implements BoardService {
     
     @Override
     public void insertViewCount(Long boardNo, String categoryId){
-        Map<String, Object> viewCountEntity = new HashMap<String, Object>();
-        boardMapper.insertViewCount(viewCountEntity);
+        MainViewCount mainViewCount = MainViewCount.builder().boardNo(boardNo).categoryId(categoryId).build();
+        log.info("{}",mainViewCount);
+        boardMapper.insertViewCount(mainViewCount);
     }
 
     @Override
-    public Map<String, Object> mainViewCount(){
-        List<MainViewCount> allCounts = boardMapper.selectMainViewCount();
-        Map<String, List<MainViewCount>> grouped = allCounts.stream()
-        .collect(Collectors.groupingBy(MainViewCount::getCategoryId));
-        Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("viewCountsByCategory", grouped);
-        return responseMap;
+    public Map<String, Map<String, List<PopularPost>>> mainViewCount() {
+        List<PopularPost> list = boardMapper.selectDailyPopularPosts();
+
+        // 1) boardGroup(A/C) → 2) categoryName → List<PopularPost>
+        return list.stream()
+                   .collect(Collectors.groupingBy(
+                        PopularPost::getBoardGroup,
+                        LinkedHashMap::new,
+                        Collectors.groupingBy(
+                            PopularPost::getCategoryName,
+                            LinkedHashMap::new,
+                            Collectors.toList()
+                        )));
     }
 }
