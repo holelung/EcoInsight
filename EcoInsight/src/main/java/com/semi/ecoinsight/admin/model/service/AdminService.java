@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.semi.ecoinsight.admin.model.dto.BanDTO;
+import com.semi.ecoinsight.admin.model.dto.CertifyDTO;
 import com.semi.ecoinsight.admin.model.dto.PointDTO;
 import com.semi.ecoinsight.admin.model.dto.SummaryCardDTO;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
@@ -46,8 +47,11 @@ public interface AdminService {
     
     // 인증게시판 관리
     Map<String, Object> selectAuthBoardList(int pageNo, int size, String search, String searchType, String sortOrder);
-    
-    
+    // 인증
+    void handleCertify(CertifyDTO certify);
+
+    void deleteAuthBoard(Long boardNo);
+    void restoreAuthBoard(Long boardNo);
 
     // 포인트 관리
     // 조회

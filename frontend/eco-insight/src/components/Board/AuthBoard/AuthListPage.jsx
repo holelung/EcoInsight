@@ -9,7 +9,7 @@ const AuthListPage = () => {
   const navi = useNavigate();
   const [list, setList] = useState([]);
   const [search, setSearch] = useState("");
-  const [searchType, setSearchType] = useState("");
+  const [searchType, setSearchType] = useState("title");
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(6);
   const [category, setCategory] = useState("all");

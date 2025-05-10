@@ -2,24 +2,18 @@ import { useContext, useEffect } from 'react';
 import { AuthContext } from '../../Context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-function CheckWithdrawal() {
-  const navigate = useNavigate();
+export default function CheckWithdrawal() {
+  const navi = useNavigate();
   const { auth } = useContext(AuthContext);
-   useEffect(() => {
-     if (!auth.isAuthenticated) {
-       navigate('/login', { replace: true });
-     }
-   }, [auth.isAuthenticated, navigate]);
 
-  const handleNext = () => {
-    // "다음" 버튼 클릭 시 회원탈퇴 절차의 다음 단계로 이동
-    navigate('/mypage/withdrawal/form');
-  };
+  useEffect(() => {
+    if (!auth.isAuthenticated) {
+      navi('/login', { replace: true });
+    }
+  }, [auth.isAuthenticated, navi]);
 
-  const handleCancel = () => {
-    // 취소 버튼 클릭 시 마이페이지로 이동
-    navigate('/mypage');
-  };
+  const handleNext = () => navi('/mypage/withdrawal/form');
+  const handleCancel = () => navi('/mypage');
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 text-gray-900">
@@ -43,5 +37,3 @@ function CheckWithdrawal() {
     </div>
   );
 }
-
-export default CheckWithdrawal;

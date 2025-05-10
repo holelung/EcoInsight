@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.semi.ecoinsight.admin.model.dto.BanDTO;
+import com.semi.ecoinsight.admin.model.dto.CertifyDTO;
 import com.semi.ecoinsight.admin.model.dto.PointDTO;
 import com.semi.ecoinsight.admin.model.dto.SummaryCardDTO;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
@@ -209,5 +210,24 @@ public class AdminController {
         return ResponseEntity.ok(adminService.selectAuthBoardList(page, size, search, searchType, sortOrder));
     }
     
+    @PatchMapping("/authboard/cert")
+    public ResponseEntity<?> handleCertify(@RequestBody CertifyDTO data) {
+        adminService.handleCertify(data);
+        return ResponseEntity.status(HttpStatus.OK).body("인증상태가 변경 되었습니다.");
+    }
+
+    @DeleteMapping("/authboard")
+    public ResponseEntity<?> deleteAuthBoard(@RequestParam(name = "boardNo") Long boardNo) {
+        log.info("에라라라:{}",boardNo);
+        adminService.deleteAuthBoard(boardNo);
+        return ResponseEntity.status(HttpStatus.OK).body("글이 삭제되었습니다.");
+    }
+
+    @PatchMapping("/authboard/restore")
+    public ResponseEntity<?> restoreAuthBoard(@RequestBody Map<String, Long> data) {
+        log.info("에라라라:{}", data);
+        adminService.restoreAuthBoard(data.get("boardNo"));
+        return ResponseEntity.status(HttpStatus.OK).body("글이 복원되었습니다.");
+    }
 
 }

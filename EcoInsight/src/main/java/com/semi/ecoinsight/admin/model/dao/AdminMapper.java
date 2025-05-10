@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.semi.ecoinsight.admin.model.dto.BanDTO;
+import com.semi.ecoinsight.admin.model.dto.CertifyDTO;
 import com.semi.ecoinsight.admin.model.dto.MemberInfoDTO;
 import com.semi.ecoinsight.admin.model.dto.PointDTO;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
@@ -67,8 +68,12 @@ public interface AdminMapper {
     Long selectAuthBoardCount();
     Long selectAuthBoardCountBySearch(Map<String, String> pageInfo);
     
-    void certifiedAuthBoard(Long boardNo);
-    
+    // 인증게시글 인증 처리
+    void certifiedAuthBoard(CertifyDTO dto);
+    void uncertifiedAuthBoard(CertifyDTO dto);
+    String selectIsCertifiedByBoardNo(Long boardNo);
+
+    // 인증게시글 삭제/복원
     void deleteAuthBoard(Long boardNo);
     void restoreAuthBoard(Long boardNo);
 }

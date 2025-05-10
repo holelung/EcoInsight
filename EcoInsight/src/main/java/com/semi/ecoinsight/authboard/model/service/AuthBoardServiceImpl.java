@@ -128,6 +128,9 @@ public class AuthBoardServiceImpl implements AuthBoardService {
     @Transactional
 	@Override
     public void updateAuthBoard(WriteFormDTO form) {
+        if (!form.getMemberNo().equals(authService.getUserDetails().getMemberNo())) {
+            throw new InvalidAccessException("유효하지 않은 접근입니다.");
+        }
         Board board = Board.builder()
                 .boardNo(form.getBoardNo())
                 .categoryId(form.getCategoryId())
@@ -162,9 +165,7 @@ public class AuthBoardServiceImpl implements AuthBoardService {
     @Override
     public void handleLikeCount(LikeDTO like) {
         
-        if (!like.getMemberNo().equals(authService.getUserDetails().getMemberNo())) {
-            throw new InvalidAccessException("유효하지 않은 접근입니다.");
-        }
+   
         Like likeData = Like.builder()
                 .memberNo(like.getMemberNo())
                 .boardNo(like.getBoardNo())

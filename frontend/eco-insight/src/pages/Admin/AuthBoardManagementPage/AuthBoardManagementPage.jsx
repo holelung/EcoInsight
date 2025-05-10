@@ -17,7 +17,7 @@ import AuthBoardDetailModal from "./AuthBoardDetailModal";
 const AuthBoardManagementPage = () => {
   const { auth } = useContext(AuthContext);
   const navi = useNavigate();
-  const [list, setList] = useState(authBoardList);
+  const [list, setList] = useState([]);
   const [search, setSearch] = useState("");
   const [searchType, setSearchType] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
@@ -56,9 +56,49 @@ const AuthBoardManagementPage = () => {
   }, [currentPage, rowsPerPage, sortOrder, listState, auth.tokens.accessToken]);
 
 
-  const handleAuthBoard = (memberName) => {
-    alert(`${memberName} 님의 게시글이 활성 되었습니다.`);
-    
+  const handleAuthBoard = (boardNo, isDeleted) => {
+    if (isDeleted === "N") {
+      axios
+        .delete(`http://localhost/admin/authboard`, {
+          headers: {
+            Authorization: `Bearer ${auth.tokens.accessToken}`,
+          },
+          params: {
+            boardNo: boardNo,
+          },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            
+            alert(response.data);
+            setListState(!listState);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      axios
+        .patch(
+          `http://localhost/admin/authboard/restore`,
+          {
+            boardNo: boardNo,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${auth.tokens.accessToken}`,
+            },
+          }
+        )
+        .then((response) => {
+          alert(response.data);
+          setListState(!listState);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
     setSelectedBoardNo(null);
   };
 
@@ -71,6 +111,7 @@ const AuthBoardManagementPage = () => {
   };
 
   const handleOpenDetail = (boardNo) => {
+    setListState(!listState);
     setModalBoardNo(boardNo);
     setModalIsOpen(true);
   }
@@ -158,7 +199,6 @@ const AuthBoardManagementPage = () => {
             <th className="p-3">아이디</th>
             <th>글 번호</th>
             <th>제목</th>
-            <th>내용</th>
             <th>조회수</th>
             <th>좋아요 수</th>
             <th>업로드일</th>
@@ -173,7 +213,6 @@ const AuthBoardManagementPage = () => {
                 <td className="px-4 py-3">{board.memberId}</td>
                 <td>{board.boardNo}</td>
                 <td>{board.boardTitle}</td>
-                <td>{board.boardContent?.replace(/<[^>]*>/g, "")}</td>
                 <td>{board.viewCount}</td>
                 <td>{board.likeCount}</td>
                 <td>{board.createdDate}</td>
@@ -204,22 +243,23 @@ const AuthBoardManagementPage = () => {
               </tr>
               {selectedBoardNo === board.boardNo && (
                 <tr className="bg-gray-50">
-                  <td colSpan={9} className="px-4 py-3">
+                  <td colSpan={8} className="px-4 py-3">
                     <div className="flex gap-2 items-center justify-end">
                       <span className="text-sm font-medium flex ">
-                        <p className="font-bold pr-1">{board.memberName}</p>
-                        회원의 게시글 인증처리자
+                        <p className="font-bold pr-1">{board.boardNo}</p>
+                        게시글 삭제하기
                       </span>
                       {/* value = {auth.loginInfo.memberName} 으로 변경해야함 */}
                       <input
                         type="text"
-                        // value={auth.memberInfo.memberName}
-                        value="관리자명"
+                        value={auth.loginInfo.memberName}
                         className="border px-3 py-2 w-32 rounded"
                       />
                       <button
                         className="bg-black text-white px-4 py-2 rounded"
-                        onClick={() => handleAuthBoard(board.memberName)}
+                        onClick={() =>
+                          handleAuthBoard(board.boardNo, board.isDeleted)
+                        }
                       >
                         {board.isDeleted === "N" ? "삭제하기" : "복원하기"}
                       </button>
