@@ -210,7 +210,7 @@ public class CommunityServiceImpl implements CommunityService{
 													.parentCommentNo(comment.getParentCommentNo())
 													.build();
 		
-		communityCommentMapper.insertCommunityComment(comment);
+		communityCommentMapper.insertCommunityComment(data);
 		
 		
 	}
