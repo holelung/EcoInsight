@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.semi.ecoinsight.authboard.model.dao.AuthBoardMapper">
+
+	<!-- 글 전체조회 -->
+	<select id="selectAuthBoardList"
+            parameterType="map"
+            resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
+        SELECT
+            A.BOARD_NO boardNo,
+            A.CATEGORY_ID categoryId,
+            A.MEMBER_NO memberNo,
+            A.BOARD_TITLE boardTitle,
+            A.BOARD_CONTENT boardContent,
+            A.CREATED_DATE createdDate,
+            A.MODIFIED_DATE modifiedDate,
+            A.VIEW_COUNT viewCount,
+            MEMBER_ID memberId,
+            MEMBER_NAME memberName,
+            (
+                SELECT
+                    COUNT(*)
+                FROM
+                    TB_AUTH_RECOMMEND R
+                WHERE
+                    R.BOARD_NO = A.BOARD_NO
+            )AS likeCount,
+			(
+				SELECT
+					NVL(ATTACHMENT_ITEM, '')
+				FROM
+					TB_AUTH_ATTACHMENT_IMG I
+				WHERE
+					I.BOARD_NO = A.BOARD_NO
+				ORDER BY
+					ATTACHMENT_NO DESC
+				FETCH FIRST 1 ROWS ONLY
+			)AS imageUrl
+        FROM
+            TB_AUTH_BOARD A
+        JOIN
+            TB_MEMBER M ON(M.MEMBER_NO = A.MEMBER_NO)
+		WHERE
+			A.IS_DELETED = 'N'
+        ORDER BY
+            A.CREATED_DATE DESC
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+	<select id="selectAuthBoardListBySearch"
+            parameterType="map"
+            resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
+        SELECT
+            A.BOARD_NO boardNo,
+            A.CATEGORY_ID categoryId,
+            A.MEMBER_NO memberNo,
+            A.BOARD_TITLE boardTitle,
+            A.BOARD_CONTENT boardContent,
+            A.CREATED_DATE createdDate,
+            A.MODIFIED_DATE modifiedDate,
+            A.VIEW_COUNT viewCount,
+            MEMBER_ID memberId,
+            MEMBER_NAME memberName,
+            (
+                SELECT
+                    COUNT(*)
+                FROM
+                    TB_AUTH_RECOMMEND R
+                WHERE
+                    R.BOARD_NO = A.BOARD_NO
+            )AS likeCount,
+			(
+				SELECT
+					NVL(ATTACHMENT_ITEM, '')
+				FROM
+					TB_AUTH_ATTACHMENT_IMG I
+				WHERE
+					I.BOARD_NO = A.BOARD_NO
+				ORDER BY
+					ATTACHMENT_NO DESC
+				FETCH FIRST 1 ROWS ONLY
+			)AS imageUrl
+        FROM
+            TB_AUTH_BOARD A
+        JOIN
+            TB_MEMBER M ON(M.MEMBER_NO = A.MEMBER_NO)
+		WHERE
+			A.IS_DELETED = 'N'
+		AND
+		<choose>
+            <when test="searchType == 'name'"> 
+                MEMBER_NAME LIKE '%'||#{search}||'%' 
+            </when>
+            <when test="searchType == 'title'"> 
+                BOARD_TITLE LIKE '%'||#{search}||'%' 
+            </when>
+            <otherwise> 
+                    MEMBER_NAME LIKE '%'||#{search}||'%' 
+                OR    
+                    BOARD_TITLE LIKE '%'||#{search}||'%' 
+            </otherwise>
+        </choose>
+        ORDER BY
+            A.CREATED_DATE DESC
+        OFFSET #{startIndex} ROWS FETCH NEXT #{size} ROWS ONLY
+    </select>
+
+	<select id="selectAuthBoardCount"
+			resultType="long">
+		SELECT
+			COUNT(*)
+		FROM
+			TB_AUTH_BOARD
+		WHERE
+			IS_DELETED = 'N'
+	</select>
+
+	<select id="selectAuthBoardCountBySearch"
+		resultType="long">
+		SELECT
+			COUNT(*)
+		FROM
+			TB_AUTH_BOARD
+		JOIN
+			TB_MEMBER USING(MEMBER_NO)
+		WHERE
+			IS_DELETED = 'N'
+		AND
+		<choose>
+			<when test="searchType == 'name'">
+				MEMBER_NAME LIKE '%'||#{search}||'%'
+			</when>
+			<when test="searchType == 'title'">
+				BOARD_TITLE LIKE '%'||#{search}||'%'
+			</when>
+			<otherwise>
+				MEMBER_NAME LIKE '%'||#{search}||'%'
+				OR
+				BOARD_TITLE LIKE '%'||#{search}||'%'
+			</otherwise>
+		</choose>
+	</select>
+
+
+	<!-- 글 상세조회 -->
+	<select id="selectAuthBoardDetail"
+			parameterType="long"
+			resultType="com.semi.ecoinsight.board.model.dto.BoardDTO">
+		SELECT
+            A.BOARD_NO boardNo,
+            A.CATEGORY_ID categoryId,
+            A.MEMBER_NO memberNo,
+            A.BOARD_TITLE boardTitle,
+            A.BOARD_CONTENT boardContent,
+            A.CREATED_DATE createdDate,
+            A.MODIFIED_DATE modifiedDate,
+            A.VIEW_COUNT viewCount,
+            MEMBER_ID memberId,
+            MEMBER_NAME memberName,
+            (
+                SELECT
+                    COUNT(*)
+                FROM
+                    TB_AUTH_RECOMMEND R
+                WHERE
+                    R.BOARD_NO = A.BOARD_NO
+            )AS likeCount
+        FROM
+            TB_AUTH_BOARD A
+        JOIN
+            TB_MEMBER M ON(M.MEMBER_NO = A.MEMBER_NO)
+		WHERE
+			A.BOARD_NO = #{boardNo}
+		AND
+			A.IS_DELETED = 'N'
+	</select>
+
+
+
+	<insert id="insertAuthBoard"
+			parameterType="com.semi.ecoinsight.board.model.vo.Board">
+		INSERT
+		INTO
+			TB_AUTH_BOARD
+			(
+				MEMBER_NO,
+				CATEGORY_ID,
+				BOARD_TITLE,
+				BOARD_CONTENT
+			)
+		VALUES
+			(
+				#{memberNo},
+				#{categoryId},
+				#{boardTitle},
+				#{boardContent}
+			)
+	</insert>
+
+
+	<!--게시글 번호 조회 -->
+	<select id="selectAuthBoardNo" parameterType="long" resultType="long">
+        SELECT
+            BOARD_NO AS boardNo
+        FROM
+            TB_AUTH_BOARD
+        WHERE
+            MEMBER_NO = #{memberNo}
+        ORDER BY
+            CREATED_DATE DESC
+        FETCH FIRST 1 ROWS ONLY
+    </select>
+
+	<!-- 글 수정 -->
+	<update id="updateAuthBoard" parameterType="com.semi.ecoinsight.board.model.vo.Board">
+		UPDATE
+			TB_AUTH_BOARD
+		SET
+			BOARD_TITLE = #{boardTitle},
+			BOARD_CONTENT = #{boardContent},
+			CATEGORY_ID = #{categoryId},
+			MODIFIED_DATE = SYSDATE
+		WHERE
+			BOARD_NO = #{boardNo}
+	</update>
+	
+	<update id="deleteAuthBoard">
+		UPDATE
+			TB_AUTH_BOARD
+		SET
+			IS_DELETED ='Y'
+		WHERE
+			BOARD_NO = #{boardNo}
+	</update>
+
+	<!-- 조회수 증가 -->
+	<update id="increaseViewCount"
+			parameterType="long">
+		UPDATE
+			TB_AUTH_BOARD
+		SET
+			VIEW_COUNT = VIEW_COUNT + 1
+		WHERE
+			BOARD_NO = #{boardNo}
+	</update>
+
+	<!-- 좋아요 처리 -->
+	<select id="selectLikeCount"
+			parameterType="com.semi.ecoinsight.board.model.vo.Like"
+			resultType="_int">
+		SELECT
+			COUNT(*)
+		FROM
+			TB_AUTH_RECOMMEND
+		WHERE
+			BOARD_NO = #{boardNo}
+		AND
+			MEMBER_NO = #{memberNo}
+	</select>
+
+
+	<insert id="increaseLikeCount"
+			parameterType="com.semi.ecoinsight.board.model.vo.Like">
+		INSERT
+		INTO
+			TB_AUTH_RECOMMEND(
+				BOARD_NO,
+				MEMBER_NO
+			)
+		VALUES(
+			#{boardNo},
+			#{memberNo}
+		)
+	</insert>
+
+	<delete id="decreaseLikeCount"
+			parameterType="com.semi.ecoinsight.board.model.vo.Like">
+		DELETE
+		FROM
+			TB_AUTH_RECOMMEND
+		WHERE
+			BOARD_NO = #{boardNo}
+		AND
+			MEMBER_NO = #{memberNo}
+	</delete>
+</mapper>

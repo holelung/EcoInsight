@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.semi.ecoinsight.mypage.model.dao.MyPageMapper">
+	
+	<select id="selectMemberInfo"
+          parameterType="long"
+          resultType="com.semi.ecoinsight.mypage.model.dto.MyPageDTO">
+    SELECT
+      m.MEMBER_NAME    AS memberName,
+      m.MEMBER_ID      AS memberId,
+      g.GRADE_NAME     AS grade,
+      m.MEMBER_ENROLL_DATE AS enrollDate,
+      NVL(
+        (SELECT SUM(p.CHANGE_POINT)
+           FROM TB_POINT p
+          WHERE p.MEMBER_NO = m.MEMBER_NO),
+        0
+      ) AS point
+    FROM TB_MEMBER m
+    LEFT JOIN TB_GRADE g
+      ON m.GRADE_NO = g.GRADE_NO
+    WHERE m.MEMBER_NO = #{memberNo}
+  </select>
+	
+	<select id="getMemberByMemberNo" 
+			parameterType="long" 
+			resultType="com.semi.ecoinsight.mypage.model.dto.EditProfileDTO">
+	
+	SELECT
+    	MEMBER_NAME memberName, 
+    	MEMBER_ID memberId, 
+    	MEMBER_PW memberPw,  
+    	MEMBER_PH memberPh, 
+    	MEMBER_NO memberNo, 
+    	EMAIL email 
+  	FROM 
+  		TB_MEMBER
+  	WHERE 
+  		MEMBER_NO = #{memberNo}
+	</select>
+	
+	<update id="editMyProfile"
+          parameterType="com.semi.ecoinsight.mypage.model.dto.EditProfileDTO">
+    UPDATE TB_MEMBER
+       SET MEMBER_NAME = #{memberName},
+           MEMBER_PH   = #{memberPh},
+           EMAIL       = #{email}
+     WHERE MEMBER_NO = #{memberNo}
+  </update>
+	
+	
+	<update id="updatePasswordByMemberId" parameterType="map">
+    UPDATE TB_MEMBER
+       SET MEMBER_PW = #{newPassword}
+     WHERE MEMBER_ID = #{memberId}
+  	</update>
+	
+	
+	<update id="withdrawalMember" parameterType="long">
+	UPDATE 
+		TB_MEMBER 
+	SET 
+		IS_ACTIVE = 'N' 
+	WHERE 
+		MEMBER_NO = ${memberNo}
+	</update>
+	
+	
+	<select id="selectMyPosts" parameterType="long"
+        resultType="com.semi.ecoinsight.mypage.model.dto.MyPostsDTO">
+  SELECT
+    b.BOARD_NO        AS boardNo,
+    b.BOARD_TITLE     AS boardTitle,
+    t.CATEGORY_NAME   AS categoryName,
+    t.CATEGORY_ID     AS categoryId, 
+    TO_CHAR(b.CREATED_DATE,'YYYY-MM-DD') AS createdDate,
+    b.VIEW_COUNT      AS viewCount
+  FROM TB_COMMUNITY_BOARD b
+  LEFT JOIN TB_BOARD_TYPE t
+    ON b.CATEGORY_ID = t.CATEGORY_ID
+  WHERE b.MEMBER_NO = #{memberNo}
+    AND b.IS_DELETED = 'N'
+  ORDER BY b.CREATED_DATE DESC
+</select>
+
+
+	<select id="selectMyAuthPosts"
+          parameterType="long"
+          resultType="com.semi.ecoinsight.mypage.model.dto.MyAuthPostsDTO">
+    SELECT
+      b.BOARD_NO        AS boardNo,
+      b.BOARD_TITLE     AS boardTitle,
+      t.CATEGORY_NAME   AS categoryName,
+      TO_CHAR(b.CREATED_DATE, 'YYYY-MM-DD') AS createdDate,
+      b.VIEW_COUNT      AS viewCount
+    FROM TB_AUTH_BOARD b
+    LEFT JOIN TB_AUTH_TYPE t
+      ON b.CATEGORY_ID = t.CATEGORY_ID
+    WHERE b.MEMBER_NO = #{memberNo}
+      AND b.IS_DELETED = 'N'
+    ORDER BY b.CREATED_DATE DESC
+  	</select>
+	
+	
+	
+	
+</mapper>

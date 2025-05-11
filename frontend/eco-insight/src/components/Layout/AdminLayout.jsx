@@ -1,22 +1,17 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import logo from "../../assets/EcoInsigthLogo2.png";
 import MenuItem from "../Button/MenuItem";
-import { use, useState } from "react";
-
+import { useContext } from "react";
+import { AuthContext } from "../Context/AuthContext";
 
 const AdminLayout = () => {
+  const { auth, logout } = useContext(AuthContext);
   const navi = useNavigate();
-  const [isClicked, setIsClicked] = useState(false);
+  const location = useLocation();
 
   const clickLogout = () => {
-    localStorage.clear();
-    navi("/");
-  }
-
-  const clickMenuItem = (link) => {
-    navi(link);
-
-  }
+    logout();
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -25,25 +20,43 @@ const AdminLayout = () => {
         <img src={logo} alt="EcoInsightLogo" className="h-14 w-auto" />
         <h2 className="text-xl font-bold mb-8 mt-5">관리자 메뉴</h2>
         <ul className="space-y-4 text-gray-700">
-          <MenuItem onClick={() => navi("/admin/dashboard")}>
-            대시보드
-          </MenuItem>
-          <MenuItem onClick={() => navi("/admin/point")}>
+          <MenuItem onClick={() => navi("/admin/dashboard")}>대시보드</MenuItem>
+          <MenuItem
+            onClick={() => navi("/admin/point-manage")}
+            isActive={location.pathname === "/admin/point-manage"}
+          >
             포인트 관리
           </MenuItem>
-          <MenuItem onClick={() => navi("/admin/user")}>
+          <MenuItem
+            onClick={() => navi("/admin/account-manage")}
+            isActive={location.pathname === "/admin/account-manage"}
+          >
             계정 관리
           </MenuItem>
-          <MenuItem onClick={() => navi("/admin/authBoard")}>
+          <MenuItem
+            onClick={() => navi("/admin/authboard-manage")}
+            isActive={location.pathname === "/admin/authboard-manage"}
+          >
             인증 게시물
           </MenuItem>
-          <MenuItem onClick={() => navi("/admin/communityBoard")}>
-            게시글 관리
+          <MenuItem
+            onClick={() => navi("/admin/communityboard-manage")}
+            isActive={location.pathname === "/admin/communityboard-manage"}
+          >
+            커뮤니티 관리
           </MenuItem>
-          <MenuItem onClick={() => navi("/admin/noticeBoard")}>
-            공지사항 작성
+          <MenuItem
+            onClick={() => navi("/admin/noticeboard-manage")}
+            isActive={location.pathname === "/admin/noticeboard-manage"}
+          >
+            공지사항 관리
           </MenuItem>
-          
+          <MenuItem
+            onClick={() => navi("/admin/report-manage")}
+            isActive={location.pathname === "/admin/report-manage"}
+          >
+            신고 관리
+          </MenuItem>
         </ul>
       </aside>
 

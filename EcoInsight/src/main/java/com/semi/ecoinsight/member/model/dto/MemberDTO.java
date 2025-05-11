@@ -14,16 +14,15 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class MemberDTO {
-    private Long MemberNo;
-    private String MemberId;
+    private Long memberNo;
+    private String memberId;
     private String memberPw;
     private String memberName;
     private String email;
     private String memberPh;
-    private String memberSsn;
-    private Date memberEnrollDate;
     private String memberRole;
     private String gradeNo;
-    private char isActive;
+    private Date memberEnrollDate;
     private Date memberUpdateDate;
+    private char isActive;
 };

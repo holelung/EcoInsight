@@ -15,6 +15,7 @@ import com.semi.ecoinsight.member.model.dto.MemberDTO;
 import com.semi.ecoinsight.member.model.dto.UpdatePasswordDTO;
 import com.semi.ecoinsight.member.model.vo.Member;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,41 +30,27 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void signUp(MemberDTO member) {
         MemberDTO searchedMember = mapper.getMemberByMemberId(member.getMemberId());
-        if(searchedMember != null){
+        MemberDTO searchedMemberEmail = mapper.getMemberByEmail(member.getEmail());
+        if(searchedMember != null || searchedMemberEmail != null){
             throw new MemberIdDuplicateException("이미 가입된 아이디입니다.");
         }
         
         Member memberValue = Member.builder()
                                    .memberName(member.getMemberName())
-                                   .memberPw(passwordEncoder.encode(member.getMemberPw()))
+                                   .memberPw(passwordEncoder.encode(member.getMemberPw())) // 패스워드 인코딩 
                                    .memberId(member.getMemberId())
                                    .email(member.getEmail())
                                    .memberPh(member.getMemberPh())
-                                   .memberSsn(member.getMemberSsn())
                                    .memberRole("ROLE_COMMON")
                                    .build();
-        log.info("----------------------------------------------- {}",member);
-        log.info("------------------------------------------------- {}",memberValue);
         mapper.signUp(memberValue);
     }
 
-    @Override
-    public void updatePassword(UpdatePasswordDTO passwordEntity) {
-        Long memberNo = passwordMatches(passwordEntity.getCurrentPassword());
-        String encodedPassword = passwordEncoder.encode(passwordEntity.getNewPassword());
-
-        Map<String, Object> changeRequest = new HashMap();
-        changeRequest.put("memberNo", memberNo);
-        changeRequest.put("encodedPassword", encodedPassword);
-
-        mapper.updatePassword(changeRequest);
-    }
-	private Long passwordMatches(String password){
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		CustomUserDetails user = (CustomUserDetails)auth.getPrincipal();
-		if(!passwordEncoder.matches(password, user.getPassword())){
-			throw new RuntimeException("비밀번호가 일치하지 않습니다.");
-		}
-		return user.getMemberNo();
+	@Override
+	public void updatePassword(@Valid UpdatePasswordDTO passwordEntity) {
+		// TODO Auto-generated method stub
+		
 	}
+
+   
 }

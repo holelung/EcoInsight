@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.semi.ecoinsight.report.model.dao.ReportMapper">
+
+  <insert id="insertCommunityBoardReport"
+          parameterType="com.semi.ecoinsight.report.model.vo.BoardReport">
+    INSERT INTO TB_COMMUNITY_REPORT (
+      REPORT_NO,
+      BOARD_NO,
+      REPORTER,
+      REPORT_CATEGORY_ID,
+      REPORT_CONTENT
+    ) VALUES (
+	  #{reportNo},
+      #{boardNo},
+      #{reporter},
+      #{reportCategoryId},
+      #{reportContent}
+    )
+  </insert>
+
+  <insert id="insertAuthBoardReport"
+          parameterType="com.semi.ecoinsight.report.model.vo.BoardReport">
+    INSERT INTO TB_AUTH_BOARD_REPORT (
+      REPORT_NO,
+      BOARD_NO,
+      REPORTER,
+      REPORT_CATEGORY_ID,
+      REPORT_CONTENT
+    ) VALUES (
+	  #{reportNo},
+      #{boardNo},
+      #{reporter},
+      #{reportCategoryId},
+      #{reportContent}
+    )
+  </insert>
+
+  <insert id="insertCommunityCommentReport"
+          parameterType="com.semi.ecoinsight.report.model.vo.CommentReport">
+    INSERT INTO TB_COMMUNITY_COMMENT_REPORT (
+      COMMENT_REPORT_NO,
+      REPORT_CATEGORY_ID,
+      REPORTER,
+      COMMENT_NO,
+      COMMENT_REPORT_CONTENT
+    ) VALUES (
+	  #{commentReportNo},
+      #{reportCategoryId},
+      #{reporter},
+      #{commentNo},
+      #{commentReportContent}
+    )
+  </insert>
+
+  <insert id="insertAuthCommentReport"
+          parameterType="com.semi.ecoinsight.report.model.vo.CommentReport">
+    INSERT INTO TB_AUTHBOARD_COMMENT_REPORT (
+      COMMENT_REPORT_NO,
+      REPORT_CATEGORY_ID,
+      REPORTER,
+      COMMENT_NO,
+      COMMENT_REPORT_CONTENT
+    ) VALUES (
+	  #{commentReportNo},
+      #{reportCategoryId},
+      #{reporter},
+      #{commentNo},
+      #{commentReportContent}
+    )
+  </insert>
+
+	<select id="findAllReports" resultType="com.semi.ecoinsight.report.model.dto.ReportSummaryDTO">
+  	SELECT *
+  	FROM (
+  	  SELECT
+   	   R.REPORT_NO AS reportNo,
+   	   R.REPORT_CATEGORY_ID AS reportCategoryId,
+   	   R.REPORTER,
+   	  B.BOARD_NO AS boardNo,
+   	   NULL AS commentNo,
+      R.REPORT_CONTENT AS reportContent,
+      B.IS_DELETED AS status,
+      '커뮤니티 게시글' AS reportType
+    FROM TB_COMMUNITY_REPORT R
+    JOIN TB_COMMUNITY_BOARD B ON R.BOARD_NO = B.BOARD_NO
+
+    UNION ALL
+
+    SELECT
+      R.REPORT_NO AS reportNo,
+      R.REPORT_CATEGORY_ID AS reportCategoryId,
+      R.REPORTER,
+      B.BOARD_NO AS boardNo,
+      NULL AS commentNo,
+      R.REPORT_CONTENT AS reportContent,
+      B.IS_DELETED AS status,
+      '인증 게시글' AS reportType
+    FROM TB_AUTH_BOARD_REPORT R
+    JOIN TB_AUTH_BOARD B ON R.BOARD_NO = B.BOARD_NO
+
+    UNION ALL
+
+    SELECT
+      R.COMMENT_REPORT_NO AS reportNo,
+      R.REPORT_CATEGORY_ID AS reportCategoryId,
+      R.REPORTER,
+      NULL AS boardNo,
+      C.COMMENT_NO AS commentNo,
+      R.COMMENT_REPORT_CONTENT AS reportContent,
+      C.IS_DELETED AS status,
+      '커뮤니티 댓글' AS reportType
+    FROM TB_COMMUNITY_COMMENT_REPORT R
+    JOIN TB_COMMUNITY_COMMENT C ON R.COMMENT_NO = C.COMMENT_NO
+
+    UNION ALL
+
+    SELECT
+      R.COMMENT_REPORT_NO AS reportNo,
+      R.REPORT_CATEGORY_ID AS reportCategoryId,
+      R.REPORTER,
+      NULL AS boardNo,
+      C.COMMENT_NO AS commentNo,
+      R.COMMENT_REPORT_CONTENT AS reportContent,
+      C.IS_DELETED AS status,
+      '인증 댓글' AS reportType
+  	  FROM TB_AUTH_BOARD_COMMENT_REPORT R
+ 	   JOIN TB_AUTH_COMMENT C ON R.COMMENT_NO = C.COMMENT_NO
+ 	 )
+  	ORDER BY reportNo DESC
+	</select>
+
+</mapper>

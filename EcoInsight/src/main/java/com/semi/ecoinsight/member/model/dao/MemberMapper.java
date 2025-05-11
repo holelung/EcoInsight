@@ -9,9 +9,10 @@ import com.semi.ecoinsight.member.model.vo.Member;
 
 @Mapper
 public interface MemberMapper {
-    MemberDTO getMemberByMemberId(String MemberId);
-
+    MemberDTO getMemberByMemberId(String memberId);
+    MemberDTO getMemberByEmail(String email);
     int signUp(Member member);
 
     void updatePassword(Map<String, Object> passwordEntity);
+
 }

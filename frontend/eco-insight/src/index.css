@@ -1,9 +1,22 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
+  --color-main: #b9ff66;
+  --color-sub: #191a23;
+  --color-button1: #f3f3f3;
+}
+.ProseMirror:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
 
-  --color-main: #B9FF66;
-  --color-sub: #191A23;
-  --color-button1: #F3F3F3;
+/* index.css or 글로벌 스타일 */
+.ProseMirror table {
+  @apply w-full border-collapse;
+}
+.ProseMirror th,
+.ProseMirror td {
+  @apply border border-gray-300 p-2 text-left;
 }
 

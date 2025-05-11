@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.semi.ecoinsight.auth.model.dao.AuthMapper">
+    <select id="checkEmail">
+        SELECT
+            MEMBER_NO AS memberNo,
+            MEMBER_ID AS username,
+            MEMBER_NAME AS memberName,
+            EMAIL AS email,
+            MEMBER_ROLE AS memberRole,
+            IS_ACTIVE AS isActive
+        FROM
+            TB_MEMBER
+        WHERE
+            EMAIL = #{email}
+    </select>
+    <insert id="sendCodeEmail">
+        INSERT INTO 
+            TB_EMAIL_VERIFY_CODE(
+                EMAIL, VERIFY_CODE
+            ) VALUES(
+                #{email}, #{verifyCode}
+            )
+    </insert>
+    <select id="checkVerifyCode">
+    SELECT
+        VERIFY_CODE_NO   AS verifyCodeNo,
+        EMAIL            AS email,
+        VERIFY_CODE      AS verifyCode,
+        CREATE_DATE      AS createDate
+    FROM TB_EMAIL_VERIFY_CODE
+    WHERE VERIFY_CODE = #{verifyCode}
+        AND EMAIL       = #{email}
+    ORDER BY CREATE_DATE DESC
+    FETCH FIRST 1 ROWS ONLY
+    </select>
+</mapper>

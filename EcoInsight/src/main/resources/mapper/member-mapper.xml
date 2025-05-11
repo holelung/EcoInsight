@@ -13,7 +13,6 @@
             MEMBER_NAME memberName,
             EMAIL email,
             MEMBER_PH memberPh,
-            MEMBER_SSN memberSsn,
             MEMBER_ENROLL_DATE memberEnrollDate,
             MEMBER_ROLE memberRole,
             GRADE_NO gradeNo,
@@ -24,7 +23,7 @@
         WHERE
             MEMBER_ID = #{memberId}
     </select>
-
+    
     <insert id="signUp"
             parameterType="Member">
         INSERT INTO TB_MEMBER(
@@ -33,7 +32,6 @@
             MEMBER_ID,
             EMAIL,
             MEMBER_PH,
-            MEMBER_SSN,
             MEMBER_ROLE
         )
         VALUES(
@@ -42,7 +40,6 @@
             #{memberId},
             #{email},
             #{memberPh},
-            #{memberSsn},
             #{memberRole}
         )
     </insert>
@@ -57,4 +54,25 @@
         MEMBER_NO = #{memberNo}
 
     </update>
+
+    <select id="getMemberByEmail"
+            parameterType="string"
+            resultType="MemberDTO">
+        SELECT
+            MEMBER_NO memberNo,
+            MEMBER_ID memberId,
+            MEMBER_PW memberPw,
+            MEMBER_NAME memberName,
+            EMAIL email,
+            MEMBER_PH memberPh,
+            MEMBER_ENROLL_DATE memberEnrollDate,
+            MEMBER_ROLE memberRole,
+            GRADE_NO gradeNo,
+            IS_ACTIVE isActive,
+            MEMBER_UPDATE_DATE memberUpdateDate
+        FROM
+            TB_MEMBER
+        WHERE
+            EMAIL = #{email}
+    </select>
 </mapper>

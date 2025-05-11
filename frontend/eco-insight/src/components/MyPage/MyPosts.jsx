@@ -1,52 +1,129 @@
-import React from 'react';
+// src/frontend/src/components/MyPage/MyPosts.jsx
+import { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../Context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Pagination from '../Pagination/Pagination'; // ✅ 페이지네이션 컴포넌트 import
 
-function Myposts() {
-  // 예시 데이터 (실제 데이터는 API 등에서 받아올 수 있음)
-  const posts = [
-    { id: 1, title: '오늘 ~~~ 한 날이었어요', author: '20xx.xx.xx', date: '2025-04-15', views: 999 },
-    { id: 2, title: '자유 게시판 테스트', author: '20xx.xx.xx', date: '2025-04-14', views: 555 },
-    { id: 3, title: '환경사랑 녹색 캠페인 참여', author: '20xx.xx.xx', date: '2025-04-13', views: 123 },
-    { id: 4, title: '배출가스 줄이기 운동, 동참하세요!', author: '20xx.xx.xx', date: '2025-04-12', views: 88 },
-  ];
+export default function MyPosts() {
+  const navi = useNavigate();
+  const { auth } = useContext(AuthContext);
 
-  const handleRowClick = (postId) => {
-    // 게시글 상세 페이지로 이동하는 로직을 추가할 수 있음
-    console.log(`게시글 ${postId} 클릭`);
-  };
+  const PAGE_SIZE = 6;
+  const [posts, setPosts] = useState([]);
+  const [categoryFilter, setCategoryFilter] = useState('전체');
+  const [keyword, setKeyword] = useState('');
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0); // ✅ 현재 페이지 상태
+
+  useEffect(() => {
+    if (!auth.isAuthenticated) {
+      navi('/login', { replace: true });
+      return;
+    }
+    if (!auth.tokens.accessToken) return;
+
+    setLoading(true);
+    axios.get('http://localhost/mypage/myposts', {
+      headers: { Authorization: `Bearer ${auth.tokens.accessToken}` }
+    })
+    .then(({ data }) => {
+      setPosts(data.map(item => ({
+        id: item.boardNo,
+        categoryId: item.categoryId,
+        category: item.categoryName,
+        title: item.boardTitle,
+        date: item.createdDate,
+        views: item.viewCount
+      })));
+    })
+    .catch(err => {
+      console.error('내 게시글 조회 실패:', err);
+      setError('내 게시글을 불러오는 데 실패했습니다.');
+    })
+    .finally(() => setLoading(false));
+  }, [auth.isAuthenticated, auth.tokens.accessToken, navi]);
+
+  if (!auth.isAuthenticated) return <div className="p-8 text-center">로그인 정보 확인 중…</div>;
+  if (loading) return <div className="p-8 text-center">내 게시글을 불러오는 중…</div>;
+  if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
+
+  const categories = ['전체', ...new Set(posts.map(p => p.category))];
+  const filtered = posts.filter(p =>
+    (categoryFilter === '전체' || p.category === categoryFilter) &&
+    p.title.includes(keyword)
+  );
+
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const startIdx = currentPage * PAGE_SIZE;
+  const displayed = filtered.slice(startIdx, startIdx + PAGE_SIZE);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 text-gray-900">
-      <div className="w-11/12 max-w-5xl bg-white shadow-md rounded-md p-8">
-        <h2 className="text-2xl font-semibold mb-6">내 게시글</h2>
-        <table className="w-full border-collapse text-sm md:text-base">
+    <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center items-start p-8">
+      <div className="w-full max-w-5xl bg-white rounded shadow p-6">
+        <h2 className="text-2xl font-semibold mb-4">내가 작성한 게시글</h2>
+
+        {/* 필터 바 */}
+        <div className="flex justify-between items-center mb-6 space-x-4">
+          <select
+            value={categoryFilter}
+            onChange={e => { setCategoryFilter(e.target.value); setCurrentPage(0); }}
+            className="border px-3 py-2 rounded"
+          >
+            {categories.map(c => <option key={c} value={c}>{c}</option>)}
+          </select>
+          <input
+            type="text"
+            placeholder="제목 검색"
+            value={keyword}
+            onChange={e => { setKeyword(e.target.value); setCurrentPage(0); }}
+            className="border px-3 py-2 rounded flex-1"
+          />
+        </div>
+
+        {/* 게시글 테이블 */}
+        <table className="w-full text-center border-collapse">
           <thead>
-            <tr className="bg-gray-200 text-gray-700">
-              <th className="py-3 px-4 border-b">No</th>
-              <th className="py-3 px-4 border-b">게시물명</th>
-              <th className="py-3 px-4 border-b">작성자</th>
-              <th className="py-3 px-4 border-b">등록일</th>
-              <th className="py-3 px-4 border-b">조회수</th>
+            <tr>
+              <th className="border px-4 py-2">No</th>
+              <th className="border px-4 py-2">제목</th>
+              <th className="border px-4 py-2">카테고리</th>
+              <th className="border px-4 py-2">등록일</th>
+              <th className="border px-4 py-2">조회수</th>
             </tr>
           </thead>
           <tbody>
-            {posts.map((post, index) => (
+            {displayed.map((p, i) => (
               <tr
-                key={post.id}
-                onClick={() => handleRowClick(post.id)}
-                className="cursor-pointer hover:bg-gray-100 transition-colors"
+                key={p.id}
+                className="cursor-pointer hover:bg-gray-100"
+                onClick={() => navi(`/post/${p.categoryId}/${p.id}`)}
               >
-                <td className="py-2 px-4 border-b text-center">{index + 1}</td>
-                <td className="py-2 px-4 border-b text-left">{post.title}</td>
-                <td className="py-2 px-4 border-b text-center">{post.author}</td>
-                <td className="py-2 px-4 border-b text-center">{post.date}</td>
-                <td className="py-2 px-4 border-b text-center">{post.views}</td>
+                <td className="border px-4 py-2">{startIdx + i + 1}</td>
+                <td className="border px-4 py-2">{p.title}</td>
+                <td className="border px-4 py-2">{p.category}</td>
+                <td className="border px-4 py-2">{p.date}</td>
+                <td className="border px-4 py-2">{p.views}</td>
               </tr>
             ))}
+            {displayed.length === 0 && (
+              <tr>
+                <td colSpan="5" className="py-4 text-gray-500">작성된 게시글이 없습니다.</td>
+              </tr>
+            )}
           </tbody>
         </table>
+
+        {/* 페이지네이션 */}
+        
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+        
       </div>
     </div>
   );
 }
-
-export default Myposts;
