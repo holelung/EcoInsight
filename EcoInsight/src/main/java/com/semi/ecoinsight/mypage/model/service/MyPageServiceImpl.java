@@ -19,6 +19,7 @@ import com.semi.ecoinsight.member.model.dto.MemberDTO;
 import com.semi.ecoinsight.mypage.model.dao.MyPageMapper;
 import com.semi.ecoinsight.mypage.model.dto.ChangePasswordDTO;
 import com.semi.ecoinsight.mypage.model.dto.EditProfileDTO;
+import com.semi.ecoinsight.mypage.model.dto.MyAuthPostsDTO;
 import com.semi.ecoinsight.mypage.model.dto.MyPageDTO;
 import com.semi.ecoinsight.mypage.model.dto.MyPostsDTO;
 import com.semi.ecoinsight.token.model.service.TokenService;
@@ -125,6 +126,13 @@ public class MyPageServiceImpl implements MyPageService {
     }
 	
 	
+	
+	@Override
+    public List<MyAuthPostsDTO> selectMyAuthPosts() {
+        CustomUserDetails user = (CustomUserDetails)
+            SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return myPageMapper.selectMyAuthPosts(user.getMemberNo());
+    }
 	
 	
 	

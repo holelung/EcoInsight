@@ -82,6 +82,24 @@
     AND b.IS_DELETED = 'N'
   ORDER BY b.CREATED_DATE DESC
 </select>
+
+
+	<select id="selectMyAuthPosts"
+          parameterType="long"
+          resultType="com.semi.ecoinsight.mypage.model.dto.MyAuthPostsDTO">
+    SELECT
+      b.BOARD_NO        AS boardNo,
+      b.BOARD_TITLE     AS boardTitle,
+      t.CATEGORY_NAME   AS categoryName,
+      TO_CHAR(b.CREATED_DATE, 'YYYY-MM-DD') AS createdDate,
+      b.VIEW_COUNT      AS viewCount
+    FROM TB_AUTH_BOARD b
+    LEFT JOIN TB_AUTH_TYPE t
+      ON b.CATEGORY_ID = t.CATEGORY_ID
+    WHERE b.MEMBER_NO = #{memberNo}
+      AND b.IS_DELETED = 'N'
+    ORDER BY b.CREATED_DATE DESC
+  	</select>
 	
 	
 	
