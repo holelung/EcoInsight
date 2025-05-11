@@ -55,6 +55,7 @@ export const AuthProvider = ({ children }) => {
     setAuth({
       loginInfo: {},
       tokens: {},
+      isLoading: true,
       isAuthenticated: false,
       googleLoginState: false,
     });

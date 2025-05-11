@@ -42,6 +42,7 @@ const Login = () => {
         if (response.status === 200) {
           if (response.data.loginInfo.isActive === 'N') {
             alert("비활성화된 계정이거나 정지된 계정입니다.");
+            return;
           }
           login(response.data.loginInfo, response.data.tokens);
           navigate("/");

@@ -76,7 +76,7 @@ const FindIdPage = () => {
               {/* 이메일 */}
               <div className="flex items-center space-x-4">
                 <div className="flex-1">
-                  <label className="block mb-1 text-gray-700">이메일 주소</label>
+                  <label className="block mb-1 text-gray-700">이메일</label>
                   <input
                     type="email"
                     value={email}
@@ -88,7 +88,7 @@ const FindIdPage = () => {
                 <button
                   type="button"
                   onClick={handleSendCode}
-                  className={`h-12 px-4 rounded-lg text-white ${
+                  className={`h-12 px-4 mt-7 rounded-lg text-white ${
                     isCodeSent ? 'bg-gray-400' : 'bg-lime-400 hover:bg-green-500'
                   }`}
                 >
@@ -111,7 +111,7 @@ const FindIdPage = () => {
                 <button
                   type="button"
                   onClick={handleVerifyCode}
-                  className={`h-12 px-4 rounded-lg text-white ${
+                  className={`h-12 px-4 rounded-lg mt-7 text-white ${
                     isCodeVerified ? 'bg-gray-400' : 'bg-lime-400 hover:bg-green-500'
                   }`}
                 >
