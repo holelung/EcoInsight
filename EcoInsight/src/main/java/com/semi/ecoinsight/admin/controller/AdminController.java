@@ -44,7 +44,6 @@ public class AdminController {
     // 공지사항
     @PostMapping("/notice-write")
     public ResponseEntity<HttpStatus> noticeWrite(@RequestBody @Valid WriteFormDTO writeForm) {
-        log.info("이얏호:{}", writeForm);
         adminService.insertNotice(writeForm);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
