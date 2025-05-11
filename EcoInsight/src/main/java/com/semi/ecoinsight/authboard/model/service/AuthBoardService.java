@@ -12,7 +12,7 @@ public interface AuthBoardService {
 	Map<String,Object> selectAuthBoardList(int pageNo, int size, String search, String searchType,
             String sortOrder, String categoryId);
 
-	BoardDTO selectAuthBoardDetail(Long boardNo);
+	BoardDTO selectAuthBoardDetail(Long boardNo, String categoryId);
 	
 	void insertAuthBoard(WriteFormDTO form);
 	void deleteAuthBoard(Long boardNo);
