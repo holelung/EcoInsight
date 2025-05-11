@@ -45,6 +45,8 @@ import CommunityBoardModify from "./components/Board/Community/CommunityBoardMod
 import ReportManagementPage from "./pages/Admin/ReportManagementPage/ReportManagementPage.jsx";
 import PointDetailPage from "./pages/Admin/PointManagementPage/PointDetailPage.jsx";
 import AuthBoardModify from "./components/Board/AuthBoard/AuthBoardModify.jsx";
+import MyAuthPosts from "./components/MyPage/MyAuthPosts";
+
 
 function App() {
   return (
@@ -93,6 +95,7 @@ function App() {
             }
           >
             <Route path="/mypage" element={<MyPage />} />
+            <Route path="/mypage/myauthposts" element={<MyAuthPosts />} />
             <Route path="/mypage/myposts" element={<Myposts />} />
             <Route path="/mypage/editprofile" element={<EditProfile />} />
             <Route path="/mypage/changepassword" element={<ChangePassword />} />
