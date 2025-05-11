@@ -20,7 +20,8 @@ public class CommentDTO {
 	private String commentContent;
 	private Long parentCommentNo;
 	private Date createdDate;
-    private Date modifiedDate;
-    private String isDeleted;
+  private Date modifiedDate;
+  private String isDeleted;
+	
 
 }
