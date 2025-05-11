@@ -32,9 +32,6 @@ const NoticeBoard = () => {
   }, [currentPage, rowsPerPage, category, totalPages]);
   
 
-
-  let filteredList = list;
-
   const clickCategoryBtn = (item) => {
     setCategory(item);
     setCurrentPage(0);
@@ -77,7 +74,7 @@ const NoticeBoard = () => {
         <div>조회</div>
       </div>
 
-      {filteredList.map((post, index) => (
+      {list.map((post, index) => (
         <div
           key={post.boardNo}
           className="grid grid-cols-6 border-b text-sm py-2 text-center hover:bg-gray-50"
