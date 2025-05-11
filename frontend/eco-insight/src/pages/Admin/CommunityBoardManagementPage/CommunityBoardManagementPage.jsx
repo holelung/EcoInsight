@@ -202,7 +202,7 @@ const CommunityBoardManagementPage = () => {
                 <td>{item.memberName}</td>
                 <td
                   className="cursor-pointer"
-                  onClick={() => navi(`/post/${item.boardNo}`)}
+                  onClick={() => navi(`/post/${item.categoryId}/${item.boardNo}`)}
                 >
                   {item.boardTitle}
                 </td>

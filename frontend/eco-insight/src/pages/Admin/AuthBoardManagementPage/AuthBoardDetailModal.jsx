@@ -27,7 +27,7 @@ const customStyles = {
   },
 };
 
-const AuthBoardDetailModal = ({ isOpen, onRequestClose, boardNo, listState, setListState }) => {
+const AuthBoardDetailModal = ({ isOpen, onRequestClose, boardNo, listState, setListState, categoryId }) => {
   const { auth } = useContext(AuthContext);
   const [board, setBoard] = useState({});
   
@@ -37,6 +37,7 @@ const AuthBoardDetailModal = ({ isOpen, onRequestClose, boardNo, listState, setL
       .get(`http://localhost/auth-boards/detail`, {
         params: {
           boardNo: boardNo,
+          categoryId: categoryId,
         },
       })
       .then((response) => {
@@ -94,13 +95,14 @@ const AuthBoardDetailModal = ({ isOpen, onRequestClose, boardNo, listState, setL
             <p>
               <strong>게시글 번호:</strong> {board.boardNo}
             </p>
-            <p>
+            <div>
               <strong>글 내용:</strong>
               <br />
               <p
                 className="whitespace-pre-wrap"
-                dangerouslySetInnerHTML={{ __html: board.boardContent }}></p>
-            </p>
+                dangerouslySetInnerHTML={{ __html: board.boardContent }}>
+              </p>
+            </div>
             <p>
               <strong>현재 상태:</strong>{" "}
               {board.isCertified === "Y" ? "처리완료" : "미처리"}

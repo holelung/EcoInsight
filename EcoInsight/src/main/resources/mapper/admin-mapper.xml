@@ -334,7 +334,8 @@
             MEMBER_NO = #{memberNo}        
     </update>
 
-    <insert id="insertBanList" parameterType="com.semi.ecoinsight.admin.model.dto.BanDTO">
+    <insert id="insertBanList" 
+            parameterType="com.semi.ecoinsight.admin.model.dto.BanDTO">
         INSERT
         INTO
             TB_BANLIST(
