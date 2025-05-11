@@ -129,7 +129,6 @@ function App() {
               </AdminRoute>
             }
           >
-            <Route index element={<Navigate to="dashboard" replace /> } />
             <Route path="dashboard" element={<AdminDashBoard />} />
             <Route path="point-manage" element={<PointManagementPage />} />
             <Route
