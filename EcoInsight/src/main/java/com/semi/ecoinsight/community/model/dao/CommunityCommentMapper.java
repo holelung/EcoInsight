@@ -6,12 +6,13 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.semi.ecoinsight.comment.model.dto.CommentDTO;
+import com.semi.ecoinsight.comment.model.vo.Comment;
 
 @Mapper
 public interface CommunityCommentMapper {
 
 	// 댓글 쓰기
-	void insertCommunityComment(CommentDTO comment);
+	void insertCommunityComment(Comment data);
 	
 	// 댓글 목록
 	List<CommentDTO> findCommunityCommentList(Long boardNo);
