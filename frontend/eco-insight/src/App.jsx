@@ -69,7 +69,7 @@ function App() {
             />
             {/* 인증게시판 */}
             <Route path="/auth-board" element={<AuthListPage />} />
-            <Route path="/auth-board/:no" element={<AuthBoardDetail />} />
+            <Route path="/auth-board/:categoryId/:no" element={<AuthBoardDetail />} />
             <Route path="/auth-board/write" element={<AuthBoardWritePage />} />
             <Route
               path="/auth-board/modify/:boardNo"
