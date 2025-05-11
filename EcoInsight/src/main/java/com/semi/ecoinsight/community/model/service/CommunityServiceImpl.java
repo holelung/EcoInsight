@@ -14,6 +14,8 @@ import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.auth.model.service.AuthService;
 import com.semi.ecoinsight.board.model.dao.BoardMapper;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
+import com.semi.ecoinsight.board.model.service.BoardService;
+import com.semi.ecoinsight.board.model.service.BoardServiceImpl;
 import com.semi.ecoinsight.board.model.vo.Attachment;
 import com.semi.ecoinsight.board.model.vo.Board;
 import com.semi.ecoinsight.comment.model.dto.CommentDTO;
@@ -39,7 +41,8 @@ public class CommunityServiceImpl implements CommunityService{
 	private final BoardMapper boardMapper;
 	private final CommunityCommentMapper communityCommentMapper;
 	private final AuthService authService;
-	
+	private final BoardService boardService;
+
 	@Override
 	public void insertCommunityBoard(WriteFormDTO form) {
 
@@ -105,7 +108,11 @@ public class CommunityServiceImpl implements CommunityService{
 		
 		Map<String, Object> resultMap = new HashMap<>();
 		resultMap.put("board", board);
-		
+		boardService.insertViewCount(boardNo, categoryId);
+		// "C0001", "C0002", "C0003"
+		//C0001 = free
+		//C0002 = qna
+		//C0003 = tips
 		 	
 		return resultMap;
 	}
@@ -129,14 +136,15 @@ public class CommunityServiceImpl implements CommunityService{
 
 	@Override
 	public void deleteCommunity(Map<String, Long> deleteMap) {
-	
-		Long boardNo = Long.parseLong(deleteMap.get("boardNo").toString());
-        Long memberNo = Long.parseLong(deleteMap.get("memberNo").toString());
 
-        Long writerNo = communityMapper.getWriterMemberNo(boardNo);
+	
+		Long boardNo = deleteMap.get("boardNo");
+    Long memberNo = deleteMap.get("memberNo");
+
+    Long writerNo = communityMapper.getWriterMemberNo(boardNo);
  
 
-        if (writerNo.longValue() != memberNo.longValue()) {
+        if (!writerNo.equals(memberNo)) {
             throw new CommunityAccessException("삭제 권한이 없습니다.");
         }
 
