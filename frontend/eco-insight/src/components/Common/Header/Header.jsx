@@ -10,7 +10,7 @@ const Header = () => {
   const [subNav, setSubNav] = useState(false);
 
   const clickBoardItem = () => {
-    navi("/auth-board/cert");
+    navi("/auth-board");
     setSubNav(!subNav);
   };
 
@@ -59,12 +59,22 @@ const Header = () => {
               </>
             ) : (
               <>
-                <button
-                  className="px-4 py-2 rounded-lg bg-main"
-                  onClick={() => navi("/mypage")}
-                >
-                  마이페이지
-                </button>
+                {auth.loginInfo.memberRole === "ROLE_COMMON" ? (
+                  <button
+                    className="px-4 py-2 rounded-lg bg-main"
+                    onClick={() => navi("/mypage")}
+                  >
+                    마이페이지
+                  </button>
+                ) : (
+                  <button
+                    className="px-4 py-2 rounded-lg bg-main"
+                    onClick={() => navi("/admin")}
+                  >
+                    관리자 페이지
+                  </button>
+                )}
+
                 <button
                   className="px-4 py-2 rounded-lg bg-sub text-white"
                   onClick={logout}
@@ -83,7 +93,7 @@ const Header = () => {
               <ul className="flex space-x-4 text-gray-600">
                 <li
                   className="cursor-pointer hover:text-green-600"
-                  onClick={() => navi("/auth-board/cert")}
+                  onClick={() => navi("/auth-board")}
                 >
                   인증게시판
                 </li>

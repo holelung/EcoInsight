@@ -221,58 +221,6 @@
 			   BOARD_NO = #{boardNo} 
 	</select>
 	
-	<!--댓글 쓰기-->
-	<insert id="insertCommunityComment" parameterType="com.semi.ecoinsight.comment.model.vo.Comment">
-		INSERT
-		  INTO
-		  	   TB_COMMUNITY_COMMENT
-		  	   (
-			    BOARD_NO
-			  , MEMBER_NO
-			  , COMMENT_CONTENT
-			  , PARENT_COMMENT_NO	
-			    )
-		VALUES 
-	    	 (
-			    #{boardNo}
-			  , #{memberNo}	
-			  , #{commentContent}
-			  , #{parentCommentNo}
-			 )  	   
-	</insert>
 	
-	<!--댓글 조회-->
-	<select id="commentCount" resultType="com.semi.ecoinsight.comment.model.dto.CommentDTO" >
-		SELECT
-			   COUNT(*)
-		  FROM
-		  	   TB_COMMUNITY_COMMENT
-		 WHERE
-		 	   BOARD_NO = #{baordNo}
-		   AND
-		   	   IS_DELETD = 'N' 	   
-	</select>
-	
-	<!--댓글 수정하기-->
-	<update id="updateComment" parameterType="long">
-		UPDATE 
-			   TB_COMMUNITY_COMMENT
-		   SET	   								
-			   COMMENT_CONTENT = #{commentContent}
-			 , PARENT_COMMENT_NO = #{parentCommentNo}
-		     , MODIFIED_DATE = SYSDATE		
-		 WHERE
-		 	   COMMENT_NO = #{commentNo}
-	</update>
-	
-	<!--댓글 삭제하기-->
-	<update id="deleteComment" parameterType="long">
-		UPDATE
-	           TB_COMMUNITY_COMMENT
-	       SET
-	           IS_DELETED ='Y'  		
-	     WHERE
-	       	   COMMENT_NO = #{commentNo}
-	</update>
 		
 </mapper>
