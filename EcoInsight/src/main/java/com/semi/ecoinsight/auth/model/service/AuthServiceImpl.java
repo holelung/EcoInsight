@@ -94,7 +94,6 @@ public class AuthServiceImpl implements AuthService{
   }
 
   private void sendCodeEmail(String email){
-    log.info("!!!!!!!!!!!!!!!!!{}", email);
     int verifyCode = verifyCodeCreate();
     MimeMessage message = sender.createMimeMessage();
     try{
