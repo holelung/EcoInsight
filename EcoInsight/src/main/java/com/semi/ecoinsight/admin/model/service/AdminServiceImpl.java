@@ -325,6 +325,7 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
+    // 포인트관리 
     @Override
     public Map<String, Object> selectPointList(int pageNo, int size, String search, String searchType,
             String sortOrder) {

@@ -11,4 +11,5 @@ public class ReportSummaryDTO {
     private Long commentNo;
     private String reportContent;
     private String reportType;
+    private String isDeleted;
 }

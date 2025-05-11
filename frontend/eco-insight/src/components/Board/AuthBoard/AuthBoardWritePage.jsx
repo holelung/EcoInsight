@@ -15,11 +15,11 @@ const AuthBoardWritePage = () => {
   const boardType = "auth";
 
   useEffect(() => {
-    if (!auth.isAuthenticated) {
+    if (!auth.isLoading &&!auth.isAuthenticated) {
       alert("로그인이 필요한 서비스입니다.");
       navi("/login");
     }
-  }, [auth, navi]);
+  }, [auth.isAuthenticated]);
 
   const handleUpload = () => {
     if (!title || !content) {
