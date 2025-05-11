@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.semi.ecoinsight.mypage.model.dto.ChangePasswordDTO;
 import com.semi.ecoinsight.mypage.model.dto.EditProfileDTO;
+import com.semi.ecoinsight.mypage.model.dto.MyAuthPostsDTO;
 import com.semi.ecoinsight.mypage.model.dto.MyPageDTO;
 import com.semi.ecoinsight.mypage.model.dto.MyPostsDTO;
 import com.semi.ecoinsight.mypage.model.dto.WithdrawalDTO;
@@ -80,4 +81,14 @@ public class MyPageController {
         myPageService.withdrawal(dto.getCurrentPassword());
         return ResponseEntity.noContent().build();
     }
+    
+    
+    // 인증게시판 글 조회
+    @GetMapping("/myauthposts")
+    public ResponseEntity<List<MyAuthPostsDTO>> getMyAuthPosts() {
+        List<MyAuthPostsDTO> list = myPageService.selectMyAuthPosts();
+        return ResponseEntity.ok(list);
+    }
+    
+    
 }
