@@ -5,6 +5,7 @@ import java.util.List;
 import com.semi.ecoinsight.member.model.dto.MemberDTO;
 import com.semi.ecoinsight.mypage.model.dto.ChangePasswordDTO;
 import com.semi.ecoinsight.mypage.model.dto.EditProfileDTO;
+import com.semi.ecoinsight.mypage.model.dto.MyAuthPostsDTO;
 import com.semi.ecoinsight.mypage.model.dto.MyPageDTO;
 import com.semi.ecoinsight.mypage.model.dto.MyPostsDTO;
 
@@ -26,5 +27,7 @@ public interface MyPageService {
     // 커뮤니티 게시글 조회
     List<MyPostsDTO> selectMyPosts();
     
+    // 인증게시판 조회
+    List<MyAuthPostsDTO> selectMyAuthPosts();
     
 }

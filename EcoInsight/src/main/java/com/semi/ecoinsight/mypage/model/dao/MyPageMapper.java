@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.semi.ecoinsight.mypage.model.dto.ChangePasswordDTO;
 import com.semi.ecoinsight.mypage.model.dto.EditProfileDTO;
+import com.semi.ecoinsight.mypage.model.dto.MyAuthPostsDTO;
 import com.semi.ecoinsight.mypage.model.dto.MyPageDTO;
 import com.semi.ecoinsight.mypage.model.dto.MyPostsDTO;
 
@@ -30,6 +31,9 @@ public interface MyPageMapper {
     List<MyPostsDTO> selectMyPosts(Long memberNo);
     
 	EditProfileDTO getMemberByMemberNo(Long memberNo);
+	
+	//인증게시판 조회
+	List<MyAuthPostsDTO> selectMyAuthPosts(Long memberNo);
 
 }
 
