@@ -84,6 +84,12 @@ export default function MyPage() {
           >
             내가 작성한 게시글 조회
           </button>
+          <button
+            onClick={() => navi('/mypage/myauthposts')}
+            className="px-4 py-2 bg-lime-400 text-white rounded-lg shadow hover:bg-green-600 transition-colors"
+          >
+            내 인증 내역
+          </button>
           {/* 구글 로그인 유저는 비밀번호 변경버튼 숨겨버리기~ */}
           {!googleLoginState ? ( /* 삼항연산자 사용! */
             <button
