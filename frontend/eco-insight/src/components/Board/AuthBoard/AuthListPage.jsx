@@ -94,8 +94,15 @@ const AuthListPage = () => {
                 navi(`/auth-board/${board.categoryId}/${board.boardNo}`, { state: { post: board } })
               }
             >
-              <div className="bg-blue-100 flex items-center justify-center h-40">
-                이미지
+              <div className="bg-blue-50 flex items-center justify-center h-40">
+                <img
+                  src={
+                    board.imageUrl
+                      ? board.imageUrl
+                      : "https://placehold.co/1000x600?text=No+Image"
+                  }
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div className="px-4 py-2 border-t text-center text-sm text-blue-800 font-semibold">
                 {board.boardTitle}

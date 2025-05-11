@@ -16,6 +16,11 @@ const CommunityBoardModify = () => {
   const imageFilesRef = useRef([]);
 
   const boardType = "community";
+  const boardNames = {
+    C0001: "자유 게시판",
+    C0002: "질문 게시판",
+    C0003: "팁 게시판",
+  };
 
   useEffect(() => {
     if (auth.loginInfo.username !== communityBoard.memberId) {
@@ -95,7 +100,7 @@ const CommunityBoardModify = () => {
   return (
     <>
       <div className="max-w-5xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md">
-        <div className="text-xl mb-3 p-2">공지사항 작성</div>
+        <div className="text-xl mb-3 p-2">{boardNames[categoryId]} 작성</div>
         {/* 제목 입력 */}
         <input
           value={title}

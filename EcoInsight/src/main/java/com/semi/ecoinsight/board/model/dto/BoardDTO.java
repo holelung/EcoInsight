@@ -34,4 +34,6 @@ public class BoardDTO {
     private String memberName;
     // 좋아요 수
     private Long likeCount;
+    // 이미지 URL
+    private String imageUrl;
 }

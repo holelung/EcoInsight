@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Pagination from "../../Pagination/Pagination";
 import axios from "axios";
 
@@ -11,6 +11,7 @@ const CommunityListPage = () => {
   const [posts, setPosts] = useState([]);
   const postsPerPage = 10;
 
+  const navi = useNavigate();
   const boardNames = {
     free: "자유게시판",
     qna: "질문 게시판",
@@ -135,13 +136,11 @@ const CommunityListPage = () => {
         >
           <div>{data.boardNo}</div>
           <div>{data.memberName}</div>
-          <div className="col-span-2 text-left">
-            <Link
-              to={`/post/${categoryId}/${data.boardNo}`} // ✅ categoryId 추가
-              className="text-black hover:underline"
-            >
-              {data.boardTitle}
-            </Link>
+          <div
+            className="col-span-2 text-left"
+            onClick={() => navi(`/post/${categoryId}/${data.boardNo}`)}
+          >
+            {data.boardTitle}
           </div>
           <div>{data.createdDate?.substring(0, 10)}</div>
           <div>{data.viewCount || 0}</div>
@@ -149,12 +148,12 @@ const CommunityListPage = () => {
         </div>
       ))}
 
-      {/* 페이지네이션
+
       <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={handlePageChange}
-      /> */}
+      /> 
     </div>
   );
 };

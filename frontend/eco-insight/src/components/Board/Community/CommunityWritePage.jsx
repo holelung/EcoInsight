@@ -34,14 +34,6 @@ const CommunityWritePage = () => {
     }
   }, [type]);
 
-  const boardNames = {
-    free: "자유게시판",
-    qna: "질문 게시판",
-    tips: "팁 게시판",
-  };
-
-  const boardName = boardNames[type] || "게시판";
-
   const handleUpload = async () => {
     if (!title || !content) {
       alert("제목과 내용을 모두 입력해주세요!");

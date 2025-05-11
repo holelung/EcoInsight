@@ -24,7 +24,18 @@
                     TB_AUTH_RECOMMEND R
                 WHERE
                     R.BOARD_NO = A.BOARD_NO
-            )AS likeCount
+            )AS likeCount,
+			(
+				SELECT
+					NVL(ATTACHMENT_ITEM, '')
+				FROM
+					TB_AUTH_ATTACHMENT_IMG I
+				WHERE
+					I.BOARD_NO = A.BOARD_NO
+				ORDER BY
+					ATTACHMENT_NO DESC
+				FETCH FIRST 1 ROWS ONLY
+			)AS imageUrl
         FROM
             TB_AUTH_BOARD A
         JOIN
@@ -57,7 +68,18 @@
                     TB_AUTH_RECOMMEND R
                 WHERE
                     R.BOARD_NO = A.BOARD_NO
-            )AS likeCount
+            )AS likeCount,
+			(
+				SELECT
+					NVL(ATTACHMENT_ITEM, '')
+				FROM
+					TB_AUTH_ATTACHMENT_IMG I
+				WHERE
+					I.BOARD_NO = A.BOARD_NO
+				ORDER BY
+					ATTACHMENT_NO DESC
+				FETCH FIRST 1 ROWS ONLY
+			)AS imageUrl
         FROM
             TB_AUTH_BOARD A
         JOIN
