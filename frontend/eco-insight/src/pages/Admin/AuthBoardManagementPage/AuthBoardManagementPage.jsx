@@ -1,6 +1,5 @@
 import { useContext, useMemo, useState } from "react";
 import SummaryCard from "../../../components/DashBoard/SummaryCard";
-
 import { authBoardList } from "../data";
 import { AuthContext } from "../../../components/Context/AuthContext";
 import Pagination from "../../../components/Pagination/Pagination";
