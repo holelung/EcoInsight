@@ -27,7 +27,8 @@ const AuthBoardManagementPage = () => {
   const [listState, setListState] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalBoardNo, setModalBoardNo] = useState();
-
+  const [categoryId, setCategoryId] = useState("A0001");
+  
   useEffect(() => {
     if (auth.tokens.accessToken) {
       axios
@@ -222,7 +223,10 @@ const AuthBoardManagementPage = () => {
                         ? "bg-green-100 text-green-600"
                         : "bg-red-100 text-red-600"
                     }`}
-                    onClick={() => handleOpenDetail(board.boardNo)}
+                    onClick={() => {
+                      handleOpenDetail(board.boardNo);
+                      setCategoryId(board.categoryId);
+                    }}
                   >
                     {board.isCertified === "Y" ? `Complete` : "Require"}
                   </span>
@@ -284,6 +288,7 @@ const AuthBoardManagementPage = () => {
         boardNo={modalBoardNo}
         listState={listState}
         setListState={setListState}
+        categoryId={categoryId}
       />
     </div>
   );
