@@ -43,7 +43,7 @@ const CommunityListPage = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, [currentPage, type, searchQuery]);
+  }, [currentPage, type]);
 
   const handleButtonClick = (buttonType) => {
     setIsPopularOnly(buttonType === "인기글");
@@ -106,6 +106,11 @@ const CommunityListPage = () => {
           <button
             className="px-4 py-2 rounded border border-black bg-white text-black"
             onClick={handleSearchClick}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearchClick();
+              }
+            }}
           >
             검색
           </button>
