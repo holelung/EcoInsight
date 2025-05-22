@@ -1,4 +1,3 @@
-import { useEffect, useMemo, useState } from "react";
 import { PageButton } from "../Button/Button";
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
@@ -6,7 +5,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   const currentPageGroup = Math.floor(currentPage / pageLimit);
   const startPage = currentPageGroup * pageLimit;
   const endPage = Math.min(startPage + pageLimit, totalPages);
-
+  
 
 
 

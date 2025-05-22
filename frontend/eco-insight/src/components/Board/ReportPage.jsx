@@ -5,6 +5,7 @@ const ReportPage = ({ isOpen, onClose, author, postTitle }) => {
   // navigate는 그대로 둡니다 (사용 안 해도 됨)
   const [selectedReason, setSelectedReason] = useState("");
   const [detail, setDetail] = useState("");
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const reasons = [
     "스팸홍보/도배글입니다.",

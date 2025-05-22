@@ -24,7 +24,7 @@ const NoticeBoardManagementPage = () => {
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [totalPages, setTotalPages] = useState(0);
   const [listState, setListState] = useState(false);
-  
+  const API_URL = import.meta.env.VITE_API_URL;
 
 
   useEffect(() => {

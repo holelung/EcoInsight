@@ -13,6 +13,8 @@ const CommunityBoardDetail = () => {
   const [likes, setLikes] = useState(0);
   const [communityBoard, setCommunityBoard] = useState({});
   const [isReportOpen, setIsReportOpen] = useState(false);
+  const API_URL = import.meta.env.VITE_API_URL;
+
 
   const fetchPostDetail = () => {
     axios

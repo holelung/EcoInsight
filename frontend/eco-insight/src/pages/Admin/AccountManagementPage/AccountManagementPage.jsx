@@ -1,7 +1,5 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import SummaryCard from "../../../components/DashBoard/SummaryCard";
-import {memberList} from "../data";
-import dayjs from "dayjs";
 
 import Pagination from "../../../components/Pagination/Pagination";
 import Search from "../../../components/Input/Search/Search";
@@ -25,6 +23,7 @@ const AccountManagementPage = () => {
   const [banId, setBanId] = useState("B0001");
   const [totalPages, setTotalPages] = useState(0);
   const [listState, setListState] = useState(false);
+  const API_URL = import.meta.env.VITE_API_URL;
   
   useEffect(() => {
     if (auth.tokens.accessToken) {

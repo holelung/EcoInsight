@@ -11,6 +11,7 @@ const AuthBoardWritePage = () => {
   const [content, setContent] = useState("");
   const [categoryId, setCategoryId] = useState("A0001");
   const imageFilesRef = useRef([]);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const boardType = "auth";
 

@@ -18,6 +18,7 @@ const ReportManagementPage = () => {
   const [selectedReport, setSelectedReport] = useState(null);
   const [filterType, setFilterType] = useState("전체");
   const today = dayjs().format("YYYY-MM-DD");
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const todaysReports = list.filter(
     (item) => dayjs(item.reportDate).format("YYYY-MM-DD") === today

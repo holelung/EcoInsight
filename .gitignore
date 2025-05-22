@@ -19,3 +19,5 @@ Thumbs.db
 
 application-private.yml
 .vscode/*
+
+.env

@@ -17,6 +17,7 @@ const CommentItem = memo(function CommentItem({
     const [editedText, setEditedText] = useState(reply.text);
     const [showReplyInput, setShowReplyInput] = useState(false);
     const [childReply, setChildReply] = useState("");
+    const API_URL = import.meta.env.VITE_API_URL;
 
     const children = replies.filter(r => r.parentId === reply.id);
 

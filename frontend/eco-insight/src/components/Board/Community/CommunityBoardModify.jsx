@@ -14,7 +14,7 @@ const CommunityBoardModify = () => {
   const [content, setContent] = useState("");
   const [categoryId, setCategoryId] = useState("C0001");
   const imageFilesRef = useRef([]);
-
+  const API_URL = import.meta.env.VITE_API_URL;
   const boardType = "community";
   const boardNames = {
     C0001: "자유 게시판",

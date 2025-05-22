@@ -14,6 +14,7 @@ const AuthBoardModify = () => {
   const [content, setContent] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const imageFilesRef = useRef([]);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (auth.loginInfo.memberNo != boardData.memberNo) {

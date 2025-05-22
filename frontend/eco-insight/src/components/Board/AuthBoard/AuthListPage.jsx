@@ -15,6 +15,7 @@ const AuthListPage = () => {
   const [category, setCategory] = useState("all");
   const [totalPages, setTotalPages] = useState();
   const [listState, setListState] = useState(false);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     axios.get("http://localhost/auth-boards", {

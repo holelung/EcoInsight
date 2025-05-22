@@ -10,6 +10,8 @@ const NoticeBoard = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [category, setCategory] = useState("all");
   const [totalPages, setTotalPages] = useState();
+
+  const API_URL = import.meta.env.VITE_API_URL;
   
   useEffect(() => {
     axios

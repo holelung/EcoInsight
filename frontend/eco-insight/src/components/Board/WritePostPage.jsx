@@ -6,6 +6,7 @@ import Tiptap from "./TipTap/Tiptap";
 const PostWritePage = () => {
   const { type } = useParams();
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const boardNames = {
     free: "자유게시판",
