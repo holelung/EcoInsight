@@ -25,6 +25,7 @@ const SignUp = () => {
   const [timer, setTimer] = useState(0);
   const [msg, setMsg] = useState("");
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   // 인증번호 타이머
   useEffect(() => {

@@ -7,6 +7,7 @@ import logo from '../../assets/EcoInsigthLogo2.png';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 
+
 const Login = () => {
   const [formData, setFormData] = useState({
     memberId: "",
@@ -15,6 +16,7 @@ const Login = () => {
   const [msg, setMsg] = useState(""); // 에러 메시지, 안내 메시지 등
   const { login, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
