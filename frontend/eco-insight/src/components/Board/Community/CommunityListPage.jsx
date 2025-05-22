@@ -27,7 +27,7 @@ const CommunityListPage = () => {
 
   const fetchPosts = () => {
     axios
-      .get("http://localhost/communities", {
+      .get(`${API_URL}communities`, {
         params: {
           page: currentPage,
           search: searchQuery,

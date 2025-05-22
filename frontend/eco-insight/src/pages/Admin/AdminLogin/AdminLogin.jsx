@@ -34,7 +34,7 @@ const AdminLogin = () => {
       alert("비밀번호 확인해주십시오.");
       return;
     }
-    axios.post("http://localhost/auth/admin-login", {memberId, memberPw})
+    axios.post(`${API_URL}auth/admin-login`, {memberId, memberPw})
     .then(
       response => {
         if (response.status === 200) {

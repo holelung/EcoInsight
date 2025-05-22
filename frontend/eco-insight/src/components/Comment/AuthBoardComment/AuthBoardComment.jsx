@@ -15,7 +15,7 @@ function AuthBoardComment({ postId, user }) {
     const [commentList, setCommentList] = useState([]);
     const [newReply, setNewReply] = useState("");
     const [reportedReplies, setReportedReplies] = useState([]); // ✅ 신고된 댓글 저장
-    const API_URL = import.meta.env.VITE_API_URL;
+    
 
     // 신고 모달 제어
     const [reportTarget, setReportTarget] = useState(null);

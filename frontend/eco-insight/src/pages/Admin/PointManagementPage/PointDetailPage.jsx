@@ -16,7 +16,7 @@ const PointDetailPage = () => {
 
   useEffect(() => {
     if (auth.tokens.accessToken) {
-      axios.get(`http://localhost/admin/point/detail?memberNo=${memberNo}`, {
+      axios.get(`${API_URL}admin/point/detail?memberNo=${memberNo}`, {
         headers: {
           Authorization: `Bearer ${auth.tokens.accessToken}`,
         }

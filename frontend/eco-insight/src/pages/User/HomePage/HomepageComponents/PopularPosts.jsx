@@ -9,7 +9,7 @@ export default function PopularPosts() {
   const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    axios.get("http://localhost/boards/mainview-count")
+    axios.get(`${API_URL}boards/mainview-count`)
          .then(res => setData(res.data))
          .catch(console.error);
   }, []);

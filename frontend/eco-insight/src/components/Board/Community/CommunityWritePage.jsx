@@ -52,7 +52,7 @@ const CommunityWritePage = () => {
     });
 
     axios
-      .post("http://localhost/boards/upload", formData, {
+      .post(`${API_URL}boards/upload`, formData, {
         headers: {
           Authorization: `Bearer ${auth.tokens.accessToken}`,
         },
@@ -68,7 +68,7 @@ const CommunityWritePage = () => {
 
         axios
           .post(
-            "http://localhost/communities/community-write",
+            `${API_URL}communities/community-write`,
             {
               memberNo: auth.loginInfo.memberNo,
               categoryId: categoryId,

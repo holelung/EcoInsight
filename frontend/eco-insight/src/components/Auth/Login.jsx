@@ -39,7 +39,7 @@ const Login = () => {
       return;
     }
 
-    axios.post("http://localhost/auth/login", { memberId, memberPw })
+    axios.post(`${API_URL}auth/login`, { memberId, memberPw })
       .then(response => {
         if (response.status === 200) {
           if (response.data.loginInfo.isActive === 'N') {
@@ -56,7 +56,7 @@ const Login = () => {
   };
 
   const handleGoogleSuccess = (credentialResponse) => {
-    axios.post("http://localhost/auth/google-login", {
+    axios.post(`${API_URL}auth/google-login`, {
       token: credentialResponse.credential,
     })
     .then((response) => {

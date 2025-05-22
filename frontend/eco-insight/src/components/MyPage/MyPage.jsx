@@ -7,6 +7,7 @@ export default function MyPage() {
   const { auth } = useContext(AuthContext);
   const { loginInfo, tokens, isAuthenticated, googleLoginState } = auth;
   const navi = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const [userInfo, setUserInfo] = useState({
     name: '',
@@ -30,7 +31,7 @@ export default function MyPage() {
 
     if (tokens.accessToken) {
       axios
-        .get('http://localhost/mypage', {
+        .get(`${API_URL}mypage`, {
           headers: { Authorization: `Bearer ${tokens.accessToken}` }
         })
         .then(({ data }) => {

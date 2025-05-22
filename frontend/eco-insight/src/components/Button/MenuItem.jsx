@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 const MenuItem = ({ children, onClick, isActive }) => {
-  const navi = useNavigate();
+  
 
   return (
     <>

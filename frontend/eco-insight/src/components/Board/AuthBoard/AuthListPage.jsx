@@ -18,7 +18,7 @@ const AuthListPage = () => {
   const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    axios.get("http://localhost/auth-boards", {
+    axios.get(`${API_URL}auth-boards`, {
       params: {
         page: currentPage,
         size: rowsPerPage,

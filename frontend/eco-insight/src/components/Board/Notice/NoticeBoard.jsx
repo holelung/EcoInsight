@@ -15,7 +15,7 @@ const NoticeBoard = () => {
   
   useEffect(() => {
     axios
-      .get("http://localhost/notice", {
+      .get(`${API_URL}notice`, {
         params: {
           page: currentPage,
           size: rowsPerPage,

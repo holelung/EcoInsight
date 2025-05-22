@@ -35,7 +35,7 @@ const AuthBoardDetailModal = ({ isOpen, onRequestClose, boardNo, listState, setL
   useEffect(() => {
     setBoard({});
     axios
-      .get(`http://localhost/auth-boards/detail`, {
+      .get(`${API_URL}auth-boards/detail`, {
         params: {
           boardNo: boardNo,
           categoryId: categoryId,
@@ -50,7 +50,7 @@ const AuthBoardDetailModal = ({ isOpen, onRequestClose, boardNo, listState, setL
   const handleCertify = () => {
     console.log("인증처리하기");
     
-    axios.patch(`http://localhost/admin/authboard/cert`,
+    axios.patch(`${API_URL}admin/authboard/cert`,
       {
         boardNo: boardNo,
         memberNo: board.memberNo,

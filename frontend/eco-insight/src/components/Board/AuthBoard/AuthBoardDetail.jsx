@@ -5,7 +5,6 @@ import AuthBoardComment from "../../Comment/AuthBoardComment/AuthBoardComment";
 import { AuthContext } from "../../Context/AuthContext";
 import axios from "axios";
 import Separate from "../../Seperate/Seperate";
-const API_URL = import.meta.env.VITE_API_URL;
 
 const AuthBoardDetail = () => {
   const { auth } = useContext(AuthContext);
@@ -15,7 +14,8 @@ const AuthBoardDetail = () => {
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isAuthor, setIsAuthor] = useState(false);
   const [pageState, setPageState] = useState(false);
-
+  const API_URL = import.meta.env.VITE_API_URL;
+  
   // 게시글 상세 조회
   useEffect(() => {
     axios

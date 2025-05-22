@@ -11,7 +11,7 @@ const NoticeBoardDetail = () => {
   const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
-    axios.get("http://localhost/notice/detail", {
+    axios.get(`${API_URL}notice/detail`, {
       params: {
         boardNo:id,
       }
@@ -39,7 +39,7 @@ const NoticeBoardDetail = () => {
     const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
     if (confirmDelete) {
       axios
-        .delete(`http://localhost/admin/notice`, {
+        .delete(`${API_URL}admin/notice`, {
           headers: {
             Authorization: `Bearer ${auth.tokens.accessToken}`,
           },

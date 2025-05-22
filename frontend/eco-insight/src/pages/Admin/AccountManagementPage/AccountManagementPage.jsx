@@ -28,7 +28,7 @@ const AccountManagementPage = () => {
   useEffect(() => {
     if (auth.tokens.accessToken) {
       axios
-        .get("http://localhost/admin/account", {
+        .get(`${API_URL}admin/account`, {
           params: {
             page: currentPage,
             size: rowsPerPage,
@@ -51,7 +51,7 @@ const AccountManagementPage = () => {
 
   const handleDisableAccount = (memberName, memberNo) => {
     axios
-      .delete("http://localhost/admin/account", {
+      .delete(`${API_URL}admin/account`, {
         params: {
           memberNo: memberNo,
           banPeriod: banPeriod,
@@ -76,7 +76,7 @@ const AccountManagementPage = () => {
 
   const handleEnableAccount = (memberName, memberNo) => {
     axios
-      .patch("http://localhost/admin/account", {
+      .patch(`${API_URL}admin/account`, {
           memberNo: memberNo,
         },{
         headers: {

@@ -11,7 +11,7 @@ const SummaryBoard = ({ type }) => {
   const icons = ["👥", "🚮", "💻"]
   useEffect(() => {
     if (auth.tokens.accessToken) { 
-      axios.get(`http://localhost/admin/summary-card`, {
+      axios.get(`${API_URL}admin/summary-card`, {
         params: {
           type: type
         },

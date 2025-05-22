@@ -31,7 +31,7 @@ const ReportManagementPage = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost/reports/all")
+      .get(`${API_URL}reports/all`)
       .then((res) => {
         setList(res.data);
       })

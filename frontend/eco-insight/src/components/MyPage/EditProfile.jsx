@@ -8,6 +8,7 @@ export default function EditProfile() {
   const navigate = useNavigate();
   const { auth } = useContext(AuthContext);
   const { tokens, isAuthenticated } = auth;
+  const API_URL = import.meta.env.API_URL;
 
   const [form, setForm] = useState({
     currentPassword: '',
@@ -29,7 +30,7 @@ export default function EditProfile() {
       return;
     }
     axios
-      .get('http://localhost/mypage/editprofile', {
+      .get(`${API_URL}mypage/editprofile`, {
         headers: { Authorization: `Bearer ${tokens.accessToken}` }
       })
       .then(({ data }) => {
@@ -61,7 +62,7 @@ export default function EditProfile() {
     setIsEmailSent(true);
     axios
       .post(
-        'http://localhost/auth/change-email',
+        `${API_URL}auth/change-email`,
         { email: form.email },
         { headers: { Authorization: `Bearer ${tokens.accessToken}` } }
       )
@@ -76,7 +77,7 @@ export default function EditProfile() {
   const verifyEmailCode = () => {
     axios
       .post(
-        'http://localhost/auth/verify-code',
+        `${API_URL}auth/verify-code`,
         { email: form.email, verifyCode: emailCode },
         { headers: { Authorization: `Bearer ${tokens.accessToken}` } }
       )
@@ -100,7 +101,7 @@ export default function EditProfile() {
     }
     axios
       .put(
-        'http://localhost/mypage/editprofile',
+        `${API_URL}mypage/editprofile`,
         form,
         { headers: { Authorization: `Bearer ${tokens.accessToken}` } }
       )

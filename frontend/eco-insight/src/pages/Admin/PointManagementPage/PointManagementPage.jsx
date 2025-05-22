@@ -1,6 +1,6 @@
 import { Fragment, useContext, useEffect, useMemo, useState } from "react";
 import SummaryCard from "../../../components/DashBoard/SummaryCard";
-import {memberList} from "../data";
+
 
 import Pagination from "../../../components/Pagination/Pagination";
 import Select from "../../../components/Input/Select/Select";
@@ -31,7 +31,7 @@ const PointManagementPage = () => {
   useEffect(() => {
     if (auth.tokens.accessToken) {
       axios
-        .get("http://localhost/admin/point", {
+        .get(`${API_URL}admin/point`, {
           params: {
             page: currentPage,
             size: rowsPerPage,
@@ -65,7 +65,7 @@ const PointManagementPage = () => {
   const insertPoint = (memberName, memberNo, changePoint) => {
     axios
       .post(
-        "http://localhost/admin/point",
+        `${API_URL}admin/point`,
         {
           memberNo: memberNo,
           changePoint: changePoint,

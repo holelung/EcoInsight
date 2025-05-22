@@ -18,7 +18,7 @@ const CommunityBoardDetail = () => {
 
   const fetchPostDetail = () => {
     axios
-      .get("http://localhost/communities/community-detail", {
+      .get(`${API_URL}communities/community-detail`, {
         params: { boardNo, categoryId },
       })
       .then((response) => {
@@ -42,7 +42,7 @@ const CommunityBoardDetail = () => {
 
     axios
       .post(
-        "http://localhost/communities/like",
+        `${API_URL}communities/like`,
         {
           boardNo: boardNo,
           memberNo: auth.loginInfo?.memberNo,
@@ -66,7 +66,7 @@ const CommunityBoardDetail = () => {
     if (!confirmDelete) return;
 
     axios
-      .delete(`http://localhost/communities/community-delete`, {
+      .delete(`${API_URL}communities/community-delete`, {
         data: {
           boardNo: Number(boardNo),
           memberNo: Number(auth.loginInfo?.memberNo),

@@ -15,13 +15,14 @@ export default function MyAuthPosts() {
   const [keyword, setKeyword]   = useState('');
   const [loading, setLoading]   = useState(true);
   const [error, setError]       = useState(null);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/login', { replace: true });
       return;
     }
-    axios.get('http://localhost/mypage/myauthposts', {
+    axios.get(`${API_URL}mypage/myauthposts`, {
       headers: { Authorization: `Bearer ${tokens.accessToken}` }
     })
     .then(({ data }) => {
