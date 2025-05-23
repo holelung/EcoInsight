@@ -16,6 +16,7 @@ const CommunityWritePage = () => {
   const API_URL = window.ENV?.API_URL;
   
   const boardType = "community";
+  
 
   useEffect(() => {
     if (!auth.isLoading && !auth.isAuthenticated) {
