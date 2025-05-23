@@ -15,7 +15,7 @@ export default function MyAuthPosts() {
   const [keyword, setKeyword]   = useState('');
   const [loading, setLoading]   = useState(true);
   const [error, setError]       = useState(null);
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = window.ENV?.API_URL;
 
   useEffect(() => {
     if (!isAuthenticated) {

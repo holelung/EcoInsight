@@ -8,7 +8,7 @@ const NoticeBoardDetail = () => {
   const { id } = useParams();
   const navi = useNavigate();
   const [notice, setNotice] = useState({});
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = window.ENV?.API_URL;
 
   useEffect(() => {
     axios.get(`${API_URL}notice/detail`, {

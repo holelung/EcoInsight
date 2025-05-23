@@ -14,7 +14,7 @@ const AuthBoardDetail = () => {
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isAuthor, setIsAuthor] = useState(false);
   const [pageState, setPageState] = useState(false);
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = window.ENV?.API_URL;
   
   // 게시글 상세 조회
   useEffect(() => {

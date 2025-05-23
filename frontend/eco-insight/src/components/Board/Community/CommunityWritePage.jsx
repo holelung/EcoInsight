@@ -13,7 +13,7 @@ const CommunityWritePage = () => {
   const [categoryId, setCategoryId] = useState("C0001");
   const imageFilesRef = useRef([]);
   const { auth } = useContext(AuthContext);
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = window.ENV?.API_URL;
   
   const boardType = "community";
 

@@ -12,7 +12,7 @@ const AdminLogin = () => {
     memberId: "",
     memberPw: ""
   });
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = window.ENV?.API_URL;
 
   const handleChange = (e) => {
     const { name, value } = e.target;

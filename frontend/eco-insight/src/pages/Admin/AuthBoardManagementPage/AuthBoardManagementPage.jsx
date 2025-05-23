@@ -26,7 +26,7 @@ const AuthBoardManagementPage = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalBoardNo, setModalBoardNo] = useState();
   const [categoryId, setCategoryId] = useState("A0001");
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = window.ENV?.API_URL;
   
   useEffect(() => {
     if (auth.tokens.accessToken) {

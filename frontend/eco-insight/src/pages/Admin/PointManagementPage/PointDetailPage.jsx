@@ -12,7 +12,7 @@ const PointDetailPage = () => {
   const item = location.state;
   const [histories, setHistories] = useState([]);
   const [totalPoint, setTotalPoint] = useState(0);
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = window.ENV?.API_URL;
 
   useEffect(() => {
     if (auth.tokens.accessToken) {

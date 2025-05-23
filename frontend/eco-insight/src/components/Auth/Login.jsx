@@ -16,7 +16,7 @@ const Login = () => {
   const [msg, setMsg] = useState(""); // 에러 메시지, 안내 메시지 등
   const { login, logout } = useContext(AuthContext);
   const navigate = useNavigate();
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = window.ENV?.API_URL;
 
   const handleChange = (e) => {
     const { name, value } = e.target;

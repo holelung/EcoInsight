@@ -6,7 +6,7 @@ import axios from "axios";
 const SummaryBoard = ({ type }) => {
   const { auth } = useContext(AuthContext);
   const [summaryCards, setSummaryCards] = useState([]);
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = window.ENV?.API_URL;
 
   const icons = ["👥", "🚮", "💻"]
   useEffect(() => {

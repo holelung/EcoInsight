@@ -14,7 +14,7 @@ const NoticeBoardModify = () => {
   const [content, setContent] = useState("");
   const [categoryId, setCategoryId] = useState("N0001");
   const imageFilesRef = useRef([]);
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = window.ENV?.API_URL;
 
   const boardType = "notice";
 

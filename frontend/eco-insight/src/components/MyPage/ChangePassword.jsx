@@ -9,7 +9,7 @@ export default function ChangePassword() {
   const [userId,    setUserId]    = useState('');
   const [newPw,     setNewPw]     = useState('');
   const [confirmPw, setConfirmPw] = useState('');
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = window.ENV?.API_URL;
 
   useEffect(() => {
     if (!auth.isAuthenticated) {

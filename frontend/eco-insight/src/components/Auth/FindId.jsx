@@ -12,7 +12,7 @@ const FindIdPage = () => {
   const [isCodeSent, setIsCodeSent] = useState(false);
   const [isCodeVerified, setIsCodeVerified] = useState(false);
   const [msg, setMsg] = useState('');
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = window.ENV?.API_URL;
 
   const handleSendCode = () => {
     //  이메일로 인증번호 요청 API 호출

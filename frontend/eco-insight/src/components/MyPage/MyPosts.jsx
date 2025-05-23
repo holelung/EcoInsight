@@ -16,7 +16,7 @@ export default function MyPosts() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0); // ✅ 현재 페이지 상태
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = window.ENV?.API_URL;
 
   useEffect(() => {
     if (!auth.isAuthenticated) {

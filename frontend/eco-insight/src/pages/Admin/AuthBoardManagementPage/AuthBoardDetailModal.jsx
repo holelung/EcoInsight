@@ -30,7 +30,7 @@ const customStyles = {
 const AuthBoardDetailModal = ({ isOpen, onRequestClose, boardNo, listState, setListState, categoryId }) => {
   const { auth } = useContext(AuthContext);
   const [board, setBoard] = useState({});
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = window.ENV?.API_URL;
   
   useEffect(() => {
     setBoard({});

@@ -10,7 +10,7 @@ const CommunityListPage = () => {
   const [isPopularOnly, setIsPopularOnly] = useState(false);
   const [posts, setPosts] = useState([]);
   const postsPerPage = 10;
-  const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = window.ENV?.API_URL;
   
   const navi = useNavigate();
   const boardNames = {
