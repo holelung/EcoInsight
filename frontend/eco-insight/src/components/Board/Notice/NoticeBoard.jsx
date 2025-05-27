@@ -10,10 +10,12 @@ const NoticeBoard = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [category, setCategory] = useState("all");
   const [totalPages, setTotalPages] = useState();
+
+  const API_URL = window.ENV?.API_URL;
   
   useEffect(() => {
     axios
-      .get("http://localhost/notice", {
+      .get(`${API_URL}notice`, {
         params: {
           page: currentPage,
           size: rowsPerPage,

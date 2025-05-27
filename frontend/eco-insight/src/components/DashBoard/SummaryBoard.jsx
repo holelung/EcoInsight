@@ -6,11 +6,12 @@ import axios from "axios";
 const SummaryBoard = ({ type }) => {
   const { auth } = useContext(AuthContext);
   const [summaryCards, setSummaryCards] = useState([]);
+  const API_URL = window.ENV?.API_URL;
 
   const icons = ["👥", "🚮", "💻"]
   useEffect(() => {
     if (auth.tokens.accessToken) { 
-      axios.get(`http://localhost/admin/summary-card`, {
+      axios.get(`${API_URL}admin/summary-card`, {
         params: {
           type: type
         },

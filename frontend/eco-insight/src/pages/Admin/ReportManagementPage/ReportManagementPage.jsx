@@ -18,6 +18,7 @@ const ReportManagementPage = () => {
   const [selectedReport, setSelectedReport] = useState(null);
   const [filterType, setFilterType] = useState("전체");
   const today = dayjs().format("YYYY-MM-DD");
+  const API_URL = window.ENV?.API_URL;
 
   const todaysReports = list.filter(
     (item) => dayjs(item.reportDate).format("YYYY-MM-DD") === today
@@ -30,7 +31,7 @@ const ReportManagementPage = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost/reports/all")
+      .get(`${API_URL}reports/all`)
       .then((res) => {
         setList(res.data);
       })

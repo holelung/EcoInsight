@@ -12,10 +12,11 @@ const FindPasswordPage = () => {
   const [isCodeSent, setIsCodeSent] = useState(false);
   const [isCodeVerified, setIsCodeVerified] = useState(false);
   const [msg, setMsg] = useState('');
+  const API_URL = window.ENV?.API_URL;
 
   const handleSendCode = () => {
     // 이메일로 인증번호 요청 API 호출
-    axios.post("http://localhost/auth/find-password", {
+    axios.post(`${API_URL}auth/find-password`, {
       id : memberId,
       email : email
     }).then(response => {
@@ -32,7 +33,7 @@ const FindPasswordPage = () => {
 
   const handleVerifyCode = () => {
     // 인증번호 확인 API 호출
-    axios.post("http://localhost/auth/verifycode-password",{
+    axios.post(`${API_URL}auth/verifycode-password`,{
       id : memberId,
       email : email,
       verifyCode : code

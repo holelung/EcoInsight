@@ -14,11 +14,12 @@ const AuthBoardDetail = () => {
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isAuthor, setIsAuthor] = useState(false);
   const [pageState, setPageState] = useState(false);
-
+  const API_URL = window.ENV?.API_URL;
+  
   // 게시글 상세 조회
   useEffect(() => {
     axios
-      .get("http://localhost/auth-boards/detail", {
+      .get(`${API_URL}auth-boards/detail`, {
         params: {
           boardNo: no,
           categoryId: categoryId,

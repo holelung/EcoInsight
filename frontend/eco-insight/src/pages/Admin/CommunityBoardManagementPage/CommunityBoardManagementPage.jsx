@@ -1,6 +1,5 @@
 import { Fragment, useContext, useEffect, useMemo, useState } from "react";
 import SummaryCard from "../../../components/DashBoard/SummaryCard";
-import { authBoardList, memberList } from "../data";
 
 import Pagination from "../../../components/Pagination/Pagination";
 import Select from "../../../components/Input/Select/Select";
@@ -23,10 +22,11 @@ const CommunityBoardManagementPage = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [listState, setListState] = useState(false);
 
+  const API_URL = window.ENV?.API_URL;
 
   useEffect(() => {
     if (auth.tokens.accessToken) {
-      axios.get("http://localhost/admin/community", {
+      axios.get(`${API_URL}admin/community`, {
         params: {
           page: currentPage,
           size: rowsPerPage,
@@ -51,7 +51,7 @@ const CommunityBoardManagementPage = () => {
   const handleData = (boardNo, isDeleted) => {
     if (isDeleted === "N") {
       axios
-        .delete(`http://localhost/admin/community`, {
+        .delete(`${API_URL}admin/community`, {
           headers: {
             Authorization: `Bearer ${auth.tokens.accessToken}`,
           },
@@ -72,7 +72,7 @@ const CommunityBoardManagementPage = () => {
     } else {
       axios
         .patch(
-          `http://localhost/admin/community/restore`,
+          `${API_URL}admin/community/restore`,
           {
             boardNo: boardNo,
           },

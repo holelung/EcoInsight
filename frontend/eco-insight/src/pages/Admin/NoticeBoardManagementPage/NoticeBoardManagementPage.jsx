@@ -1,6 +1,6 @@
-import { Fragment, useContext, useEffect, useMemo, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import SummaryCard from "../../../components/DashBoard/SummaryCard";
-import { authBoardList } from "../data";
+
 
 import Pagination from "../../../components/Pagination/Pagination";
 import Select from "../../../components/Input/Select/Select";
@@ -24,13 +24,13 @@ const NoticeBoardManagementPage = () => {
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [totalPages, setTotalPages] = useState(0);
   const [listState, setListState] = useState(false);
-  
+  const API_URL = window.ENV?.API_URL;
 
 
   useEffect(() => {
     if (auth.tokens.accessToken) {
       axios
-        .get("http://localhost/admin/notice", {
+        .get(`${API_URL}admin/notice`, {
           params: {
             page: currentPage,
             size: rowsPerPage,
@@ -57,7 +57,7 @@ const NoticeBoardManagementPage = () => {
 
   const handleData = (boardNo, isDeleted) => {
     if (isDeleted === 'N') {
-      axios.delete(`http://localhost/admin/notice`, {
+      axios.delete(`${API_URL}admin/notice`, {
         headers: {
           Authorization: `Bearer ${auth.tokens.accessToken}`,
         },
@@ -76,7 +76,7 @@ const NoticeBoardManagementPage = () => {
           console.log(error);
         });
     } else {
-      axios.patch(`http://localhost/admin/notice/restore`, 
+      axios.patch(`${API_URL}admin/notice/restore`, 
         {
           boardNo: boardNo,
         }, {

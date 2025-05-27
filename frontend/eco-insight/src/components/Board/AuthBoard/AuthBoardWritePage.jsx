@@ -11,6 +11,7 @@ const AuthBoardWritePage = () => {
   const [content, setContent] = useState("");
   const [categoryId, setCategoryId] = useState("A0001");
   const imageFilesRef = useRef([]);
+  const API_URL = window.ENV?.API_URL;
 
   const boardType = "auth";
 
@@ -36,7 +37,7 @@ const AuthBoardWritePage = () => {
       formData.append("files", file);
     });
 
-    axios.post("http://localhost/boards/upload", formData, {
+    axios.post(`${API_URL}boards/upload`, formData, {
       headers: {
         Authorization: `Bearer ${auth.tokens.accessToken}`,
       }
@@ -51,7 +52,7 @@ const AuthBoardWritePage = () => {
       
       axios
         .post(
-          "http://localhost/auth-boards",
+          `${API_URL}auth-boards`,
           {
             memberNo: auth.loginInfo.memberNo,
             categoryId: categoryId,

@@ -37,7 +37,6 @@ import UserRoute from "./components/RouteGuard/UserRoute.jsx";
 import NoticeBoard from "./components/Board/Notice/NoticeBoard.jsx";
 import NoticeBoardDetail from "./components/Board/Notice/NoticeBoardDetail.jsx";
 import NoticeBoardWrite from "./components/Board/Notice/NoticeBoardWrite.jsx";
-import NoticeWrite from "./pages/Admin/NoticeBoardManagementPage/NoticeWrite.jsx";
 import CommunityWritePage from "./components/Board/Community/CommunityWritePage.jsx";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import NoticeBoardModify from "./components/Board/Notice/NoticeBoardModify.jsx";
@@ -48,7 +47,12 @@ import AuthBoardModify from "./components/Board/AuthBoard/AuthBoardModify.jsx";
 import MyAuthPosts from "./components/MyPage/MyAuthPosts";
 
 
+
 function App() {
+
+
+  
+
   return (
     <GoogleOAuthProvider clientId="617855234940-dp6iq2v93alink0ttpmgadohvbhj0fo5.apps.googleusercontent.com">
       <AuthProvider>

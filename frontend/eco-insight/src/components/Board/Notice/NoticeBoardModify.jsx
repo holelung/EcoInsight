@@ -14,6 +14,7 @@ const NoticeBoardModify = () => {
   const [content, setContent] = useState("");
   const [categoryId, setCategoryId] = useState("N0001");
   const imageFilesRef = useRef([]);
+  const API_URL = window.ENV?.API_URL;
 
   const boardType = "notice";
 
@@ -43,7 +44,7 @@ const NoticeBoardModify = () => {
     });
 
     axios
-      .post("http://localhost/boards/upload", formData, {
+      .post(`${API_URL}boards/upload`, formData, {
         headers: {
           Authorization: `Bearer ${auth.tokens.accessToken}`,
         },
@@ -59,7 +60,7 @@ const NoticeBoardModify = () => {
 
         axios
           .put(
-            "http://localhost/admin/notice",
+            `${API_URL}admin/notice`,
             {
               memberNo: auth.loginInfo.memberNo,
               boardNo: boardNo,

@@ -3,6 +3,7 @@ import { useState } from "react";
 const CommentReportPage = ({ isOpen, onClose, author, postTitle }) => {
   const [selectedReason, setSelectedReason] = useState("");
   const [detail, setDetail] = useState("");
+  
 
   const reasons = [
     "스팸홍보/도배글입니다.",

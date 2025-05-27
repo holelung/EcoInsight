@@ -25,6 +25,7 @@ const SignUp = () => {
   const [timer, setTimer] = useState(0);
   const [msg, setMsg] = useState("");
   const navigate = useNavigate();
+  const API_URL = window.ENV?.API_URL;
 
   // 인증번호 타이머
   useEffect(() => {
@@ -59,7 +60,7 @@ const SignUp = () => {
       setMsg("유효한 이메일을 입력해주세요.");
       return;
     }
-    axios.post("http://localhost/auth/send-code", { email: formData.email })
+    axios.post(`${API_URL}auth/send-code`, { email: formData.email })
       .then(() => {
         setCodeSent(true);
         setTimer(180); // 3분
@@ -72,7 +73,7 @@ const SignUp = () => {
   };
 
   const verifyCode = () => {
-    axios.post("http://localhost/auth/verify-code", {
+    axios.post(`${API_URL}auth/verify-code`, {
       email: formData.email,
       verifyCode: formData.verifyCode
     })
@@ -104,7 +105,7 @@ const SignUp = () => {
     if (!codeVerified) { setMsg("이메일 인증 후 회원가입 해주세요."); return; }
     if (!/^\d{3}-\d{3,4}-\d{4}$/.test(memberPh)) { setMsg("전화번호 형식이 올바르지 않습니다."); return; }
 
-    axios.post("http://localhost/members", {
+    axios.post(`${API_URL}members`, {
       memberId,
       memberPw,
       memberName,

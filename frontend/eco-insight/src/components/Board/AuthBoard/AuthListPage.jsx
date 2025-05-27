@@ -15,9 +15,10 @@ const AuthListPage = () => {
   const [category, setCategory] = useState("all");
   const [totalPages, setTotalPages] = useState();
   const [listState, setListState] = useState(false);
+  const API_URL = window.ENV?.API_URL;
 
   useEffect(() => {
-    axios.get("http://localhost/auth-boards", {
+    axios.get(`${API_URL}auth-boards`, {
       params: {
         page: currentPage,
         size: rowsPerPage,

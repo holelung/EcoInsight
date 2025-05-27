@@ -10,7 +10,8 @@ const CommunityListPage = () => {
   const [isPopularOnly, setIsPopularOnly] = useState(false);
   const [posts, setPosts] = useState([]);
   const postsPerPage = 10;
-
+  const API_URL = window.ENV?.API_URL;
+  
   const navi = useNavigate();
   const boardNames = {
     free: "자유게시판",
@@ -26,7 +27,7 @@ const CommunityListPage = () => {
 
   const fetchPosts = () => {
     axios
-      .get("http://localhost/communities", {
+      .get(`${API_URL}communities`, {
         params: {
           page: currentPage,
           search: searchQuery,
@@ -43,7 +44,7 @@ const CommunityListPage = () => {
 
   useEffect(() => {
     fetchPosts();
-  }, [currentPage, type, searchQuery]);
+  }, [currentPage, type]);
 
   const handleButtonClick = (buttonType) => {
     setIsPopularOnly(buttonType === "인기글");
@@ -106,6 +107,11 @@ const CommunityListPage = () => {
           <button
             className="px-4 py-2 rounded border border-black bg-white text-black"
             onClick={handleSearchClick}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearchClick();
+              }
+            }}
           >
             검색
           </button>

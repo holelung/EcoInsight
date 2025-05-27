@@ -8,9 +8,10 @@ const NoticeBoardDetail = () => {
   const { id } = useParams();
   const navi = useNavigate();
   const [notice, setNotice] = useState({});
+  const API_URL = window.ENV?.API_URL;
 
   useEffect(() => {
-    axios.get("http://localhost/notice/detail", {
+    axios.get(`${API_URL}notice/detail`, {
       params: {
         boardNo:id,
       }
@@ -38,7 +39,7 @@ const NoticeBoardDetail = () => {
     const confirmDelete = window.confirm("정말 삭제하시겠습니까?");
     if (confirmDelete) {
       axios
-        .delete(`http://localhost/admin/notice`, {
+        .delete(`${API_URL}admin/notice`, {
           headers: {
             Authorization: `Bearer ${auth.tokens.accessToken}`,
           },

@@ -12,6 +12,7 @@ const NoticeBoardWrite = () => {
   const [content, setContent] = useState("");
   const [categoryId, setCategoryId] = useState("N0001");
   const imageFilesRef = useRef([]);
+  const API_URL = window.ENV?.API_URL;
 
   const boardType = "notice";
 
@@ -32,7 +33,7 @@ const NoticeBoardWrite = () => {
 
     
 
-    axios.post("http://localhost/boards/upload", formData, {
+    axios.post(`${API_URL}boards/upload`, formData, {
       headers: {
         Authorization: `Bearer ${auth.tokens.accessToken}`,
       }
@@ -47,7 +48,7 @@ const NoticeBoardWrite = () => {
       
       axios
         .post(
-          "http://localhost/admin/notice-write",
+          `${API_URL}admin/notice-write`,
           {
             memberNo: auth.loginInfo.memberNo,
             categoryId: categoryId,

@@ -7,6 +7,7 @@ import logo from '../../assets/EcoInsigthLogo2.png';
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from 'jwt-decode';
 
+
 const Login = () => {
   const [formData, setFormData] = useState({
     memberId: "",
@@ -15,6 +16,7 @@ const Login = () => {
   const [msg, setMsg] = useState(""); // 에러 메시지, 안내 메시지 등
   const { login, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const API_URL = window.ENV?.API_URL;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,7 +39,7 @@ const Login = () => {
       return;
     }
 
-    axios.post("http://localhost/auth/login", { memberId, memberPw })
+    axios.post(`${API_URL}auth/login`, { memberId, memberPw })
       .then(response => {
         if (response.status === 200) {
           if (response.data.loginInfo.isActive === 'N') {
@@ -54,7 +56,7 @@ const Login = () => {
   };
 
   const handleGoogleSuccess = (credentialResponse) => {
-    axios.post("http://localhost/auth/google-login", {
+    axios.post(`${API_URL}auth/google-login`, {
       token: credentialResponse.credential,
     })
     .then((response) => {

@@ -1,7 +1,5 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import SummaryCard from "../../../components/DashBoard/SummaryCard";
-import DOMpurify from "dompurify";
-import { authBoardList } from "../data";
 import { AuthContext } from "../../../components/Context/AuthContext";
 import Pagination from "../../../components/Pagination/Pagination";
 import SelectRowNumber from "../../../components/Input/Select/SelectRowNumber";
@@ -28,11 +26,12 @@ const AuthBoardManagementPage = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalBoardNo, setModalBoardNo] = useState();
   const [categoryId, setCategoryId] = useState("A0001");
+  const API_URL = window.ENV?.API_URL;
   
   useEffect(() => {
     if (auth.tokens.accessToken) {
       axios
-        .get("http://localhost/admin/authboard", {
+        .get(`${API_URL}admin/authboard`, {
           params: {
             page: currentPage,
             size: rowsPerPage,
@@ -59,7 +58,7 @@ const AuthBoardManagementPage = () => {
   const handleAuthBoard = (boardNo, isDeleted) => {
     if (isDeleted === "N") {
       axios
-        .delete(`http://localhost/admin/authboard`, {
+        .delete(`${API_URL}admin/authboard`, {
           headers: {
             Authorization: `Bearer ${auth.tokens.accessToken}`,
           },
@@ -80,7 +79,7 @@ const AuthBoardManagementPage = () => {
     } else {
       axios
         .patch(
-          `http://localhost/admin/authboard/restore`,
+          `${API_URL}admin/authboard/restore`,
           {
             boardNo: boardNo,
           },

@@ -1,7 +1,5 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import SummaryCard from "../../../components/DashBoard/SummaryCard";
-import {memberList} from "../data";
-import dayjs from "dayjs";
 
 import Pagination from "../../../components/Pagination/Pagination";
 import Search from "../../../components/Input/Search/Search";
@@ -25,11 +23,12 @@ const AccountManagementPage = () => {
   const [banId, setBanId] = useState("B0001");
   const [totalPages, setTotalPages] = useState(0);
   const [listState, setListState] = useState(false);
+  const API_URL = window.ENV?.API_URL;
   
   useEffect(() => {
     if (auth.tokens.accessToken) {
       axios
-        .get("http://localhost/admin/account", {
+        .get(`${API_URL}admin/account`, {
           params: {
             page: currentPage,
             size: rowsPerPage,
@@ -52,7 +51,7 @@ const AccountManagementPage = () => {
 
   const handleDisableAccount = (memberName, memberNo) => {
     axios
-      .delete("http://localhost/admin/account", {
+      .delete(`${API_URL}admin/account`, {
         params: {
           memberNo: memberNo,
           banPeriod: banPeriod,
@@ -77,7 +76,7 @@ const AccountManagementPage = () => {
 
   const handleEnableAccount = (memberName, memberNo) => {
     axios
-      .patch("http://localhost/admin/account", {
+      .patch(`${API_URL}admin/account`, {
           memberNo: memberNo,
         },{
         headers: {

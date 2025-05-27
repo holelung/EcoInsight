@@ -12,9 +12,11 @@ const FindIdPage = () => {
   const [isCodeSent, setIsCodeSent] = useState(false);
   const [isCodeVerified, setIsCodeVerified] = useState(false);
   const [msg, setMsg] = useState('');
+  const API_URL = window.ENV?.API_URL;
+
   const handleSendCode = () => {
     //  이메일로 인증번호 요청 API 호출
-    axios.post("http://localhost/auth/find-id", {
+    axios.post(`${API_URL}auth/find-id`, {
       memberName : name, 
       email : email
     })
@@ -33,20 +35,23 @@ const FindIdPage = () => {
 
   const handleVerifyCode = () => {
     // 인증번호 확인 API 호출
-    axios.post("http://localhost/auth/verify-code", {
-      email : email,
-      verifyCode : code})
-      .then(response => {
-        if(response.status === 200){
+    axios
+      .post(`${API_URL}auth/verify-code`, {
+        email: email,
+        verifyCode: code,
+      })
+      .then((response) => {
+        if (response.status === 200) {
           setMemberId(response.data);
           setIsCodeVerified(true);
-          alert('인증이 완료되었습니다.');
+          alert("인증이 완료되었습니다.");
         }
-      }).catch(error => {
-        console.log(error);
-        alert('인증에 실패하였습니다.');
-        setMsg("인증번호 인증에 실패하였습니다.")
       })
+      .catch((error) => {
+        console.log(error);
+        alert("인증에 실패하였습니다.");
+        setMsg("인증번호 인증에 실패하였습니다.");
+      });
   };
 
   return (

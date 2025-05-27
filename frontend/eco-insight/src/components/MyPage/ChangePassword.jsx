@@ -9,7 +9,7 @@ export default function ChangePassword() {
   const [userId,    setUserId]    = useState('');
   const [newPw,     setNewPw]     = useState('');
   const [confirmPw, setConfirmPw] = useState('');
-
+  const API_URL = window.ENV?.API_URL;
 
   useEffect(() => {
     if (!auth.isAuthenticated) {
@@ -30,7 +30,7 @@ export default function ChangePassword() {
 
     try {
       await axios.put(
-        'http://localhost/mypage/changepassword',
+        `${API_URL}mypage/changepassword`,
         {
           memberId:        userId,
           newPassword:     newPw,

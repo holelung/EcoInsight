@@ -14,6 +14,7 @@ const AuthBoardModify = () => {
   const [content, setContent] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const imageFilesRef = useRef([]);
+  const API_URL = window.ENV?.API_URL;
 
   useEffect(() => {
     if (auth.loginInfo.memberNo != boardData.memberNo) {
@@ -41,7 +42,7 @@ const AuthBoardModify = () => {
     });
 
     axios
-      .post("http://localhost/boards/upload", formData, {
+      .post(`${API_URL}boards/upload`, formData, {
         headers: {
           Authorization: `Bearer ${auth.tokens.accessToken}`,
         },
@@ -57,7 +58,7 @@ const AuthBoardModify = () => {
 
         axios
           .put(
-            "http://localhost/auth-boards",
+            `${API_URL}auth-boards`,
             {
               memberNo: auth.loginInfo.memberNo,
               boardNo: boardNo,

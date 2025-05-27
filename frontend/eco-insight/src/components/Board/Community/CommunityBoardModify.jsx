@@ -14,7 +14,7 @@ const CommunityBoardModify = () => {
   const [content, setContent] = useState("");
   const [categoryId, setCategoryId] = useState("C0001");
   const imageFilesRef = useRef([]);
-
+  const API_URL = window.ENV?.API_URL;
   const boardType = "community";
   const boardNames = {
     C0001: "자유 게시판",
@@ -47,7 +47,7 @@ const CommunityBoardModify = () => {
     });
 
     axios
-      .post("http://localhost/boards/upload", formData, {
+      .post(`${API_URL}boards/upload`, formData, {
         headers: {
           Authorization: `Bearer ${auth.tokens.accessToken}`,
         },
@@ -63,7 +63,7 @@ const CommunityBoardModify = () => {
 
         axios
           .put(
-            "http://localhost/communities/community-update",
+            `${API_URL}communities/community-update`,
             {
               memberNo: auth.loginInfo.memberNo,
               boardNo: boardNo,
