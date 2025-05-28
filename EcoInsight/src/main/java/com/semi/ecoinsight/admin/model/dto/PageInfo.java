@@ -17,4 +17,10 @@ public class PageInfo {
     private String search;
     private String searchType;
     private String sortOrder;
+    private String category;
+    private int startIndex;
+
+    public void calStartIndex() {
+        this.startIndex = this.page * this.size;
+    }
 }

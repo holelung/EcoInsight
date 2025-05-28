@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.semi.ecoinsight.admin.model.dao.AdminMapper;
 import com.semi.ecoinsight.admin.model.dto.BanDTO;
 import com.semi.ecoinsight.admin.model.dto.CertifyDTO;
+import com.semi.ecoinsight.admin.model.dto.PageInfo;
 import com.semi.ecoinsight.admin.model.dto.PointDTO;
 import com.semi.ecoinsight.admin.model.dto.SummaryCardDTO;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
@@ -88,28 +89,16 @@ public class AdminServiceImpl implements AdminService {
      * @param sortOrder     오름차순/내림차순 정의
      */
     @Override
-    public Map<String, Object> selectNoticeListForAdmin(int pageNo, int size, String search, String searchType,
-            String sortOrder) {
-
-        int startIndex = pagination.getStartIndex(pageNo, size);
-        Map<String, String> pageInfo = new HashMap<>();
-        pageInfo.put("startIndex", Integer.toString(startIndex));
-        pageInfo.put("size", Integer.toString(size));
-        pageInfo.put("sortOrder", sortOrder);
-
+    public Map<String, Object> selectNoticeListForAdmin(PageInfo pageInfo) {
+        // startIndex 계산
+        pageInfo.calStartIndex();
+        
         Map<String, Object> resultData = new HashMap<String, Object>();
-
-        if (search.isEmpty()) {
-            resultData.put("totalCount", noticeMapper.selectTotalNoticeCountForAdmin());
-            // 10개만 나옴
-            resultData.put("boardList", noticeMapper.selectNoticeListForAdmin(pageInfo));
-            return resultData;
-        }
-        pageInfo.put("search", search);
-        pageInfo.put("searchType", searchType);
-
-        resultData.put("totalCount", noticeMapper.selectNoticeCountBySearch(pageInfo));
-        resultData.put("boardList", noticeMapper.selectSearchedNoticeListForAdmin(pageInfo));
+        
+        resultData.put("totalCount",
+                noticeMapper.selectTotalNoticeCountForAdmin(pageInfo));
+        resultData.put("boardList",
+                noticeMapper.selectNoticeListForAdmin(pageInfo));
         return resultData;
     }
 
@@ -179,7 +168,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<SummaryCardDTO> selectNoticeSummaryCards() {
         List<SummaryCardDTO> cards = new ArrayList<>();
-        Long totalCount = noticeMapper.selectTotalNoticeCount();
+        Long totalCount = noticeMapper.selectTotalNoticeCount("all");
         Long currentMonthCount = noticeMapper.selectTotalNoticeCountByMonth();
 
         Long noticeIncrease = ((long) Math.floor((double) currentMonthCount / (totalCount - currentMonthCount) * 100));

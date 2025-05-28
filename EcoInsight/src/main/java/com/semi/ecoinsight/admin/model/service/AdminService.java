@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.semi.ecoinsight.admin.model.dto.BanDTO;
 import com.semi.ecoinsight.admin.model.dto.CertifyDTO;
+import com.semi.ecoinsight.admin.model.dto.PageInfo;
 import com.semi.ecoinsight.admin.model.dto.PointDTO;
 import com.semi.ecoinsight.admin.model.dto.SummaryCardDTO;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
@@ -17,7 +18,7 @@ public interface AdminService {
     // 공지사항 작성
     void insertNotice(WriteFormDTO form);
     // 공지사항 목록 조회(관리자)
-    Map<String, Object> selectNoticeListForAdmin(int pageNo, int size, String search, String searchType, String sortOrder);
+    Map<String, Object> selectNoticeListForAdmin(PageInfo pageInfo);
     // 공지사항 관리
     // 공지사항 수정
     void updateNotice(WriteFormDTO form);

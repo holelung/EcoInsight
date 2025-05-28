@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.semi.ecoinsight.admin.model.dto.BanDTO;
 import com.semi.ecoinsight.admin.model.dto.CertifyDTO;
+import com.semi.ecoinsight.admin.model.dto.PageInfo;
 import com.semi.ecoinsight.admin.model.dto.PointDTO;
 import com.semi.ecoinsight.admin.model.dto.SummaryCardDTO;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
@@ -41,52 +42,58 @@ public class AdminController {
 
     private final AdminService adminService;
     
-    // 공지사항
+    /* 공지사항 */
+    // 공지사항 작성
     @PostMapping("/notice-write")
     public ResponseEntity<HttpStatus> noticeWrite(@RequestBody @Valid WriteFormDTO writeForm) {
+        
         adminService.insertNotice(writeForm);
+
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    // 글 전체 조회
     @GetMapping("/notice")
     public ResponseEntity<Map<String, Object>> selectNoticeListForAdmin(
-            @RequestParam(name="page", defaultValue="0") int page,
-            @RequestParam(name = "size") int size,
-            @RequestParam(name = "search", required = false) String search,
-            @RequestParam(name = "searchType", required = false) String searchType,
-            @RequestParam(name = "sortOrder", defaultValue = "Newest") String sortOrder){
-        log.info("page:{}\nsize:{}\nsearch:{}\nsortOrder:{}",page, size, search, searchType, sortOrder);
-        return ResponseEntity.ok(adminService.selectNoticeListForAdmin(page, size, search, searchType, sortOrder));
+            @ModelAttribute PageInfo pageInfo) {
+                
+        return ResponseEntity.ok(adminService.selectNoticeListForAdmin(pageInfo));
     }
 
+    // 공지사항 수정
     @PutMapping("/notice")
     public ResponseEntity<HttpStatus> modifyNotice(@RequestBody @Valid WriteFormDTO writeForm) {
-        log.info("공지사항 수정:{}", writeForm);
+        
         adminService.updateNotice(writeForm);
+
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    // 공지사항 삭제
     @DeleteMapping("/notice")
     public ResponseEntity<String> deleteNotice(@RequestParam(name="boardNo") Long boardNo) {
 
-        log.info("삭제 요청:{}", boardNo);
-
         adminService.deleteNotice(boardNo);
+        
         return ResponseEntity.status(HttpStatus.OK).body("글이 비활성화 되었습니다.");
     }
     
+    // 공지사항 복원
     @PatchMapping("/notice/restore")
     public ResponseEntity<String> restoreNotice(@RequestBody Map<String, String> body) {
-        Long boardNo = Long.parseLong(body.get("boardNo"));
-        log.info("복원 요청:{}", boardNo);
-        adminService.restoreNotice(boardNo);
+        
+        adminService.restoreNotice(Long.parseLong(body.get("boardNo")));
+        
         return ResponseEntity.status(HttpStatus.OK).body("글이 활성화 되었습니다.");
     }
 
 
-    // DashBoard
+
+
+    /*  DashBoard  */
+    // 요약 카드
     @GetMapping("/summary-card")
-    public ResponseEntity<?> getSummaryCard(@RequestParam(name = "type") String type) {
+    public ResponseEntity<List<SummaryCardDTO>> getSummaryCard(@RequestParam(name = "type") String type) {
         List<SummaryCardDTO> summaryCards = new ArrayList<SummaryCardDTO>();
         switch (type) {
             case "notice":
@@ -110,8 +117,10 @@ public class AdminController {
         return ResponseEntity.ok(summaryCards);
     }
 
-        // 커뮤니티 관리
-    
+
+
+
+    /* 커뮤니티 관리 */
     // 조회
     @GetMapping("/community")
     public ResponseEntity<Map<String, Object>> getMethodName(

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.semi.ecoinsight.admin.model.dto.PageInfo;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
 import com.semi.ecoinsight.board.model.service.BoardService;
 import com.semi.ecoinsight.notice.model.dao.NoticeMapper;
@@ -28,31 +29,18 @@ public class NoticeServiceImpl implements NoticeService{
     }
 
     @Override
-    public Map<String, Object> selectNoticeList(int pageNo, int size, String category) {
+    public Map<String, Object> selectNoticeList(PageInfo pageInfo) {
         
-        int startIndex = pagination.getStartIndex(pageNo, size);
-        Map<String, String> pageInfo = new HashMap<>(); 
-        pageInfo.put("startIndex", Integer.toString(startIndex));
-        pageInfo.put("size", Integer.toString(size));
-
+        pageInfo.calStartIndex();
+        
         Map<String, Object> resultData = new HashMap<String, Object>();
         
 
-        if (category.equals("all")) {
-            Long totalCount = noticeMapper.selectTotalNoticeCount();
-            resultData.put("totalCount", totalCount);
-
-            List<BoardDTO> result = noticeMapper.selectNoticeList(pageInfo);
-            resultData.put("boardList", result);
-            return resultData;
-        }
-        Long totalCount = noticeMapper.selectNoticeCountByCategoryId(category);
-        resultData.put("totalCount", totalCount);
-
-        pageInfo.put("category", category);
-        List<BoardDTO> result = noticeMapper.selectNoticeListByCategory(pageInfo);
-        resultData.put("boardList", result);
+        resultData.put("totalCount", noticeMapper.selectTotalNoticeCount(pageInfo.getCategory()));
+        resultData.put("boardList", noticeMapper.selectNoticeList(pageInfo));
+        
         return resultData;
+        
     }
 
     
