@@ -1,16 +1,14 @@
 package com.semi.ecoinsight.notice.model.service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
 import com.semi.ecoinsight.admin.model.dto.PageInfo;
 import com.semi.ecoinsight.board.model.dto.BoardDTO;
-import com.semi.ecoinsight.board.model.service.BoardService;
 import com.semi.ecoinsight.notice.model.dao.NoticeMapper;
-import com.semi.ecoinsight.util.pagination.PaginationService;
+
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,8 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class NoticeServiceImpl implements NoticeService{
 
     private final NoticeMapper noticeMapper;
-    private final PaginationService pagination;
-    private final BoardService boardService;
+    
 
     @Override
     public BoardDTO selectNoticeDetail(Long boardNo) {
@@ -36,8 +33,11 @@ public class NoticeServiceImpl implements NoticeService{
         Map<String, Object> resultData = new HashMap<String, Object>();
         
 
-        resultData.put("totalCount", noticeMapper.selectTotalNoticeCount(pageInfo.getCategory()));
-        resultData.put("boardList", noticeMapper.selectNoticeList(pageInfo));
+        resultData.put("totalCount",
+                noticeMapper.selectTotalNoticeCount(pageInfo.getCategory()));
+
+        resultData.put("boardList",
+                noticeMapper.selectNoticeList(pageInfo));
         
         return resultData;
         

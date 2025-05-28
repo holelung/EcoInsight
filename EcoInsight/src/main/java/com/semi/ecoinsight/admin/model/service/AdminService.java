@@ -10,7 +10,7 @@ import com.semi.ecoinsight.admin.model.dto.PageInfo;
 import com.semi.ecoinsight.admin.model.dto.PointDTO;
 import com.semi.ecoinsight.admin.model.dto.SummaryCardDTO;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
-import com.semi.ecoinsight.board.model.dto.BoardDTO;
+
 
 
 public interface AdminService {
@@ -31,7 +31,7 @@ public interface AdminService {
      * 커뮤니티 관리
      **/
     // 조회
-    Map<String, Object> selectCommunityForAdmin(int pageNo, int size, String search, String searchType, String sortOrder);
+    Map<String, Object> selectCommunityForAdmin(PageInfo pageInfo);
     // 삭제(블라인드 처리)
     void deleteCommunity(Long boardNo);
     void restoreCommunity(Long boardNo);
@@ -39,7 +39,7 @@ public interface AdminService {
     
     // 계정 관리
     // 조회
-    Map<String, Object> selectAccountList(int pageNo, int size, String search, String searchType, String sortOrder);
+    Map<String, Object> selectAccountList(PageInfo pageInfo);
     // 계정 정지
     void disableAccount(BanDTO banInfo);
 
@@ -47,7 +47,7 @@ public interface AdminService {
     
     
     // 인증게시판 관리
-    Map<String, Object> selectAuthBoardList(int pageNo, int size, String search, String searchType, String sortOrder);
+    Map<String, Object> selectAuthBoardList(PageInfo pageInfo);
     // 인증
     void handleCertify(CertifyDTO certify);
 
@@ -56,7 +56,7 @@ public interface AdminService {
 
     // 포인트 관리
     // 조회
-    Map<String, Object> selectPointList(int pageNo, int size, String search, String searchType, String sortOrder);
+    Map<String, Object> selectPointList(PageInfo pageInfo);
 
     // 포인트 지급/회수
     void insertPoint(PointDTO points);

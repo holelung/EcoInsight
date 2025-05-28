@@ -11,16 +11,14 @@ import com.semi.ecoinsight.admin.model.dto.PointDTO;
 import com.semi.ecoinsight.admin.model.dto.SummaryCardDTO;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.admin.model.service.AdminService;
-import com.semi.ecoinsight.board.model.dto.BoardDTO;
 import com.semi.ecoinsight.exception.util.InvalidAccessException;
-import com.semi.ecoinsight.notice.model.service.NoticeService;
+
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -123,52 +121,38 @@ public class AdminController {
     /* 커뮤니티 관리 */
     // 조회
     @GetMapping("/community")
-    public ResponseEntity<Map<String, Object>> getMethodName(
-            @RequestParam(name="page", defaultValue="0") int page,
-            @RequestParam(name = "size") int size,
-            @RequestParam(name = "search", required = false) String search,
-            @RequestParam(name = "searchType", required = false) String searchType,
-            @RequestParam(name = "sortOrder", defaultValue = "Newest") String sortOrder) {
+    public ResponseEntity<Map<String, Object>> getMethodName(@ModelAttribute PageInfo pageInfo) {
         
-        log.info("관리자 커뮤니티 리스트 요청:\\n" +
-                        "page:{}\\n" + //
-                        "size:{}\\n" + //
-                        "search:{}\\n" + //
-                        "sortOrder:{}", page, size, search, searchType, sortOrder);
-        return ResponseEntity.ok(adminService.selectCommunityForAdmin(page, size, search, searchType, sortOrder));
+        return ResponseEntity.ok(adminService.selectCommunityForAdmin(pageInfo));
     }
-    
+
+    // 삭제
     @DeleteMapping("/community")
     public ResponseEntity<String> deleteCommunity(@RequestParam(name="boardNo") Long boardNo) {
-
-        log.info("삭제 요청:{}", boardNo);
 
         adminService.deleteCommunity(boardNo);
         return ResponseEntity.status(HttpStatus.OK).body("글이 비활성화 되었습니다.");
     }
     
+    // 복원
     @PatchMapping("/community/restore")
     public ResponseEntity<String> restoreCommunity(@RequestBody Map<String, String> body) {
-        Long boardNo = Long.parseLong(body.get("boardNo"));
-        log.info("복원 요청:{}", boardNo);
-        adminService.restoreCommunity(boardNo);
+
+        adminService.restoreCommunity(Long.parseLong(body.get("boardNo")));
         return ResponseEntity.status(HttpStatus.OK).body("글이 활성화 되었습니다.");
     }
-
     
-    // 계정관리
+
+    /* 계정 관리 */
+
+    // 계정 목록 조회
     @GetMapping("/account")
-    public ResponseEntity<Map<String,Object>> getAccountList(
-            @RequestParam(name = "page", defaultValue="0") int page,
-            @RequestParam(name = "size") int size,
-            @RequestParam(name = "search", required = false) String search,
-            @RequestParam(name = "searchType", required = false) String searchType,
-            @RequestParam(name = "sortOrder", defaultValue = "Newest") String sortOrder) 
-            {
+    public ResponseEntity<Map<String,Object>> getAccountList(@ModelAttribute PageInfo pageInfo) {
         
-        return ResponseEntity.ok(adminService.selectAccountList(page, size, search, searchType, sortOrder));
+        return ResponseEntity.ok(adminService.selectAccountList(pageInfo));
     }
     
+    // 계정 정지
     @DeleteMapping("/account")
     public ResponseEntity<HttpStatus> disableAccount(@ModelAttribute BanDTO banInfo) {
         log.info("정지 요청:{}", banInfo);
@@ -176,6 +160,7 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    // 정지 해제
     @PatchMapping("/account")
     public ResponseEntity<HttpStatus> enableAccount(@RequestBody BanDTO banInfo) {
         log.info("정지 해제 요청:{}", banInfo);
@@ -183,57 +168,57 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @GetMapping("/point")
-    public ResponseEntity<Map<String,Object>> getPointList(
-            @RequestParam(name = "page", defaultValue="0") int page,
-            @RequestParam(name = "size") int size,
-            @RequestParam(name = "search", required = false) String search,
-            @RequestParam(name = "searchType", required = false) String searchType,
-            @RequestParam(name = "sortOrder", defaultValue = "Newest") String sortOrder) 
-    {
+    /* 포인트 관리 */
 
-        return ResponseEntity.ok(adminService.selectPointList(page, size, search, searchType, sortOrder));
+    // 포인트 목록 조회
+    @GetMapping("/point")
+    public ResponseEntity<Map<String,Object>> getPointList(@ModelAttribute PageInfo pageInfo) {
+
+        return ResponseEntity.ok(adminService.selectPointList(pageInfo));
     }
     
+    // 포인트 적립
     @PostMapping("/point")
     public ResponseEntity<HttpStatus> insertPoint(@RequestBody PointDTO point) {
         adminService.insertPoint(point);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    // 유저별 포인트 목록 조회
     @GetMapping("/point/detail")
     public ResponseEntity<Map<String,Object>> getPointDetail(@RequestParam(name = "memberNo") Long memberNo) {
         
         return ResponseEntity.ok(adminService.selectPointDetail(memberNo));
     }
     
+    /* 인증 게시판 관리 */
+
+    // 인증 게시판 목록 조회
     @GetMapping("/authboard")
-    public ResponseEntity<Map<String,Object>> getAuthboard(
-        @RequestParam(name = "page", defaultValue="0") int page,
-        @RequestParam(name = "size") int size,
-        @RequestParam(name = "search", required = false) String search,
-        @RequestParam(name = "searchType", required = false) String searchType,
-        @RequestParam(name = "sortOrder", defaultValue = "Newest") String sortOrder) {
+    public ResponseEntity<Map<String,Object>> getAuthboard(@ModelAttribute PageInfo pageInfo) {
         
-        return ResponseEntity.ok(adminService.selectAuthBoardList(page, size, search, searchType, sortOrder));
+        return ResponseEntity.ok(adminService.selectAuthBoardList(pageInfo));
     }
     
+    // 게시글 인증 처리
     @PatchMapping("/authboard/cert")
-    public ResponseEntity<?> handleCertify(@RequestBody CertifyDTO data) {
+    public ResponseEntity<String> handleCertify(@RequestBody CertifyDTO data) {
         adminService.handleCertify(data);
         return ResponseEntity.status(HttpStatus.OK).body("인증상태가 변경 되었습니다.");
     }
 
+    // 게시글 삭제
     @DeleteMapping("/authboard")
-    public ResponseEntity<?> deleteAuthBoard(@RequestParam(name = "boardNo") Long boardNo) {
-        log.info("에라라라:{}",boardNo);
+    public ResponseEntity<String> deleteAuthBoard(@RequestParam(name = "boardNo") Long boardNo) {
+        
         adminService.deleteAuthBoard(boardNo);
         return ResponseEntity.status(HttpStatus.OK).body("글이 삭제되었습니다.");
     }
 
+    // 게시글 복원
     @PatchMapping("/authboard/restore")
-    public ResponseEntity<?> restoreAuthBoard(@RequestBody Map<String, Long> data) {
-        log.info("에라라라:{}", data);
+    public ResponseEntity<String> restoreAuthBoard(@RequestBody Map<String, Long> data) {
+        
         adminService.restoreAuthBoard(data.get("boardNo"));
         return ResponseEntity.status(HttpStatus.OK).body("글이 복원되었습니다.");
     }
