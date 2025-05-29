@@ -27,6 +27,7 @@ import com.semi.ecoinsight.exception.util.ImageInsertException;
 import com.semi.ecoinsight.exception.util.InvalidAccessException;
 import com.semi.ecoinsight.exception.util.LargePointValueException;
 import com.semi.ecoinsight.notice.model.dao.NoticeMapper;
+import com.semi.ecoinsight.util.file.service.FileService;
 import com.semi.ecoinsight.util.sanitize.SanitizingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +43,7 @@ public class AdminServiceImpl implements AdminService {
     private final AdminMapper adminMapper;
     private final BoardMapper boardMapper;
     private final NoticeMapper noticeMapper;
+    private final FileService fileService;
 
     @Transactional
     @Override
@@ -56,7 +58,6 @@ public class AdminServiceImpl implements AdminService {
             adminMapper.insertNotice(board);
         } catch (RuntimeException e) {
             throw new BoardInsertException("게시글 생성에 실패했습니다.");
-            // uploads에 저장한 파일 삭제 로직 필요
         }
 
         // 신규 BoardNo 불러오기
@@ -68,7 +69,7 @@ public class AdminServiceImpl implements AdminService {
                 try {
                     boardMapper.uploadImage(a);
                 } catch (RuntimeException e) {
-                    //uploads에 저장한 파일도 제거해야함
+                    fileService.deleteFile(a.getAttachmentItem());
                     throw new ImageInsertException("이미지 업로드에 실패했습니다.");
                 }
             }
@@ -115,7 +116,7 @@ public class AdminServiceImpl implements AdminService {
                 try {
                     boardMapper.uploadImage(a);
                 } catch (RuntimeException e) {
-                    //uploads에 저장한 파일도 제거해야함
+                    fileService.deleteFile(a.getAttachmentItem());
                     throw new ImageInsertException("추가 이미지 업로드에 실패했습니다.");
                 }
             }

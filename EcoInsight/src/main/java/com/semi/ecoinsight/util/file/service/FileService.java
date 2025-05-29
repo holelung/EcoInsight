@@ -31,19 +31,18 @@ public class FileService {
 
     @SuppressWarnings("null")
     public String store(MultipartFile file) {
-        
+
         // 빈파일명 체크
-        if(file.getOriginalFilename() == null || file.getOriginalFilename().isBlank()){ 
+        if (file.getOriginalFilename() == null || file.getOriginalFilename().isBlank()) {
             throw new FileStreamException("파일명이 비어 있습니다.");
         }
         String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
-        
+
         // 이미지 형식 체크
         String contentType = file.getContentType();
         if (contentType == null || !contentType.startsWith("image/")) {
             throw new FileTypeNotAllowedException("이미지 파일만 업로드 가능합니다.");
         }
-
 
         // 확장자 추출 
         String extension = StringUtils.getFilenameExtension(originalFileName);
@@ -53,18 +52,29 @@ public class FileService {
 
         LocalDateTime now = LocalDateTime.now();
         String timestamp = now.format(
-            DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS")
-        );
+                DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
         String newFileName = timestamp + "." + extension;
 
         Path targetLocation = this.fileLocation.resolve(newFileName);
         log.info("파일경로:{}", targetLocation);
 
-        try{
+        try {
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
-            return "http://localhost/uploads/"+newFileName;
-        } catch(IOException e){
+            return "http://localhost/uploads/" + newFileName;
+        } catch (IOException e) {
             throw new FileStreamException("파일 저장중 오류 발생");
         }
+    }
+    
+    public void deleteFile(String fileUrl) {
+        Path filePath = fileLocation.resolve(fileUrl.substring(24)).normalize();
+        
+        try {
+            Files.deleteIfExists(filePath);
+        } catch (IOException e) {
+            throw new FileStreamException("파일 삭제중 오류 발생: " + e.getMessage());
+        }
+
+        
     }
 }
