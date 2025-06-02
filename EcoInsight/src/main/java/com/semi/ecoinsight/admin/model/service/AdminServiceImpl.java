@@ -1,13 +1,12 @@
 package com.semi.ecoinsight.admin.model.service;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.security.access.method.P;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,12 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.semi.ecoinsight.admin.model.dao.AdminMapper;
 import com.semi.ecoinsight.admin.model.dto.BanDTO;
 import com.semi.ecoinsight.admin.model.dto.CertifyDTO;
+import com.semi.ecoinsight.admin.model.dto.PageInfo;
 import com.semi.ecoinsight.admin.model.dto.PointDTO;
 import com.semi.ecoinsight.admin.model.dto.SummaryCardDTO;
 import com.semi.ecoinsight.admin.model.dto.WriteFormDTO;
 import com.semi.ecoinsight.board.model.dao.BoardMapper;
-import com.semi.ecoinsight.board.model.dto.BoardDTO;
-import com.semi.ecoinsight.board.model.service.BoardService;
+
 import com.semi.ecoinsight.board.model.vo.Attachment;
 import com.semi.ecoinsight.board.model.vo.Board;
 import com.semi.ecoinsight.exception.util.BoardInsertException;
@@ -28,7 +27,7 @@ import com.semi.ecoinsight.exception.util.ImageInsertException;
 import com.semi.ecoinsight.exception.util.InvalidAccessException;
 import com.semi.ecoinsight.exception.util.LargePointValueException;
 import com.semi.ecoinsight.notice.model.dao.NoticeMapper;
-import com.semi.ecoinsight.util.pagination.PaginationService;
+import com.semi.ecoinsight.util.file.service.FileService;
 import com.semi.ecoinsight.util.sanitize.SanitizingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,11 +40,10 @@ import lombok.extern.slf4j.Slf4j;
 public class AdminServiceImpl implements AdminService {
 
     private final SanitizingService sanitizingService;
-    private final PaginationService pagination;
-    private final BoardService boardService;
     private final AdminMapper adminMapper;
     private final BoardMapper boardMapper;
     private final NoticeMapper noticeMapper;
+    private final FileService fileService;
 
     @Transactional
     @Override
@@ -60,7 +58,6 @@ public class AdminServiceImpl implements AdminService {
             adminMapper.insertNotice(board);
         } catch (RuntimeException e) {
             throw new BoardInsertException("게시글 생성에 실패했습니다.");
-            // uploads에 저장한 파일 삭제 로직 필요
         }
 
         // 신규 BoardNo 불러오기
@@ -72,7 +69,7 @@ public class AdminServiceImpl implements AdminService {
                 try {
                     boardMapper.uploadImage(a);
                 } catch (RuntimeException e) {
-                    //uploads에 저장한 파일도 제거해야함
+                    fileService.deleteFile(a.getAttachmentItem());
                     throw new ImageInsertException("이미지 업로드에 실패했습니다.");
                 }
             }
@@ -88,28 +85,16 @@ public class AdminServiceImpl implements AdminService {
      * @param sortOrder     오름차순/내림차순 정의
      */
     @Override
-    public Map<String, Object> selectNoticeListForAdmin(int pageNo, int size, String search, String searchType,
-            String sortOrder) {
-
-        int startIndex = pagination.getStartIndex(pageNo, size);
-        Map<String, String> pageInfo = new HashMap<>();
-        pageInfo.put("startIndex", Integer.toString(startIndex));
-        pageInfo.put("size", Integer.toString(size));
-        pageInfo.put("sortOrder", sortOrder);
-
+    public Map<String, Object> selectNoticeListForAdmin(PageInfo pageInfo) {
+        // startIndex 계산
+        pageInfo.calStartIndex();
+        
         Map<String, Object> resultData = new HashMap<String, Object>();
-
-        if (search.isEmpty()) {
-            resultData.put("totalCount", noticeMapper.selectTotalNoticeCountForAdmin());
-            // 10개만 나옴
-            resultData.put("boardList", noticeMapper.selectNoticeListForAdmin(pageInfo));
-            return resultData;
-        }
-        pageInfo.put("search", search);
-        pageInfo.put("searchType", searchType);
-
-        resultData.put("totalCount", noticeMapper.selectNoticeCountBySearch(pageInfo));
-        resultData.put("boardList", noticeMapper.selectSearchedNoticeListForAdmin(pageInfo));
+        
+        resultData.put("totalCount",
+                noticeMapper.selectTotalNoticeCountForAdmin(pageInfo));
+        resultData.put("boardList",
+                noticeMapper.selectNoticeListForAdmin(pageInfo));
         return resultData;
     }
 
@@ -131,7 +116,7 @@ public class AdminServiceImpl implements AdminService {
                 try {
                     boardMapper.uploadImage(a);
                 } catch (RuntimeException e) {
-                    //uploads에 저장한 파일도 제거해야함
+                    fileService.deleteFile(a.getAttachmentItem());
                     throw new ImageInsertException("추가 이미지 업로드에 실패했습니다.");
                 }
             }
@@ -179,7 +164,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<SummaryCardDTO> selectNoticeSummaryCards() {
         List<SummaryCardDTO> cards = new ArrayList<>();
-        Long totalCount = noticeMapper.selectTotalNoticeCount();
+        Long totalCount = noticeMapper.selectTotalNoticeCount("all");
         Long currentMonthCount = noticeMapper.selectTotalNoticeCountByMonth();
 
         Long noticeIncrease = ((long) Math.floor((double) currentMonthCount / (totalCount - currentMonthCount) * 100));
@@ -223,32 +208,23 @@ public class AdminServiceImpl implements AdminService {
         throw new UnsupportedOperationException("Unimplemented method 'selectPointSummaryCards'");
     }
 
-    // Community 관련
-    @Override
-    public Map<String, Object> selectCommunityForAdmin(int pageNo, int size, String search, String searchType,
-            String sortOrder) {
-        int startIndex = pagination.getStartIndex(pageNo, size);
-        Map<String, String> pageInfo = new HashMap<>();
-        pageInfo.put("startIndex", Integer.toString(startIndex));
-        pageInfo.put("size", Integer.toString(size));
-        pageInfo.put("sortOrder", sortOrder);
 
+    /* 커뮤니티 관리 */
+    // 조회
+    @Override
+    public Map<String, Object> selectCommunityForAdmin(PageInfo pageInfo) {
+        pageInfo.calStartIndex();       
         Map<String, Object> resultData = new HashMap<String, Object>();
 
-        if (search.isEmpty()) {
-            resultData.put("totalCount", adminMapper.selectCommunityCount());
-            // 10개만 나옴
-            resultData.put("boardList", adminMapper.selectCommunityListForAdmin(pageInfo));
-            return resultData;
-        }
-        pageInfo.put("search", search);
-        pageInfo.put("searchType", searchType);
-
-        resultData.put("totalCount", adminMapper.selectCommunityCountBySearch(pageInfo));
-        resultData.put("boardList", adminMapper.selectCommunityListForAdminBySearch(pageInfo));
+        resultData.put("totalCount",
+                adminMapper.selectCommunityCount(pageInfo));
+        
+        resultData.put("boardList",
+                adminMapper.selectCommunityListForAdmin(pageInfo));
         return resultData;
     }
 
+    // 게시글 삭제
     @Override
     public void deleteCommunity(Long boardNo) {
         if (boardNo < 1) {
@@ -257,6 +233,7 @@ public class AdminServiceImpl implements AdminService {
         adminMapper.deleteCommunity(boardNo);
     }
 
+    // 게시글 복원
     @Override
     public void restoreCommunity(Long boardNo) {
         if (boardNo < 1) {
@@ -265,32 +242,26 @@ public class AdminServiceImpl implements AdminService {
         adminMapper.restoreCommunity(boardNo);
     }
 
+
+    /* 계정관리 */
+
+    // 계정목록 조회
     @Override
-    public Map<String, Object> selectAccountList(int pageNo, int size, String search, String searchType,
-            String sortOrder) {
+    public Map<String, Object> selectAccountList(PageInfo pageInfo) {
 
-        int startIndex = pagination.getStartIndex(pageNo, size);
-        Map<String, String> pageInfo = new HashMap<>();
-        pageInfo.put("startIndex", Integer.toString(startIndex));
-        pageInfo.put("size", Integer.toString(size));
-        pageInfo.put("sortOrder", sortOrder);
-
+        pageInfo.calStartIndex();
+        
         Map<String, Object> resultData = new HashMap<String, Object>();
 
-        if (search.isEmpty()) {
-            resultData.put("totalCount", adminMapper.selectAccountCount());
-            // 10개만 나옴
-            resultData.put("memberList", adminMapper.selectAccountList(pageInfo));
-            return resultData;
-        }
-        pageInfo.put("search", search);
-        pageInfo.put("searchType", searchType);
-
-        resultData.put("totalCount", adminMapper.selectAccountCountBySearch(pageInfo));
-        resultData.put("memberList", adminMapper.selectAccountListBySearch(pageInfo));
+        resultData.put("totalCount",
+                adminMapper.selectAccountCount(pageInfo));
+        resultData.put("memberList",
+                adminMapper.selectAccountList(pageInfo));
+        
         return resultData;
     }
 
+    // 계정 정지
     @Transactional
     @Override
     public void disableAccount(BanDTO banInfo) {
@@ -309,6 +280,7 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
+    // 계정 정지 해제
     @Override
     public void enableAccount(Long memberNo) {
         // banList table에서 삭제
@@ -325,36 +297,25 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
-    // 포인트관리 
+    /* 포인트 관리 */
+    
+    // 유저 목록(포인트) 조회
     @Override
-    public Map<String, Object> selectPointList(int pageNo, int size, String search, String searchType,
-            String sortOrder) {
-
-        int startIndex = pagination.getStartIndex(pageNo, size);
-        Map<String, String> pageInfo = new HashMap<>();
-        pageInfo.put("startIndex", Integer.toString(startIndex));
-        pageInfo.put("size", Integer.toString(size));
-        pageInfo.put("sortOrder", sortOrder);
-
+    public Map<String, Object> selectPointList(PageInfo pageInfo) {
+        pageInfo.calStartIndex();
+        
         Map<String, Object> resultData = new HashMap<String, Object>();
 
-        if (search.isEmpty()) {
-            resultData.put("totalCount", adminMapper.selectAccountCount());
-            // 10개만 나옴
-            resultData.put("memberList", adminMapper.selectPointList(pageInfo));
-            
-            return resultData;
-        }
-        pageInfo.put("search", search);
-        pageInfo.put("searchType", searchType);
-
-        resultData.put("totalCount", adminMapper.selectAccountCountBySearch(pageInfo));
-        resultData.put("memberList", adminMapper.selectPointListBySearch(pageInfo));
+        resultData.put("totalCount", adminMapper.selectAccountCount(pageInfo));
+        resultData.put("memberList", adminMapper.selectPointList(pageInfo));
+        
         return resultData;
     }
 
+    // 포인트 적립
     @Override
     public void insertPoint(PointDTO point) {
+
         if (Math.abs(point.getChangePoint()) > 100000l) {
             throw new LargePointValueException("값이 너무 크거나 작습니다.(최대 +-10만)");
         }
@@ -366,6 +327,7 @@ public class AdminServiceImpl implements AdminService {
         
     }
 
+    // 포인트 차감
     @Transactional
     @Override
     public Map<String, Object> selectPointDetail(Long memberNo) {
@@ -390,33 +352,27 @@ public class AdminServiceImpl implements AdminService {
         return resultMap;
     }
 
-    // 인증 게시판 조회~
+    /* 인증 게시판 관리 */
+
+    // 인증 게시판 조회
     @Override
-    public Map<String, Object> selectAuthBoardList(int pageNo, int size, String search, String searchType,
-            String sortOrder) {
+    public Map<String, Object> selectAuthBoardList(PageInfo pageInfo) {
         
-        int startIndex = pagination.getStartIndex(pageNo, size);
-        Map<String, String> pageInfo = new HashMap<>();
-        pageInfo.put("startIndex", Integer.toString(startIndex));
-        pageInfo.put("size", Integer.toString(size));
-        pageInfo.put("sortOrder", sortOrder);
+        pageInfo.calStartIndex();
 
         Map<String, Object> resultData = new HashMap<String, Object>();
 
-        if (search.isEmpty()) {
-            resultData.put("totalCount", adminMapper.selectAuthBoardCount());
-            // 10개만 나옴
-            resultData.put("boardList", adminMapper.selectAuthBoardList(pageInfo));
-            return resultData;
-        }
-        pageInfo.put("search", search);
-        pageInfo.put("searchType", searchType);
-
-        resultData.put("totalCount", adminMapper.selectAuthBoardCountBySearch(pageInfo));
-        resultData.put("boardList", adminMapper.selectAuthBoardListBySearch(pageInfo));
+        resultData.put("totalCount",
+                adminMapper.selectAuthBoardCount());
+        
+        resultData.put("boardList",
+                adminMapper.selectAuthBoardList(pageInfo));
+        
         return resultData;
+        
     }
 
+    // 게시글 인증 처리
     @Override
     public void handleCertify(CertifyDTO certify) {
 
@@ -436,6 +392,7 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
+    // 게시글 삭제
     @Override
     public void deleteAuthBoard(Long boardNo) {
         
@@ -445,6 +402,7 @@ public class AdminServiceImpl implements AdminService {
         adminMapper.deleteAuthBoard(boardNo);
     }
 
+    // 게시글 복원
     @Override
     public void restoreAuthBoard(Long boardNo) {
         if (boardNo < 1l) {
@@ -454,6 +412,7 @@ public class AdminServiceImpl implements AdminService {
         
     }
 
+    // 인증 게시글 포인트 적립량
     private Long pointChoice(String categoryId) {
         switch (categoryId) {
             case "A0001":

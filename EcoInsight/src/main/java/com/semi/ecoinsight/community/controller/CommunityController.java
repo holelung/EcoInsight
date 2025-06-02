@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-@RequestMapping("/communities")
+@RequestMapping("/api/communities")
 @RestController
 @RequiredArgsConstructor
 public class CommunityController {

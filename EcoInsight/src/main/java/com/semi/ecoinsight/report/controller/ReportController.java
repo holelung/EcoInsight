@@ -23,9 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @Validated
 @RequiredArgsConstructor
-@RequestMapping("/reports")
+@RequestMapping("/api/reports")
 @Slf4j
-public class ReportController {
+public class ReportController  {
 	
 	private final ReportService reportService;
 	
