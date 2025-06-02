@@ -29,6 +29,8 @@ import com.semi.ecoinsight.exception.util.LargePointValueException;
 import com.semi.ecoinsight.notice.model.dao.NoticeMapper;
 import com.semi.ecoinsight.util.file.service.FileService;
 import com.semi.ecoinsight.util.sanitize.SanitizingService;
+import com.semi.ecoinsight.validation.ValidationService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,6 +46,7 @@ public class AdminServiceImpl implements AdminService {
     private final BoardMapper boardMapper;
     private final NoticeMapper noticeMapper;
     private final FileService fileService;
+    private final ValidationService validationService;
 
     @Transactional
     @Override
@@ -51,6 +54,8 @@ public class AdminServiceImpl implements AdminService {
         // 유효성 검증 NotBlank밖에 없음
 
         // XSS 방어
+        form.setContent(sanitizingService.sanitize(form.getContent()));
+        form.setTitle(sanitizingService.sanitize(form.getTitle()));
 
         Board board = boardBuilder(form);
 
@@ -86,6 +91,8 @@ public class AdminServiceImpl implements AdminService {
      */
     @Override
     public Map<String, Object> selectNoticeListForAdmin(PageInfo pageInfo) {
+        
+        validationService.validateNegativeNumber(pageInfo.getPage());
         // startIndex 계산
         pageInfo.calStartIndex();
         
@@ -126,17 +133,13 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void deleteNotice(Long boardNo) {
-        if (boardNo < 1) {
-            throw new InvalidAccessException("잘못된 접근입니다.");
-        }
+        validationService.invalidIndexAccessHandler(boardNo);
         adminMapper.deleteNotice(boardNo);
     }
 
     @Override
     public void restoreNotice(Long boardNo) {
-        if (boardNo < 1) {
-            throw new InvalidAccessException("잘못된 접근입니다.");
-        }
+        validationService.invalidIndexAccessHandler(boardNo);
         adminMapper.restoreNotice(boardNo);
     }
 
@@ -227,18 +230,16 @@ public class AdminServiceImpl implements AdminService {
     // 게시글 삭제
     @Override
     public void deleteCommunity(Long boardNo) {
-        if (boardNo < 1) {
-            throw new InvalidAccessException("잘못된 접근입니다.");
-        }
+        
+        validationService.invalidIndexAccessHandler(boardNo);
+
         adminMapper.deleteCommunity(boardNo);
     }
 
     // 게시글 복원
     @Override
     public void restoreCommunity(Long boardNo) {
-        if (boardNo < 1) {
-            throw new InvalidAccessException("잘못된 접근입니다.");
-        }
+        validationService.invalidIndexAccessHandler(boardNo);
         adminMapper.restoreCommunity(boardNo);
     }
 
@@ -283,6 +284,9 @@ public class AdminServiceImpl implements AdminService {
     // 계정 정지 해제
     @Override
     public void enableAccount(Long memberNo) {
+
+        validationService.invalidIndexAccessHandler(memberNo);
+
         // banList table에서 삭제
         try {
             adminMapper.deleteBanList(memberNo);
@@ -319,9 +323,7 @@ public class AdminServiceImpl implements AdminService {
         if (Math.abs(point.getChangePoint()) > 100000l) {
             throw new LargePointValueException("값이 너무 크거나 작습니다.(최대 +-10만)");
         }
-        if (point.getMemberNo() < 1) {
-            throw new InvalidAccessException("잘못된 접근입니다.");
-        }
+        validationService.invalidIndexAccessHandler(point.getMemberNo());
 
         adminMapper.insertPoint(point);
         
@@ -331,10 +333,9 @@ public class AdminServiceImpl implements AdminService {
     @Transactional
     @Override
     public Map<String, Object> selectPointDetail(Long memberNo) {
-        if (memberNo < 1) {
-            throw new InvalidAccessException("잘못된 접근입니다.");
-        }
         
+        validationService.invalidIndexAccessHandler(memberNo);
+
         Map<String, Object> resultMap = new HashMap<>();
 
         try{
@@ -373,15 +374,16 @@ public class AdminServiceImpl implements AdminService {
     }
 
     // 게시글 인증 처리
+    @Transactional
     @Override
     public void handleCertify(CertifyDTO certify) {
 
-        String temp = adminMapper.selectIsCertifiedByBoardNo(certify.getBoardNo());
+        String isCertified = adminMapper.selectIsCertifiedByBoardNo(certify.getBoardNo());
         PointDTO point = new PointDTO();
         Long changePoint = pointChoice(certify.getCategoryId());
         
         point.setMemberNo(certify.getMemberNo());
-        if (temp.equals("Y")) {
+        if (isCertified.equals("Y")) {
             adminMapper.uncertifiedAuthBoard(certify);
             point.setChangePoint(changePoint * -1);
             adminMapper.insertPoint(point);
@@ -396,18 +398,17 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void deleteAuthBoard(Long boardNo) {
         
-        if (boardNo < 1l) {
-            throw new InvalidAccessException("잘못된 접근");
-        }
+        validationService.invalidIndexAccessHandler(boardNo);
+
         adminMapper.deleteAuthBoard(boardNo);
     }
 
     // 게시글 복원
     @Override
     public void restoreAuthBoard(Long boardNo) {
-        if (boardNo < 1l) {
-            throw new InvalidAccessException("잘못된 접근");
-        }
+
+        validationService.invalidIndexAccessHandler(boardNo);
+
         adminMapper.restoreAuthBoard(boardNo);
         
     }

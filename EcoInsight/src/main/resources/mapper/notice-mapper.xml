@@ -59,7 +59,7 @@
             TB_NOTICE
         WHERE
             IS_DELETED = 'N'
-        <if test="category != all">
+        <if test="category != 'all'">
         AND
             CATEGORY_ID = #{category}
         </if>
@@ -99,7 +99,7 @@
         <include refid="noticeSelect" />
         WHERE
             IS_DELETED = 'N'
-        <if test="category != all">
+        <if test="category != 'all'">
         AND
             CATEGORY_ID = #{category}
         </if>
