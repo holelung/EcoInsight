@@ -40,20 +40,20 @@ public class SecurityConfigure {
 				.csrf(AbstractHttpConfigurer::disable)
 				.cors(Customizer.withDefaults())
 				.authorizeHttpRequests(requests -> {
-					requests.requestMatchers("/admin/**").hasRole("ADMIN");
+					requests.requestMatchers("/api/admin/**").hasRole("ADMIN");
 					requests.requestMatchers(HttpMethod.POST, 
-							"/auth/login", 
-							"/auth/id", 
-							"/auth/password",
-							"/members",
-							"/admin/login",
-							"/auth/send-code",
-							"/auth/verify-code",
-							"/auth/find-id",
-							"/auth/find-password",
-							"/auth/verifycode-password",
-							"/auth/admin-login",
-							"/auth/google-login").permitAll();
+							"/api/auth/login", 
+							"/api/auth/id", 
+							"/api/auth/password",
+							"/api/members",
+							"/api/admin/login",
+							"/api/auth/send-code",
+							"/api/auth/verify-code",
+							"/api/auth/find-id",
+							"/api/auth/find-password",
+							"/api/auth/verifycode-password",
+							"/api/auth/admin-login",
+							"/api/auth/google-login").permitAll();
 					requests.requestMatchers(HttpMethod.GET).permitAll();
 					requests.requestMatchers(HttpMethod.POST).authenticated();
 					requests.requestMatchers(HttpMethod.PUT).authenticated();

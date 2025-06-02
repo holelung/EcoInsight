@@ -52,10 +52,6 @@ const MenuBar = ({ editor, imageFilesRef }) => {
 
       imageFilesRef.current.push(file);
 
-      // const prev = JSON.parse(sessionStorage.getItem("uploadImgs") || "[]");
-      // prev.push({fileName: file.name});
-      // sessionStorage.setItem("uploadImgs", JSON.stringify(prev));
-
       // blob형식 URL 생성
       const previewUrl = URL.createObjectURL(file);
       editor.chain().focus().setImage({ src: previewUrl }).run();
@@ -274,10 +270,6 @@ const Tiptap = ({ prevContent, setContent, imageFilesRef }) => {
     extensions,
     content:prevContent === "" ? content : prevContent,
     onUpdate({ editor }) {
-      // const dirtyHtml = editor.getHTML();
-      // const cleanHtml = DOMpurify.sanitize(dirtyHtml, {
-      //   USE_PROFILES: {html:true}
-      // });
       setContent(editor.getHTML());
     },
   });
